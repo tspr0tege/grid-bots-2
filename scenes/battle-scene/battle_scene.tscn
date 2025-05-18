@@ -1,13 +1,17 @@
-[gd_scene load_steps=7 format=3 uid="uid://b7s8i4yotbhd4"]
+[gd_scene load_steps=9 format=3 uid="uid://b7s8i4yotbhd4"]
 
 [ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battleScene_gameController.gd" id="1_p7nsj"]
+[ext_resource type="Script" uid="uid://d1tg7waqcp1ck" path="res://scenes/battle-scene/scenes_battleScene.gd" id="1_w5c51"]
 [ext_resource type="Script" uid="uid://djxr7o5ldgyi3" path="res://entities/test-character/character.gd" id="2_5po22"]
 [ext_resource type="ArrayMesh" uid="uid://crr2al4gl0ad4" path="res://entities/test-character/figurine.obj" id="2_snvd5"]
 [ext_resource type="Material" uid="uid://bqm2pun4c5ial" path="res://entities/test-character/blue_albedo.tres" id="3_5po22"]
 [ext_resource type="Resource" uid="uid://exqi8ng4ltm2" path="res://entities/common-resources/movement/quick_hop.tres" id="3_mthio"]
 [ext_resource type="Material" uid="uid://c6s1klglreml7" path="res://entities/test-character/red_albedo.tres" id="4_snvd5"]
+[ext_resource type="Texture2D" uid="uid://d3v0aeruwqfx6" path="res://scenes/battle-scene/pause-button.svg" id="7_ftv0g"]
 
 [node name="BattleScene" type="Node"]
+process_mode = 3
+script = ExtResource("1_w5c51")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -25,11 +29,13 @@ size_flags_vertical = 3
 stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/GridContainer/SubViewportContainer"]
+process_mode = 1
 handle_input_locally = false
 size = Vector2i(1920, 1080)
 render_target_update_mode = 4
 
 [node name="CombatArena" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport"]
+unique_name_in_owner = true
 script = ExtResource("1_p7nsj")
 
 [node name="Floor" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena"]
@@ -69,5 +75,81 @@ size = 3.72794
 [node name="GameSpaceRaycast" type="RayCast3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D"]
 unique_name_in_owner = true
 
+[node name="CanvasLayer" type="CanvasLayer" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D"]
+process_mode = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer"]
+process_mode = 3
+top_level = true
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 120.0
+grow_horizontal = 0
+
+[node name="TextureButton" type="TextureButton" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PanelContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("7_ftv0g")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="PauseMenu" type="PanelContainer" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -306.5
+offset_top = -268.0
+offset_right = 306.5
+offset_bottom = 268.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu"]
+layout_mode = 2
+color = Color(0.629675, 0.629675, 0.629675, 0.784314)
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_top = 200
+theme_override_constants/margin_right = 200
+theme_override_constants/margin_bottom = 200
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="Button" type="Button" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "QUIT TO MAIN MENU"
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0)
+
+[node name="Control" type="Control" parent="CanvasLayer/GridContainer/SubViewportContainer"]
+layout_mode = 2
+
+[connection signal="pressed" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PanelContainer/TextureButton" to="." method="_handle_pause_button"]
+[connection signal="pressed" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer/VBoxContainer/Button" to="." method="_on_quit_button_pressed"]

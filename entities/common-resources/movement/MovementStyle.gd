@@ -2,6 +2,6 @@ extends Resource
 
 class_name MovementStyle
 
-func move(entity, to_pos) -> void:
+func move(_entity, _to_pos) -> void:
 	pass
 	

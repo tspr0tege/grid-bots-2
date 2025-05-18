@@ -34,7 +34,7 @@ func _process(_delta):
 		_attempt_move(player_character, player_character.grid_pos + Vector2i(0, 1))
 	
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if screen_tap_origin.length() > 0:
 		var space_state = get_world_3d().direct_space_state
 		var cam = $"../Camera3D"
@@ -139,3 +139,4 @@ func _on_input_signal_received(from_character: Node, action: Dictionary):
 		"move":
 			_attempt_move(from_character, action.dir)
 		# Future: "attack", "dash", "ability", etc.
+	
