@@ -88,16 +88,25 @@ func _init_board_state():
 	for y in range(grid_size.y):
 		var row = []
 		for x in range(grid_size.x * 2): # Both sides
+			var board_state_dict = {
+				#grid_coordinates
+				#node
+				#control
+				#state
+			}
 			var new_tile = FLOOR_TILE.instantiate()
 			new_tile.position = Vector3((1.1 * x) + .05, 0, (1.1 * y) + .05)
 			new_tile.grid_coordinates = Vector2i(x, y)
+			board_state_dict.node = new_tile
 			var tile_material = new_tile.get_node("MeshInstance3D").get_surface_override_material(0)
 			if (x < grid_size.x):
+				board_state_dict.control_group = "BLUE"
 				tile_material.albedo_color = Color(0, 0, .9)
 			else:
+				board_state_dict.control_group = "RED"
 				tile_material.albedo_color = Color(.9, .2, .2)
-			row.append(new_tile)
 			$Floor.add_child(new_tile)
+			row.append(board_state_dict)
 			
 		board_state.append(row)
 	_place_character_on_board(player_character, Vector2i(1, 1))
@@ -105,24 +114,38 @@ func _init_board_state():
 
 func _place_character_on_board(character: Node, pos: Vector2i):
 	character.grid_pos = pos
-	character.position = board_state[pos.y][pos.x].position
+	character.position = board_state[pos.y][pos.x].node.position
 	
 
 func _attempt_move(character: Node, target_pos: Vector2i):
-	#var current_pos: Vector2i = character.grid_pos
-	#var target_pos = current_pos + direction
-
+	
+	print(str(character.name) + " attempting to move to " + str(target_pos))
 	#Check valid coordinates
 	if not _is_valid_position(target_pos): return
-	
 	#Check valid tile
-	if board_state[target_pos.y][target_pos.x] == null: return
+	var target_tile = board_state[target_pos.y][target_pos.x]
 	
-	#Check Player controlled tile
-	if target_pos.x > grid_size.x - 1: return
+	if target_tile.node == null: return
+	
+	#Check Character controlled tile
+	if target_tile.control_group != character.control_group: return
+	#if target_pos.x > grid_size.x - 1: return
+	
+	var desired_move = target_pos - character.grid_pos
+	# length for above formula is 1.0 for adjacent tiles, and roughly 1.4 for diagonals
+	if desired_move.length() > 1:
+		#print("Invalid move. Time to adjust target position")
+		if abs(desired_move.x) > abs(desired_move.y):
+			desired_move.x /= abs(desired_move.x)
+			desired_move.y = 0
+		else:
+			desired_move.y /= abs(desired_move.y)
+			desired_move.x = 0
+			
+		target_pos = character.grid_pos + desired_move
 	
 	character.grid_pos = target_pos
-	character.move_to(board_state[target_pos.y][target_pos.x].position)
+	character.move_to(board_state[target_pos.y][target_pos.x].node.position)
 	
 
 func _is_valid_position(pos: Vector2i) -> bool:

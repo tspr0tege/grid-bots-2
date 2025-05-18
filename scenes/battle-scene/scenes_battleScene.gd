@@ -2,11 +2,11 @@ extends Node
 
 func _handle_pause_button() -> void:
 	if get_tree().paused:
-		print("Unpaused")
+		#print("Unpaused")
 		%PauseMenu.visible = false
 		get_tree().paused = false
 	else:
-		print("Paused")
+		#print("Paused")
 		get_tree().paused = true
 		%PauseMenu.visible = true
 	

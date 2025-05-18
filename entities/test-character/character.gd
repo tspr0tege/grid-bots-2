@@ -1,6 +1,9 @@
 extends Node3D
 
+class_name Character
+
 var grid_pos : Vector2i
+@export var control_group := "NONE"
 @export var move_handler: MovementStyle
 
 func move_to(new_pos) -> void:
