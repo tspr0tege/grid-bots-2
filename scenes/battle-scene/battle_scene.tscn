@@ -1,0 +1,73 @@
+[gd_scene load_steps=7 format=3 uid="uid://b7s8i4yotbhd4"]
+
+[ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battleScene_gameController.gd" id="1_p7nsj"]
+[ext_resource type="Script" uid="uid://djxr7o5ldgyi3" path="res://entities/test-character/character.gd" id="2_5po22"]
+[ext_resource type="ArrayMesh" uid="uid://crr2al4gl0ad4" path="res://entities/test-character/figurine.obj" id="2_snvd5"]
+[ext_resource type="Material" uid="uid://bqm2pun4c5ial" path="res://entities/test-character/blue_albedo.tres" id="3_5po22"]
+[ext_resource type="Resource" uid="uid://exqi8ng4ltm2" path="res://entities/common-resources/movement/quick_hop.tres" id="3_mthio"]
+[ext_resource type="Material" uid="uid://c6s1klglreml7" path="res://entities/test-character/red_albedo.tres" id="4_snvd5"]
+
+[node name="BattleScene" type="Node"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="CanvasLayer/GridContainer/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="CombatArena" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport"]
+script = ExtResource("1_p7nsj")
+
+[node name="Floor" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena"]
+
+[node name="BlueCharacter" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)
+script = ExtResource("2_5po22")
+move_handler = ExtResource("3_mthio")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/BlueCharacter"]
+mesh = ExtResource("2_snvd5")
+surface_material_override/0 = ExtResource("3_5po22")
+surface_material_override/1 = ExtResource("3_5po22")
+surface_material_override/2 = ExtResource("3_5po22")
+surface_material_override/3 = ExtResource("3_5po22")
+surface_material_override/4 = ExtResource("3_5po22")
+surface_material_override/5 = ExtResource("3_5po22")
+
+[node name="RedCharacter" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena"]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0, 0)
+script = ExtResource("2_5po22")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter"]
+mesh = ExtResource("2_snvd5")
+surface_material_override/0 = ExtResource("4_snvd5")
+surface_material_override/1 = ExtResource("4_snvd5")
+surface_material_override/2 = ExtResource("4_snvd5")
+surface_material_override/3 = ExtResource("4_snvd5")
+surface_material_override/4 = ExtResource("4_snvd5")
+surface_material_override/5 = ExtResource("4_snvd5")
+
+[node name="Camera3D" type="Camera3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 0.829038, 0.559193, 0, -0.559193, 0.829038, 2.8, 3.4, 4.7)
+projection = 1
+size = 3.72794
+
+[node name="GameSpaceRaycast" type="RayCast3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D"]
+unique_name_in_owner = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0)

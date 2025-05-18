@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://c13wyouguu0b0"]
+
+[ext_resource type="ArrayMesh" uid="uid://dgkqwcmuo0x1w" path="res://scenes/battle-scene/floor-square.obj" id="1_at28f"]
+[ext_resource type="Script" uid="uid://cvuxvrwitsgff" path="res://scenes/battle-scene/floor_tile.gd" id="2_j1tcp"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_j1tcp"]
+size = Vector3(1, 0.1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j1tcp"]
+resource_local_to_scene = true
+
+[node name="FloorTile" type="Area3D"]
+script = ExtResource("2_j1tcp")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+shape = SubResource("BoxShape3D_j1tcp")
+debug_color = Color(0, 0.6, 0.701961, 1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_at28f")
+surface_material_override/0 = SubResource("StandardMaterial3D_j1tcp")
