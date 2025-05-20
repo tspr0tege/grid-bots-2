@@ -21,15 +21,14 @@ SceneManager="*res://autoload/AL_sceneManager.gd"
 
 [display]
 
-window/size/viewport_width=1920
-window/size/viewport_height=1080
-window/size/mode=3
+window/size/viewport_width=1904
+window/size/viewport_height=1071
 window/stretch/mode="viewport"
+window/stretch/aspect="expand"
 
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
-pointing/emulate_mouse_from_touch=false
 
 [rendering]
 

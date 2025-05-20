@@ -71,13 +71,13 @@ func _unhandled_input(event):
 		#var to = from + camera.project_ray_normal(event.position) * 1000
 #
 		#var space_state = get_world_3d().direct_space_state
-		##var result = space_state.intersect_ray(from, to, [], collision_mask)
+		#var result = space_state.intersect_ray(from, to, [], collision_mask)
 		#var result = false
 #
 		#if result:
 			#var clicked_tile = result.collider
 			#if "GridTile" in clicked_tile.name:  # Or check group or metadata
-				##handle_grid_click(clicked_tile)
+				#handle_grid_click(clicked_tile)
 				#pass
 	
 
@@ -91,7 +91,7 @@ func _init_board_state():
 			var board_state_dict = {
 				#grid_coordinates
 				#node
-				#control
+				#control_group
 				#state
 			}
 			var new_tile = FLOOR_TILE.instantiate()
@@ -117,9 +117,9 @@ func _place_character_on_board(character: Node, pos: Vector2i):
 	character.position = board_state[pos.y][pos.x].node.position
 	
 
-func _attempt_move(character: Node, target_pos: Vector2i):
+func _attempt_move(character: Node, target_pos: Vector2i):	
+	#print(str(character.name) + " attempting to move to " + str(target_pos))
 	
-	print(str(character.name) + " attempting to move to " + str(target_pos))
 	#Check valid coordinates
 	if not _is_valid_position(target_pos): return
 	#Check valid tile
@@ -129,7 +129,6 @@ func _attempt_move(character: Node, target_pos: Vector2i):
 	
 	#Check Character controlled tile
 	if target_tile.control_group != character.control_group: return
-	#if target_pos.x > grid_size.x - 1: return
 	
 	var desired_move = target_pos - character.grid_pos
 	# length for above formula is 1.0 for adjacent tiles, and roughly 1.4 for diagonals
@@ -148,18 +147,17 @@ func _attempt_move(character: Node, target_pos: Vector2i):
 	character.move_to(board_state[target_pos.y][target_pos.x].node.position)
 	
 
+func _attempt_action(character: Node, action: String) -> void:
+	print("%s attempting to %s" % [character.name, action])
+	
+
+func player_attack() -> void:
+	_attempt_action(player_character, "pew")
+	
+
 func _is_valid_position(pos: Vector2i) -> bool:
 	return (
 		pos.x >= 0 and pos.x < grid_size.x * 2 and
 		pos.y >= 0 and pos.y < grid_size.y
 	)
-
-# --- Signal Handling ---
-
-func _on_input_signal_received(from_character: Node, action: Dictionary):
-	# `action` might be { "type": "move", "dir": Vector2i(1,0) }
-	match action.type:
-		"move":
-			_attempt_move(from_character, action.dir)
-		# Future: "attack", "dash", "ability", etc.
 	

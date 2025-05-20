@@ -1,14 +1,16 @@
-[gd_scene load_steps=10 format=3 uid="uid://b7s8i4yotbhd4"]
+[gd_scene load_steps=12 format=3 uid="uid://b7s8i4yotbhd4"]
 
 [ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battleScene_gameController.gd" id="1_p7nsj"]
 [ext_resource type="Script" uid="uid://d1tg7waqcp1ck" path="res://scenes/battle-scene/scenes_battleScene.gd" id="1_w5c51"]
 [ext_resource type="Script" uid="uid://djxr7o5ldgyi3" path="res://entities/test-character/Character.gd" id="2_5po22"]
+[ext_resource type="Script" uid="uid://gaj7wrf8fx8r" path="res://scenes/battle-scene/sub_viewport_container.gd" id="2_dgigb"]
 [ext_resource type="ArrayMesh" uid="uid://crr2al4gl0ad4" path="res://entities/test-character/figurine.obj" id="2_snvd5"]
 [ext_resource type="Material" uid="uid://bqm2pun4c5ial" path="res://entities/test-character/blue_albedo.tres" id="3_5po22"]
 [ext_resource type="Resource" uid="uid://exqi8ng4ltm2" path="res://entities/common-resources/movement/quick_hop.tres" id="3_mthio"]
 [ext_resource type="Material" uid="uid://c6s1klglreml7" path="res://entities/test-character/red_albedo.tres" id="4_snvd5"]
 [ext_resource type="Texture2D" uid="uid://d3v0aeruwqfx6" path="res://scenes/battle-scene/pause-button.svg" id="7_ftv0g"]
 [ext_resource type="Script" uid="uid://bhngbrs7oyjqy" path="res://entities/test-character/red_character.gd" id="7_rqjoh"]
+[ext_resource type="Script" uid="uid://bbpaafgpbd7o3" path="res://scenes/battle-scene/fire_button.gd" id="11_e5sai"]
 
 [node name="BattleScene" type="Node"]
 process_mode = 3
@@ -22,17 +24,19 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+columns = 2
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 stretch = true
+script = ExtResource("2_dgigb")
 
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/GridContainer/SubViewportContainer"]
 process_mode = 1
 handle_input_locally = false
-size = Vector2i(1920, 1080)
+size = Vector2i(1600, 867)
 render_target_update_mode = 4
 
 [node name="CombatArena" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport"]
@@ -74,9 +78,10 @@ surface_material_override/5 = ExtResource("4_snvd5")
 autostart = true
 
 [node name="Camera3D" type="Camera3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 0.829038, 0.559193, 0, -0.559193, 0.829038, 2.8, 3.4, 4.7)
+transform = Transform3D(1, 0, 0, 0, 0.829038, 0.559193, 0, -0.559193, 0.829038, 2.8, 3.15, 4.7)
+keep_aspect = 0
 projection = 1
-size = 3.72794
+size = 6.75
 
 [node name="GameSpaceRaycast" type="RayCast3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D"]
 unique_name_in_owner = true
@@ -154,10 +159,25 @@ text = "QUIT TO MAIN MENU"
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0)
 
-[node name="Control" type="Control" parent="CanvasLayer/GridContainer/SubViewportContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/GridContainer"]
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+size_flags_vertical = 3
 
+[node name="PanelContainer2" type="PanelContainer" parent="CanvasLayer/GridContainer"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FireButton" type="Button" parent="CanvasLayer/GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "FIRE"
+script = ExtResource("11_e5sai")
+
+[connection signal="item_rect_changed" from="CanvasLayer/GridContainer/SubViewportContainer" to="CanvasLayer/GridContainer/SubViewportContainer" method="_on_sub_viewport_container_item_rect_changed"]
 [connection signal="attempt_move" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" method="_attempt_move"]
 [connection signal="timeout" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter/Timer" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter" method="_on_timer_timeout"]
 [connection signal="pressed" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PanelContainer/TextureButton" to="." method="_handle_pause_button"]
 [connection signal="pressed" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer/VBoxContainer/Button" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/GridContainer/FireButton" to="CanvasLayer/GridContainer/FireButton" method="_on_pressed"]

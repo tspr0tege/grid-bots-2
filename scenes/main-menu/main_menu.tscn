@@ -33,31 +33,32 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 30
 
 [node name="Title" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 50
+theme_override_font_sizes/font_size = 100
 text = "GRID BOTS"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 30
 text = "alpha prototype"
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 
 [node name="Start" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 50
 text = "Start"
 
 [node name="Quit" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 50
 text = "Quit"
 
 [connection signal="pressed" from="VBoxContainer/Start" to="." method="_handle_button_input" binds= ["START"]]
