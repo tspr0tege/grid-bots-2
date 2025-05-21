@@ -13,3 +13,7 @@ func move_to(new_pos) -> void:
 		var new_tween = get_tree().create_tween()
 		new_tween.tween_property(self, "position", new_pos,.1)
 	
+
+func _on_hp_node_hp_changed(new_amt: float) -> void:
+	$HealthDisplay.text = str(floori(new_amt))
+	

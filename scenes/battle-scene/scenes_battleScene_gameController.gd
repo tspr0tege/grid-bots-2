@@ -51,13 +51,22 @@ func _physics_process(_delta: float) -> void:
 			_attempt_move(player_character, result.collider.grid_coordinates)
 		screen_tap_origin = Vector2.ZERO
 
-func _unhandled_input(event):
+func _unhandled_input(event: InputEvent) -> void:
 	# Events are triggered when the screen is touched, and when the touch ends.
 	# Positions are recorded at these two events
 	if event is InputEventScreenTouch and event.pressed: 
 		#print("Touch screen pressed")
 		screen_tap_origin = event.position
-	
+	elif event is InputEventKey and event.pressed:
+		# f=70 g=71
+		match event.keycode:
+			70:
+				print("Hurt player")
+				$BlueCharacter.get_node("HpNode").take_damage(10.5)
+			71:
+				print("Hurt weiner")
+				$RedCharacter.get_node("HpNode").take_damage(20)
+		
 	#if event is InputEventScreenTouch && !event.pressed:
 		#print("Touch screen released")
 		#screen_tap_origin = Vector2.ZERO
@@ -149,10 +158,12 @@ func _attempt_move(character: Node, target_pos: Vector2i):
 
 func _attempt_action(character: Node, action: String) -> void:
 	print("%s attempting to %s" % [character.name, action])
+	if action == "ATTACK":
+		pass
 	
 
 func player_attack() -> void:
-	_attempt_action(player_character, "pew")
+	_attempt_action(player_character, "ATTACK")
 	
 
 func _is_valid_position(pos: Vector2i) -> bool:
