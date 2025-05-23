@@ -50,6 +50,7 @@ func _physics_process(_delta: float) -> void:
 			#print("Attempting to move to " + str(result.collider.grid_coordinates))			
 			_attempt_move(player_character, result.collider.grid_coordinates)
 		screen_tap_origin = Vector2.ZERO
+	
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Events are triggered when the screen is touched, and when the touch ends.
@@ -67,30 +68,28 @@ func _unhandled_input(event: InputEvent) -> void:
 				print("Hurt weiner")
 				$RedCharacter.get_node("HpNode").take_damage(20)
 		
-	#if event is InputEventScreenTouch && !event.pressed:
-		#print("Touch screen released")
-		#screen_tap_origin = Vector2.ZERO
-		#%GameSpaceRaycast
-		#var from = $"../Camera3D".project_ray_origin(event.position)
-		#var to = from + $"../Camera3D".project_ray_normal(event.position) * 1000
-		#var space_state = get_world_3d().direct_space_state #direct_space_state or space?
-		#var viewport = get_viewport()
-		#var camera = get_viewport().get_camera_3d()
-		#var from = camera.project_ray_origin(event.position)
-		#var to = from + camera.project_ray_normal(event.position) * 1000
-#
-		#var space_state = get_world_3d().direct_space_state
-		#var result = space_state.intersect_ray(from, to, [], collision_mask)
-		#var result = false
-#
-		#if result:
-			#var clicked_tile = result.collider
-			#if "GridTile" in clicked_tile.name:  # Or check group or metadata
-				#handle_grid_click(clicked_tile)
-				#pass
+		#if event is InputEventScreenTouch && !event.pressed:
+			#print("Touch screen released")
+			#screen_tap_origin = Vector2.ZERO
+			#%GameSpaceRaycast
+			#var from = $"../Camera3D".project_ray_origin(event.position)
+			#var to = from + $"../Camera3D".project_ray_normal(event.position) * 1000
+			#var space_state = get_world_3d().direct_space_state #direct_space_state or space?
+			#var viewport = get_viewport()
+			#var camera = get_viewport().get_camera_3d()
+			#var from = camera.project_ray_origin(event.position)
+			#var to = from + camera.project_ray_normal(event.position) * 1000
+	#
+			#var space_state = get_world_3d().direct_space_state
+			#var result = space_state.intersect_ray(from, to, [], collision_mask)
+			#var result = false
+	#
+			#if result:
+				#var clicked_tile = result.collider
+				#if "GridTile" in clicked_tile.name:  # Or check group or metadata
+					#handle_grid_click(clicked_tile)
+					#pass
 	
-
-# --- Board State ---
 
 func _init_board_state():
 	board_state = []
@@ -99,14 +98,16 @@ func _init_board_state():
 		for x in range(grid_size.x * 2): # Both sides
 			var board_state_dict = {
 				#grid_coordinates
-				#node
 				#control_group
+				#occupant
+				#node
 				#state
 			}
 			var new_tile = FLOOR_TILE.instantiate()
 			new_tile.position = Vector3((1.1 * x) + .05, 0, (1.1 * y) + .05)
 			new_tile.grid_coordinates = Vector2i(x, y)
 			board_state_dict.node = new_tile
+			board_state_dict.occupant = null
 			var tile_material = new_tile.get_node("MeshInstance3D").get_surface_override_material(0)
 			if (x < grid_size.x):
 				board_state_dict.control_group = "BLUE"
@@ -120,55 +121,87 @@ func _init_board_state():
 		board_state.append(row)
 	_place_character_on_board(player_character, Vector2i(1, 1))
 	_place_character_on_board(enemy_character, Vector2i(4, 1))
+	
 
 func _place_character_on_board(character: Node, pos: Vector2i):
 	character.grid_pos = pos
 	character.position = board_state[pos.y][pos.x].node.position
+	board_state[pos.y][pos.x].occupant = character
 	
 
 func _attempt_move(character: Node, target_pos: Vector2i):	
 	#print(str(character.name) + " attempting to move to " + str(target_pos))
 	
 	#Check valid coordinates
-	if not _is_valid_position(target_pos): return
-	#Check valid tile
-	var target_tile = board_state[target_pos.y][target_pos.x]
-	
-	if target_tile.node == null: return
-	
-	#Check Character controlled tile
-	if target_tile.control_group != character.control_group: return
+	if not _is_valid_tile(target_pos): return
 	
 	var desired_move = target_pos - character.grid_pos
-	# length for above formula is 1.0 for adjacent tiles, and roughly 1.4 for diagonals
-	if desired_move.length() > 1:
-		#print("Invalid move. Time to adjust target position")
-		if abs(desired_move.x) > abs(desired_move.y):
-			desired_move.x /= abs(desired_move.x)
-			desired_move.y = 0
-		else:
-			desired_move.y /= abs(desired_move.y)
-			desired_move.x = 0
-			
-		target_pos = character.grid_pos + desired_move
-	
-	character.grid_pos = target_pos
-	character.move_to(board_state[target_pos.y][target_pos.x].node.position)
+	# desired_move.length is 1.0 for adjacent tiles, and roughly 1.4 for diagonals
+	if character.teleport_enabled or desired_move.length() <= 1:
+		if not _execute_move(character, target_pos):
+			print(str(character.name) + " unable to move")
+	elif character.diagonal_move_enabled and _execute_move(character, character.grid_pos + move_dir(desired_move, 0)):
+		return
+	elif abs(desired_move.x) > abs(desired_move.y) and _execute_move(character, character.grid_pos + move_dir(desired_move, 1)):
+		return
+	elif _execute_move(character, character.grid_pos + move_dir(desired_move, 2)):
+		return
+	else:
+		print("Character %s unable to move!" % character.name)
 	
 
-func _attempt_action(character: Node, action: String) -> void:
+func _execute_move(character: Node, pos: Vector2i) -> bool:
+	#Check Character controlled tile
+	var target_tile = board_state[pos.y][pos.x]
+	if target_tile.control_group != character.control_group: return false
+	#if target_tile.occupant: return false
+	board_state[character.grid_pos.y][character.grid_pos.x].occupant = null
+	character.grid_pos = pos
+	board_state[pos.y][pos.x].occupant = character
+	character.move_to(board_state[pos.y][pos.x].node.position)
+	return true
+	
+
+func move_dir(target_pos: Vector2i, rule: int) -> Vector2i:
+	#rule: 0 = diagonal, 1 = favor x, 2 = favor y
+	var direction := Vector2i.ZERO
+	if target_pos.x != 0 and rule != 2:
+		direction.x = target_pos.x / abs(target_pos.x)
+	if target_pos.y != 0 and rule != 1:
+		direction.y = target_pos.y / abs(target_pos.y)
+	return direction
+	
+
+func _attempt_action(character: Character, action: String) -> void:
 	print("%s attempting to %s" % [character.name, action])
 	if action == "ATTACK":
-		pass
+		var target_row = character.grid_pos.y
+		for x in range(character.grid_pos.x + 1, grid_size.x * 2):
+			var target_tile = board_state[target_row][x]
+			if is_instance_valid(target_tile.occupant):
+				#print("Found a target at %s. Target name: %s" % [Vector2i(x, target_row), target_tile.occupant.name])
+				target_tile.occupant.get_node("HpNode").take_damage(10)
+				break
 	
 
 func player_attack() -> void:
 	_attempt_action(player_character, "ATTACK")
 	
 
-func _is_valid_position(pos: Vector2i) -> bool:
-	return (
-		pos.x >= 0 and pos.x < grid_size.x * 2 and
-		pos.y >= 0 and pos.y < grid_size.y
-	)
+func _is_valid_tile(pos: Vector2i) -> bool:
+	if pos.x < 0 or pos.x > grid_size.x * 2:
+		push_warning("Attempted move outside of valid grid constraints on the X axis. X value = " + str(pos.x))
+		return false
+	
+	if pos.y < 0 or pos.y > grid_size.y:
+		push_warning("Attempted move outside of valid grid constraints on the Y axis. Y value = " + str(pos.y))
+		return false
+	
+	var target_tile = board_state[pos.y][pos.x]
+	
+	if target_tile.node == null: 
+		push_error("Attempted move targets a grid tile that is null. Grid position: " + str(pos))
+		return false
+		
+	return true
 	

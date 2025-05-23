@@ -5,6 +5,9 @@ class_name Character
 var grid_pos : Vector2i
 @export var control_group := "NONE"
 @export var move_handler: MovementStyle
+@export var teleport_enabled := false
+@export var diagonal_move_enabled := false
+@export_range(-1, 1, 2) var attack_direction = 1
 
 func move_to(new_pos) -> void:
 	if move_handler:
