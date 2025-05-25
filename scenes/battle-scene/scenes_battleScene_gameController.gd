@@ -118,7 +118,7 @@ func _execute_move(character: Character, pos: Vector2i) -> bool:
 	#Check Character controlled tile
 	var target_tile = board_state[pos.y][pos.x]
 	if target_tile.control_group != character.control_group: return false
-	#if target_tile.occupant: return false
+	if target_tile.occupant: return false
 	board_state[character.grid_pos.y][character.grid_pos.x].occupant = null
 	character.grid_pos = pos
 	board_state[pos.y][pos.x].occupant = character
