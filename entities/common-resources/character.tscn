@@ -8,9 +8,3 @@ transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 
 script = ExtResource("1_8nokr")
 control_group = "BLUE"
 move_handler = ExtResource("2_a370o")
-
-[node name="HealthDisplay" type="Label3D" parent="."]
-offset = Vector2(0, -50)
-billboard = 1
-no_depth_test = true
-text = "1000"

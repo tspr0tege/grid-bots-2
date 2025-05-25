@@ -5,6 +5,7 @@ extends Node3D
 #const RED_CHARACTER = preload("res://scenes/battle-scene/red_character.tres")
 #const RED_FLOOR_MAT = preload("res://scenes/battle-scene/red_floor.tres")
 const FLOOR_TILE = preload("res://scenes/battle-scene/floor_tile.tscn")
+const ROCK_CUBE = preload("res://entities/cards/summons/rock-cube/rock_cube.tscn")
 
 var player_character: Node = null
 var enemy_character: Node = null
@@ -126,13 +127,24 @@ func _execute_move(character: Character, pos: Vector2i) -> bool:
 
 
 func _attempt_attack(character: Character) -> void:
-	print("%s attempting to attack" % character.name)
 	#execute attack animation
 	character.shoot()
 	#print("Found a target at %s. Target name: %s" % [Vector2i(x, target_row), target_tile.occupant.name])
 	var target = linear_search(character)
 	if target != null:
 		target.get_node("HpNode").take_damage(10)
+
+
+func _attempt_ability(character: Character, card) -> void:
+	match card:
+		"ROCK_CUBE":
+			print("Casting Rock Cube")
+			var rock_cube_pos = character.grid_pos + Vector2i(character.attack_direction, 0)
+			var new_rock_cube = ROCK_CUBE.instantiate()
+			%CombatArena.add_child(new_rock_cube)
+			place_character_on_board(new_rock_cube, rock_cube_pos)
+		_:
+			print("Unknown ability: " + str(card))
 
 
 func init_board_state():

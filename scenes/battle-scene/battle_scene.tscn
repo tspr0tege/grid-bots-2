@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://b7s8i4yotbhd4"]
+[gd_scene load_steps=30 format=3 uid="uid://b7s8i4yotbhd4"]
 
 [ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battleScene_gameController.gd" id="1_p7nsj"]
 [ext_resource type="Script" uid="uid://d1tg7waqcp1ck" path="res://scenes/battle-scene/scenes_battleScene.gd" id="1_w5c51"]
@@ -15,6 +15,7 @@
 [ext_resource type="Material" uid="uid://b24jr8mu18ac3" path="res://entities/test-character/white_mat.tres" id="11_dllb0"]
 [ext_resource type="AudioStream" uid="uid://cst8b3jc7augb" path="res://entities/common-resources/sfx/hit.wav" id="12_pp0o7"]
 [ext_resource type="AudioStream" uid="uid://ceguwale66mm5" path="res://entities/common-resources/sfx/pew.wav" id="13_daxnq"]
+[ext_resource type="Texture2D" uid="uid://deb1yrrnjhye5" path="res://entities/cards/summons/rock-cube/rock_cube_icon.png" id="16_daxnq"]
 
 [sub_resource type="Resource" id="Resource_daxnq"]
 resource_local_to_scene = true
@@ -179,7 +180,7 @@ script = ExtResource("2_dgigb")
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/GridContainer/SubViewportContainer"]
 process_mode = 1
 handle_input_locally = false
-size = Vector2i(1600, 867)
+size = Vector2i(1700, 867)
 render_target_update_mode = 4
 
 [node name="CombatArena" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport"]
@@ -191,6 +192,7 @@ script = ExtResource("1_p7nsj")
 [node name="PlayerCharacter" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" node_paths=PackedStringArray("animation_player") instance=ExtResource("4_dllb0")]
 move_handler = SubResource("Resource_daxnq")
 animation_player = NodePath("ActionPlayer")
+display_health = true
 
 [node name="HpNode" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter" node_paths=PackedStringArray("animation_player", "hit_sfx") instance=ExtResource("6_pp0o7")]
 animation_player = NodePath("../WhiteFlash")
@@ -226,8 +228,10 @@ max_polyphony = 3
 [node name="RedCharacter" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" node_paths=PackedStringArray("animation_player")]
 transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0, 0)
 script = ExtResource("7_rqjoh")
+attacking = false
 control_group = "RED"
 animation_player = NodePath("ActionPlayer")
+display_health = true
 attack_direction = -1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter"]
@@ -247,12 +251,6 @@ hit_sfx = NodePath("../Hit")
 
 [node name="Timer" type="Timer" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter"]
 autostart = true
-
-[node name="HealthDisplay" type="Label3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter"]
-offset = Vector2(0, -50)
-billboard = 1
-no_depth_test = true
-text = "1000"
 
 [node name="WhiteFlash" type="AnimationPlayer" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter"]
 libraries = {
@@ -276,6 +274,7 @@ max_polyphony = 3
 transform = Transform3D(1, 0, 0, 0, 0.829038, 0.559193, 0, -0.559193, 0.829038, 2.8, 3.15, 4.7)
 keep_aspect = 0
 projection = 1
+fov = 7.0
 size = 6.75
 
 [node name="GameSpaceRaycast" type="RayCast3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D"]
@@ -352,14 +351,65 @@ theme_override_font_sizes/font_size = 20
 text = "QUIT TO MAIN MENU"
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, 0, 0, 0)
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/GridContainer"]
-custom_minimum_size = Vector2(300, 0)
+[node name="AbilityPanel" type="PanelContainer" parent="CanvasLayer/GridContainer"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="PanelContainer2" type="PanelContainer" parent="CanvasLayer/GridContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GridContainer/AbilityPanel"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("16_daxnq")
+
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer2"]
+layout_mode = 2
+
+[node name="MarginContainer3" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer3"]
+layout_mode = 2
+
+[node name="MarginContainer4" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer4"]
+layout_mode = 2
+
+[node name="MarginContainer5" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer5"]
+layout_mode = 2
+
+[node name="MarginContainer6" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer6"]
+layout_mode = 2
+
+[node name="BottomPanel" type="PanelContainer" parent="CanvasLayer/GridContainer"]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -371,10 +421,18 @@ text = "FIRE"
 
 [connection signal="item_rect_changed" from="CanvasLayer/GridContainer/SubViewportContainer" to="CanvasLayer/GridContainer/SubViewportContainer" method="_on_sub_viewport_container_item_rect_changed"]
 [connection signal="HP_changed" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter/HpNode" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter" method="_on_hp_node_hp_changed"]
+[connection signal="character_died" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter/HpNode" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter" method="_handle_character_death"]
 [connection signal="attempt_attack" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" method="_attempt_attack"]
 [connection signal="attempt_move" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" method="_attempt_move"]
 [connection signal="HP_changed" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter/HpNode" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter" method="_on_hp_node_hp_changed"]
+[connection signal="character_died" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter/HpNode" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter" method="_handle_character_death"]
 [connection signal="timeout" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter/Timer" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter" method="_on_timer_timeout"]
 [connection signal="pressed" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PanelContainer/TextureButton" to="." method="_handle_pause_button"]
 [connection signal="pressed" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer/VBoxContainer/Button" to="." method="_on_quit_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/GridContainer/FireButton" to="." method="_on_fire_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer/Button" to="." method="_UI_input_use_ability" binds= [0]]
+[connection signal="pressed" from="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer2/Button" to="." method="_UI_input_use_ability" binds= [1]]
+[connection signal="pressed" from="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer3/Button" to="." method="_UI_input_use_ability" binds= [2]]
+[connection signal="pressed" from="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer4/Button" to="." method="_UI_input_use_ability" binds= [3]]
+[connection signal="pressed" from="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer5/Button" to="." method="_UI_input_use_ability" binds= [4]]
+[connection signal="pressed" from="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer6/Button" to="." method="_UI_input_use_ability" binds= [5]]
+[connection signal="pressed" from="CanvasLayer/GridContainer/FireButton" to="." method="_UI_input_fire_button_pressed"]
