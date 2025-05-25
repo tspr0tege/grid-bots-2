@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://c08lgbln8qfyn"]
+
+[ext_resource type="Script" uid="uid://djxr7o5ldgyi3" path="res://entities/common-resources/Character.gd" id="1_8nokr"]
+[ext_resource type="Resource" uid="uid://exqi8ng4ltm2" path="res://entities/common-resources/movement/quick_hop.tres" id="2_a370o"]
+
+[node name="Character" type="Node3D"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)
+script = ExtResource("1_8nokr")
+control_group = "BLUE"
+move_handler = ExtResource("2_a370o")
+
+[node name="HealthDisplay" type="Label3D" parent="."]
+offset = Vector2(0, -50)
+billboard = 1
+no_depth_test = true
+text = "1000"

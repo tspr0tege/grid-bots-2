@@ -9,9 +9,12 @@ func _handle_pause_button() -> void:
 		#print("Paused")
 		get_tree().paused = true
 		%PauseMenu.visible = true
-	
+
 
 func _on_quit_button_pressed() -> void:
 	get_tree().paused = false
 	SceneManager.load_menu()
-	
+
+
+func _on_fire_button_pressed() -> void:
+	%CombatArena._attempt_attack(%CombatArena.player_character)

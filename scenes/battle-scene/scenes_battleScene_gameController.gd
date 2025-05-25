@@ -8,7 +8,7 @@ const FLOOR_TILE = preload("res://scenes/battle-scene/floor_tile.tscn")
 
 var player_character: Node = null
 var enemy_character: Node = null
-var grid_size = Vector2i(3, 3) # 3x3 tiles per side
+var grid_size = Vector2i(6, 3) # 3x3 tiles per side
 
 const RAY_LENGTH = 100
 var screen_tap_origin: Vector2 = Vector2.ZERO
@@ -16,12 +16,13 @@ var screen_tap_origin: Vector2 = Vector2.ZERO
 var board_state : Array = []
 
 func _ready():
-	player_character = $BlueCharacter
+	player_character = $PlayerCharacter
 	enemy_character = $RedCharacter
-	_init_board_state()
+	init_board_state()
 
 	#player_character.input_signal.connect(_on_input_signal_received)
 	#enemy_character.input_signal.connect(_on_input_signal_received)
+
 
 func _process(_delta):
 	if Input.is_action_just_pressed("ui_left"):
@@ -32,7 +33,7 @@ func _process(_delta):
 		_attempt_move(player_character, player_character.grid_pos + Vector2i(0, -1))
 	elif Input.is_action_just_pressed("ui_down"):
 		_attempt_move(player_character, player_character.grid_pos + Vector2i(0, 1))
-	
+
 
 func _physics_process(_delta: float) -> void:
 	if screen_tap_origin.length() > 0:
@@ -50,7 +51,7 @@ func _physics_process(_delta: float) -> void:
 			#print("Attempting to move to " + str(result.collider.grid_coordinates))			
 			_attempt_move(player_character, result.collider.grid_coordinates)
 		screen_tap_origin = Vector2.ZERO
-	
+
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Events are triggered when the screen is touched, and when the touch ends.
@@ -89,51 +90,13 @@ func _unhandled_input(event: InputEvent) -> void:
 				#if "GridTile" in clicked_tile.name:  # Or check group or metadata
 					#handle_grid_click(clicked_tile)
 					#pass
-	
 
-func _init_board_state():
-	board_state = []
-	for y in range(grid_size.y):
-		var row = []
-		for x in range(grid_size.x * 2): # Both sides
-			var board_state_dict = {
-				#grid_coordinates
-				#control_group
-				#occupant
-				#node
-				#state
-			}
-			var new_tile = FLOOR_TILE.instantiate()
-			new_tile.position = Vector3((1.1 * x) + .05, 0, (1.1 * y) + .05)
-			new_tile.grid_coordinates = Vector2i(x, y)
-			board_state_dict.node = new_tile
-			board_state_dict.occupant = null
-			var tile_material = new_tile.get_node("MeshInstance3D").get_surface_override_material(0)
-			if (x < grid_size.x):
-				board_state_dict.control_group = "BLUE"
-				tile_material.albedo_color = Color(0, 0, .9)
-			else:
-				board_state_dict.control_group = "RED"
-				tile_material.albedo_color = Color(.9, .2, .2)
-			$Floor.add_child(new_tile)
-			row.append(board_state_dict)
-			
-		board_state.append(row)
-	_place_character_on_board(player_character, Vector2i(1, 1))
-	_place_character_on_board(enemy_character, Vector2i(4, 1))
-	
 
-func _place_character_on_board(character: Node, pos: Vector2i):
-	character.grid_pos = pos
-	character.position = board_state[pos.y][pos.x].node.position
-	board_state[pos.y][pos.x].occupant = character
-	
-
-func _attempt_move(character: Node, target_pos: Vector2i):	
+func _attempt_move(character: Character, target_pos: Vector2i):
 	#print(str(character.name) + " attempting to move to " + str(target_pos))
 	
 	#Check valid coordinates
-	if not _is_valid_tile(target_pos): return
+	if not is_valid_tile(target_pos): return
 	
 	var desired_move = target_pos - character.grid_pos
 	# desired_move.length is 1.0 for adjacent tiles, and roughly 1.4 for diagonals
@@ -148,9 +111,9 @@ func _attempt_move(character: Node, target_pos: Vector2i):
 		return
 	else:
 		print("Character %s unable to move!" % character.name)
-	
 
-func _execute_move(character: Node, pos: Vector2i) -> bool:
+
+func _execute_move(character: Character, pos: Vector2i) -> bool:
 	#Check Character controlled tile
 	var target_tile = board_state[pos.y][pos.x]
 	if target_tile.control_group != character.control_group: return false
@@ -160,7 +123,54 @@ func _execute_move(character: Node, pos: Vector2i) -> bool:
 	board_state[pos.y][pos.x].occupant = character
 	character.move_to(board_state[pos.y][pos.x].node.position)
 	return true
-	
+
+
+func _attempt_attack(character: Character) -> void:
+	print("%s attempting to attack" % character.name)
+	#execute attack animation
+	character.shoot()
+	#print("Found a target at %s. Target name: %s" % [Vector2i(x, target_row), target_tile.occupant.name])
+	var target = linear_search(character)
+	if target != null:
+		target.get_node("HpNode").take_damage(10)
+
+
+func init_board_state():
+	board_state = []
+	for y in range(grid_size.y):
+		var row = []
+		for x in range(grid_size.x):
+			var board_state_dict = {
+				#control_group
+				#occupant
+				#node
+				#state
+			}
+			var new_tile = FLOOR_TILE.instantiate()
+			new_tile.position = Vector3((1.1 * x) + .05, 0, (1.1 * y) + .05)
+			new_tile.grid_coordinates = Vector2i(x, y)
+			board_state_dict.node = new_tile
+			board_state_dict.occupant = null
+			var tile_material = new_tile.get_node("MeshInstance3D").get_surface_override_material(0)
+			if (x < grid_size.x / 2):
+				board_state_dict.control_group = "BLUE"
+				tile_material.albedo_color = Color(0, 0, .9)
+			else:
+				board_state_dict.control_group = "RED"
+				tile_material.albedo_color = Color(.9, .2, .2)
+			$Floor.add_child(new_tile)
+			row.append(board_state_dict)
+			
+		board_state.append(row)
+	place_character_on_board(player_character, Vector2i(1, 1))
+	place_character_on_board(enemy_character, Vector2i(4, 1))
+
+
+func place_character_on_board(character: Character, pos: Vector2i):
+	character.grid_pos = pos
+	character.position = board_state[pos.y][pos.x].node.position
+	board_state[pos.y][pos.x].occupant = character
+
 
 func move_dir(target_pos: Vector2i, rule: int) -> Vector2i:
 	#rule: 0 = diagonal, 1 = favor x, 2 = favor y
@@ -170,26 +180,24 @@ func move_dir(target_pos: Vector2i, rule: int) -> Vector2i:
 	if target_pos.y != 0 and rule != 1:
 		direction.y = target_pos.y / abs(target_pos.y)
 	return direction
-	
 
-func _attempt_action(character: Character, action: String) -> void:
-	print("%s attempting to %s" % [character.name, action])
-	if action == "ATTACK":
-		var target_row = character.grid_pos.y
-		for x in range(character.grid_pos.x + 1, grid_size.x * 2):
+
+func linear_search(from_character: Character):
+	var target_row = from_character.grid_pos.y
+	var direction = from_character.attack_direction
+	var start_point = from_character.grid_pos.x + direction
+	var end_point = grid_size.x if direction > 0 else -1
+	
+	for x in range(start_point, end_point, direction):
 			var target_tile = board_state[target_row][x]
 			if is_instance_valid(target_tile.occupant):
-				#print("Found a target at %s. Target name: %s" % [Vector2i(x, target_row), target_tile.occupant.name])
-				target_tile.occupant.get_node("HpNode").take_damage(10)
-				break
+				return target_tile.occupant
 	
+	return null
 
-func player_attack() -> void:
-	_attempt_action(player_character, "ATTACK")
-	
 
-func _is_valid_tile(pos: Vector2i) -> bool:
-	if pos.x < 0 or pos.x > grid_size.x * 2:
+func is_valid_tile(pos: Vector2i) -> bool:
+	if pos.x < 0 or pos.x > grid_size.x:
 		push_warning("Attempted move outside of valid grid constraints on the X axis. X value = " + str(pos.x))
 		return false
 	
@@ -204,4 +212,3 @@ func _is_valid_tile(pos: Vector2i) -> bool:
 		return false
 		
 	return true
-	
