@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cvcsf4nvwlj6k"
-path="res://.godot/imported/punch_icon.png-92aec69a1290e7dc1d9910dc3972437c.ctex"
+uid="uid://bajy3tu0iw8gf"
+path="res://.godot/imported/heal_10.png-aa66177b39f9e86480b1731a14ba0fca.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://entities/cards/melee/punch/punch_icon.png"
-dest_files=["res://.godot/imported/punch_icon.png-92aec69a1290e7dc1d9910dc3972437c.ctex"]
+source_file="res://cards/buffs/heal-10/heal_10.png"
+dest_files=["res://.godot/imported/heal_10.png-aa66177b39f9e86480b1731a14ba0fca.ctex"]
 
 [params]
 

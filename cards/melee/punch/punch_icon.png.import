@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://deb1yrrnjhye5"
-path="res://.godot/imported/rock_cube_icon.png-be3395acba5e1f145902f7f7ca36d77c.ctex"
+uid="uid://cvcsf4nvwlj6k"
+path="res://.godot/imported/punch_icon.png-f0f41aefd1c70cf094d5735e8d089648.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://entities/cards/summons/rock-cube/rock_cube_icon.png"
-dest_files=["res://.godot/imported/rock_cube_icon.png-be3395acba5e1f145902f7f7ca36d77c.ctex"]
+source_file="res://cards/melee/punch/punch_icon.png"
+dest_files=["res://.godot/imported/punch_icon.png-f0f41aefd1c70cf094d5735e8d089648.ctex"]
 
 [params]
 

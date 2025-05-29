@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://valpt2bifm6t"]
 
-[ext_resource type="Script" uid="uid://dknwrg5frlj37" path="res://entities/cards/summons/rock-cube/cards_summons_rockCube.gd" id="1_rpht0"]
+[ext_resource type="Script" uid="uid://dknwrg5frlj37" path="res://cards/summons/rock-cube/cards_summons_rockCube.gd" id="1_rpht0"]
 [ext_resource type="PackedScene" uid="uid://ck7yv7nnq5hna" path="res://entities/common-resources/hp_node.tscn" id="2_rpht0"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_sktmq"]

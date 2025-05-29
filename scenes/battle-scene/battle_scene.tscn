@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://b7s8i4yotbhd4"]
+[gd_scene load_steps=32 format=3 uid="uid://b7s8i4yotbhd4"]
 
 [ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battleScene_gameController.gd" id="1_p7nsj"]
 [ext_resource type="Script" uid="uid://d1tg7waqcp1ck" path="res://scenes/battle-scene/scenes_battleScene.gd" id="1_w5c51"]
@@ -15,7 +15,9 @@
 [ext_resource type="Material" uid="uid://b24jr8mu18ac3" path="res://entities/test-character/white_mat.tres" id="11_dllb0"]
 [ext_resource type="AudioStream" uid="uid://cst8b3jc7augb" path="res://entities/common-resources/sfx/hit.wav" id="12_pp0o7"]
 [ext_resource type="AudioStream" uid="uid://ceguwale66mm5" path="res://entities/common-resources/sfx/pew.wav" id="13_daxnq"]
-[ext_resource type="Texture2D" uid="uid://deb1yrrnjhye5" path="res://entities/cards/summons/rock-cube/rock_cube_icon.png" id="16_daxnq"]
+[ext_resource type="Texture2D" uid="uid://deb1yrrnjhye5" path="res://cards/summons/rock-cube/rock_cube_icon.png" id="16_daxnq"]
+[ext_resource type="Texture2D" uid="uid://cvcsf4nvwlj6k" path="res://cards/melee/punch/punch_icon.png" id="17_6tpmo"]
+[ext_resource type="Texture2D" uid="uid://befwppd8jt0wm" path="res://cards/stage-effects/capture-tile/capture_tile_icon.png" id="18_n0yl0"]
 
 [sub_resource type="Resource" id="Resource_daxnq"]
 resource_local_to_scene = true
@@ -228,6 +230,7 @@ max_polyphony = 3
 [node name="RedCharacter" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" node_paths=PackedStringArray("animation_player")]
 transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0, 0)
 script = ExtResource("7_rqjoh")
+attacking = false
 control_group = "RED"
 animation_player = NodePath("ActionPlayer")
 display_health = true
@@ -370,8 +373,11 @@ layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
 mouse_filter = 2
 texture = ExtResource("16_daxnq")
+expand_mode = 2
+stretch_mode = 4
 
 [node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
 layout_mode = 2
@@ -380,12 +386,28 @@ size_flags_vertical = 3
 [node name="Button" type="Button" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer2"]
 layout_mode = 2
 
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("17_6tpmo")
+expand_mode = 2
+stretch_mode = 4
+
 [node name="MarginContainer3" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
 [node name="Button" type="Button" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer3"]
 layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer3"]
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("18_n0yl0")
+expand_mode = 2
+stretch_mode = 4
 
 [node name="MarginContainer4" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
 layout_mode = 2
@@ -394,6 +416,10 @@ size_flags_vertical = 3
 [node name="Button" type="Button" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer4"]
 layout_mode = 2
 
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer4"]
+layout_mode = 2
+mouse_filter = 2
+
 [node name="MarginContainer5" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -401,12 +427,20 @@ size_flags_vertical = 3
 [node name="Button" type="Button" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer5"]
 layout_mode = 2
 
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer5"]
+layout_mode = 2
+mouse_filter = 2
+
 [node name="MarginContainer6" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
 [node name="Button" type="Button" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer6"]
 layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer6"]
+layout_mode = 2
+mouse_filter = 2
 
 [node name="BottomPanel" type="PanelContainer" parent="CanvasLayer/GridContainer"]
 custom_minimum_size = Vector2(0, 200)

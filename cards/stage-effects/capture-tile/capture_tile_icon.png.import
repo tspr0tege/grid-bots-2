@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bajy3tu0iw8gf"
-path="res://.godot/imported/heal_10.png-a76f0dbfa84169111d3fd36e462191f3.ctex"
+uid="uid://befwppd8jt0wm"
+path="res://.godot/imported/capture_tile_icon.png-41af8718b8562d07f5cfa31080158d2a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://entities/cards/buffs/heal-10/heal_10.png"
-dest_files=["res://.godot/imported/heal_10.png-a76f0dbfa84169111d3fd36e462191f3.ctex"]
+source_file="res://cards/stage-effects/capture-tile/capture_tile_icon.png"
+dest_files=["res://.godot/imported/capture_tile_icon.png-41af8718b8562d07f5cfa31080158d2a.ctex"]
 
 [params]
 

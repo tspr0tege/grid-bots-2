@@ -5,7 +5,8 @@ extends Node3D
 #const RED_CHARACTER = preload("res://scenes/battle-scene/red_character.tres")
 #const RED_FLOOR_MAT = preload("res://scenes/battle-scene/red_floor.tres")
 const FLOOR_TILE = preload("res://scenes/battle-scene/floor_tile.tscn")
-const ROCK_CUBE = preload("res://entities/cards/summons/rock-cube/rock_cube.tscn")
+const ROCK_CUBE = preload("res://cards/summons/rock-cube/rock_cube.tscn")
+const PUNCH = preload("res://cards/melee/punch/punch.tscn")
 
 var player_character: Node = null
 var enemy_character: Node = null
@@ -143,6 +144,13 @@ func _attempt_ability(character: Character, card) -> void:
 			var new_rock_cube = ROCK_CUBE.instantiate()
 			%CombatArena.add_child(new_rock_cube)
 			place_character_on_board(new_rock_cube, rock_cube_pos)
+		"PUNCH":
+			print("Attempting punch")
+			var new_punch = PUNCH.instantiate()
+			player_character.add_child(new_punch)
+			new_punch.global_rotation = Vector3.ZERO
+		"CAPTURE_TILE":
+			print("Attempting to capture tile")
 		_:
 			print("Unknown ability: " + str(card))
 

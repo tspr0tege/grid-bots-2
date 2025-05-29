@@ -2,6 +2,8 @@ extends Node
 
 var card_hand := [
 	"ROCK_CUBE",
+	"PUNCH",
+	"CAPTURE_TILE"
 ]
 
 func _handle_pause_button() -> void:
