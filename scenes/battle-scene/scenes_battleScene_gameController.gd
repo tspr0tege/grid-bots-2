@@ -127,7 +127,7 @@ func _attempt_attack(character: Character) -> void:
 	#execute attack animation
 	character.shoot()
 	#print("Found a target at %s. Target name: %s" % [Vector2i(x, target_row), target_tile.occupant.name])
-	var target = linear_search(character)
+	var target = linear_search(character, "CHARACTER")
 	if target != null:
 		target.get_node("HpNode").take_damage(10)
 
@@ -137,6 +137,9 @@ func _attempt_ability(character: Character, card) -> void:
 		"ROCK_CUBE":
 			print("Casting Rock Cube")
 			var rock_cube_pos = character.grid_pos + Vector2i(character.attack_direction, 0)
+			if !is_valid_tile(rock_cube_pos):
+				print("Attempting to place Rock Cube outside of arena limits")
+				return
 			var new_rock_cube = ROCK_CUBE.instantiate()
 			%CombatArena.add_child(new_rock_cube)
 			place_character_on_board(new_rock_cube, rock_cube_pos)
@@ -148,19 +151,29 @@ func _attempt_ability(character: Character, card) -> void:
 			new_punch.global_rotation = Vector3.ZERO
 		"CAPTURE_TILE":
 			print("Attempting to capture tile")
+			#search in row for a tile that is NOT matching the character and switch it
+			var target = linear_search(character, "TILE")
+			if target != null:
+				target.control_group = "BLUE"
+				var tile_material = target.node.get_node("MeshInstance3D").get_surface_override_material(0)
+				tile_material.albedo_color = Color(0, 0, .9)
+				
 		_:
 			print("Unknown ability: " + str(card))
 
 
 func _attempt_push(pos: Vector2i, dir: Vector2i, push_dmg: float = 0.0) -> bool:
-	var push_to = pos + dir
-	if !is_valid_tile(pos) or !is_valid_tile(push_to): return false
-	
+	if !is_valid_tile(pos): return false
 	var target : Character = board_state[pos.y][pos.x].occupant
-	var target_tile = board_state[push_to.y][push_to.x]
-	
 	if target == null: return false
+	
 	if !is_instance_of(target, Character): return false
+	var target_hp_node = target.get_node("HpNode")
+	target_hp_node.take_damage(push_dmg)
+	
+	var push_to = pos + dir
+	if !is_valid_tile(push_to): return false
+	var target_tile = board_state[push_to.y][push_to.x]
 	
 	if target.is_in_group("Obstacles"): #always moves
 		
@@ -173,7 +186,6 @@ func _attempt_push(pos: Vector2i, dir: Vector2i, push_dmg: float = 0.0) -> bool:
 		board_state[pos.y][pos.x].occupant = null
 		await get_tree().create_timer(target.tile_move_speed).timeout
 		if obstruction.is_in_group("Obstacles"):
-			var target_hp_node = target.get_node("HpNode")
 			obstruction.get_node("HpNode").take_damage(target_hp_node.HP / 2)
 			target_hp_node.take_damage(target_hp_node.HP)
 			return true
@@ -184,12 +196,10 @@ func _attempt_push(pos: Vector2i, dir: Vector2i, push_dmg: float = 0.0) -> bool:
 				target_tile.occupant = target
 				return true
 			else:
-				var target_hp_node = target.get_node("HpNode")
 				obstruction.get_node("HpNode").take_damage(target_hp_node.HP / 2)
 				target_hp_node.take_damage(target_hp_node.HP)
 				return true
 	else: #all other characters
-		target.get_node("HpNode").take_damage(push_dmg)
 		return _attempt_move(target, push_to)
 	#if  is_instance_valid(target) and target.is_in_group("Character"):
 		#_attempt_move(target, move_to)
@@ -247,26 +257,35 @@ func move_dir(target_pos: Vector2i, rule: int) -> Vector2i:
 	return direction
 
 
-func linear_search(from_character: Character):
+func linear_search(from_character: Character, search_for: String):
 	var target_row = from_character.grid_pos.y
 	var direction = from_character.attack_direction
 	var start_point = from_character.grid_pos.x + direction
 	var end_point = grid_size.x if direction > 0 else -1
 	
-	for x in range(start_point, end_point, direction):
-			var target_tile = board_state[target_row][x]
-			if is_instance_valid(target_tile.occupant):
-				return target_tile.occupant
+	match search_for:
+		"TILE":
+			for x in range(start_point, end_point, direction):
+				var target_tile = board_state[target_row][x]
+						
+				if from_character.control_group != target_tile.control_group:
+					return target_tile
+		"CHARACTER":
+			for x in range(start_point, end_point, direction):
+				var target_tile = board_state[target_row][x]
+						
+				if is_instance_valid(target_tile.occupant):
+					return target_tile.occupant
 	
 	return null
 
 
 func is_valid_tile(pos: Vector2i) -> bool:
-	if pos.x < 0 or pos.x > grid_size.x:
+	if pos.x < 0 or pos.x >= grid_size.x:
 		push_warning("Attempted move outside of valid grid constraints on the X axis. X value = " + str(pos.x))
 		return false
 	
-	if pos.y < 0 or pos.y > grid_size.y:
+	if pos.y < 0 or pos.y >= grid_size.y:
 		push_warning("Attempted move outside of valid grid constraints on the Y axis. Y value = " + str(pos.y))
 		return false
 	
