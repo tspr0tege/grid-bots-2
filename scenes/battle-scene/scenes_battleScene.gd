@@ -1,10 +1,15 @@
 extends Node
 
 var card_hand := [
-	"ROCK_CUBE",
-	"PUNCH",
-	"CAPTURE_TILE"
+	load("res://cards/summons/rock-cube/card-rock_cube.tscn").instantiate(),
+	load("res://cards/melee/punch/card-punch.tscn").instantiate(),
+	load("res://cards/stage-effects/capture-tile/card-capture_tile.tscn").instantiate(),
 ]
+#[
+	#"ROCK_CUBE",
+	#"PUNCH",
+	#"CAPTURE_TILE"
+#]
 
 func _handle_pause_button() -> void:
 	if get_tree().paused:

@@ -6,5 +6,4 @@
 [node name="Character" type="Node3D"]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)
 script = ExtResource("1_8nokr")
-control_group = "BLUE"
 move_handler = ExtResource("2_a370o")

@@ -11,7 +11,7 @@ size = Vector3(0.3, 0.3, 0.3)
 
 [node name="RockCube" type="Node3D" groups=["Obstacles"]]
 script = ExtResource("1_rpht0")
-control_group = "UNIVERSAL"
+control_group = 3
 display_health = true
 metadata/_custom_type_script = "uid://djxr7o5ldgyi3"
 

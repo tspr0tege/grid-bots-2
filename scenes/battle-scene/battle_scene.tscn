@@ -192,6 +192,7 @@ script = ExtResource("1_p7nsj")
 [node name="Floor" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena"]
 
 [node name="PlayerCharacter" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" node_paths=PackedStringArray("animation_player") instance=ExtResource("4_dllb0")]
+control_group = 2
 move_handler = SubResource("Resource_daxnq")
 animation_player = NodePath("ActionPlayer")
 display_health = true
@@ -231,7 +232,7 @@ max_polyphony = 3
 transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0, 0)
 script = ExtResource("7_rqjoh")
 attacking = false
-control_group = "RED"
+control_group = 1
 animation_player = NodePath("ActionPlayer")
 display_health = true
 attack_direction = -1

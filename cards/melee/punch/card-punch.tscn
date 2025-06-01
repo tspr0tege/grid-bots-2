@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://3eds7rev5aux"]
+
+[ext_resource type="Script" uid="uid://36o1uq7kfo46" path="res://cards/melee/punch/card-punch.gd" id="1_52ffp"]
+
+[node name="Card-punch" type="Node"]
+script = ExtResource("1_52ffp")
+metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

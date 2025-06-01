@@ -1,8 +1,6 @@
 extends Node3D
 
 const FLOOR_TILE = preload("res://scenes/battle-scene/floor_tile.tscn")
-const ROCK_CUBE = preload("res://cards/summons/rock-cube/rock_cube.tscn")
-const PUNCH = preload("res://cards/melee/punch/punch.tscn")
 
 var player_character: Node = null
 var enemy_character: Node = null
@@ -114,12 +112,12 @@ func _attempt_move(character: Character, target_pos: Vector2i) -> bool:
 func _execute_move(character: Character, pos: Vector2i) -> bool:
 	#Check Character controlled tile
 	var target_tile = board_state[pos.y][pos.x]
-	if character.control_group != "UNIVERSAL" and target_tile.control_group != character.control_group: return false
+	if character.control_group != DataTypes.ControlGroups.UNIVERSAL and target_tile.control_group != character.control_group: return false
 	if target_tile.occupant: return false
 	board_state[character.grid_pos.y][character.grid_pos.x].occupant = null
 	character.grid_pos = pos
 	board_state[pos.y][pos.x].occupant = character
-	character.move_to(board_state[pos.y][pos.x].node.position)
+	character.move_to(board_state[pos.y][pos.x].position)
 	return true
 
 
@@ -132,34 +130,8 @@ func _attempt_attack(character: Character) -> void:
 		target.get_node("HpNode").take_damage(10)
 
 
-func _attempt_ability(character: Character, card) -> void:
-	match card:
-		"ROCK_CUBE":
-			print("Casting Rock Cube")
-			var rock_cube_pos = character.grid_pos + Vector2i(character.attack_direction, 0)
-			if !is_valid_tile(rock_cube_pos):
-				print("Attempting to place Rock Cube outside of arena limits")
-				return
-			var new_rock_cube = ROCK_CUBE.instantiate()
-			%CombatArena.add_child(new_rock_cube)
-			place_character_on_board(new_rock_cube, rock_cube_pos)
-		"PUNCH":
-			print("Attempting punch")
-			var new_punch = PUNCH.instantiate()
-			new_punch.connect("attempt_push", _attempt_push)
-			player_character.add_child(new_punch)
-			new_punch.global_rotation = Vector3.ZERO
-		"CAPTURE_TILE":
-			print("Attempting to capture tile")
-			#search in row for a tile that is NOT matching the character and switch it
-			var target = linear_search(character, "TILE")
-			if target != null:
-				target.control_group = "BLUE"
-				var tile_material = target.node.get_node("MeshInstance3D").get_surface_override_material(0)
-				tile_material.albedo_color = Color(0, 0, .9)
-				
-		_:
-			print("Unknown ability: " + str(card))
+func _attempt_ability(caster: Character, card) -> void:
+	card.play_card(caster, %CombatArena)
 
 
 func _attempt_push(pos: Vector2i, dir: Vector2i, push_dmg: float = 0.0) -> bool:
@@ -182,7 +154,7 @@ func _attempt_push(pos: Vector2i, dir: Vector2i, push_dmg: float = 0.0) -> bool:
 		
 		#move to tile occupied by obstacle
 		var obstruction : Character = target_tile.occupant
-		target.move_to(target_tile.node.position)
+		target.move_to(target_tile.position)
 		board_state[pos.y][pos.x].occupant = null
 		await get_tree().create_timer(target.tile_move_speed).timeout
 		if obstruction.is_in_group("Obstacles"):
@@ -201,8 +173,6 @@ func _attempt_push(pos: Vector2i, dir: Vector2i, push_dmg: float = 0.0) -> bool:
 				return true
 	else: #all other characters
 		return _attempt_move(target, push_to)
-	#if  is_instance_valid(target) and target.is_in_group("Character"):
-		#_attempt_move(target, move_to)
 
 
 func _attempt_knockback(character: Character, dir: Vector2i) -> bool:
@@ -215,26 +185,17 @@ func init_board_state():
 	for y in range(grid_size.y):
 		var row = []
 		for x in range(grid_size.x):
-			var board_state_dict = {
-				#control_group
-				#occupant
-				#node
-				#state
-			}
 			var new_tile = FLOOR_TILE.instantiate()
 			new_tile.position = Vector3((1.1 * x) + .05, 0, (1.1 * y) + .05)
 			new_tile.grid_coordinates = Vector2i(x, y)
-			board_state_dict.node = new_tile
-			board_state_dict.occupant = null
-			var tile_material = new_tile.get_node("MeshInstance3D").get_surface_override_material(0)
+			#board_state_dict = new_tile
+			new_tile.occupant = null
 			if (x < grid_size.x / 2):
-				board_state_dict.control_group = "BLUE"
-				tile_material.albedo_color = Color(0, 0, .9)
+				new_tile._set_control_group(DataTypes.ControlGroups.BLUE)
 			else:
-				board_state_dict.control_group = "RED"
-				tile_material.albedo_color = Color(.9, .2, .2)
+				new_tile._set_control_group(DataTypes.ControlGroups.RED)
 			$Floor.add_child(new_tile)
-			row.append(board_state_dict)
+			row.append(new_tile)
 			
 		board_state.append(row)
 	place_character_on_board(player_character, Vector2i(1, 1))
@@ -243,7 +204,7 @@ func init_board_state():
 
 func place_character_on_board(character: Character, pos: Vector2i):
 	character.grid_pos = pos
-	character.position = board_state[pos.y][pos.x].node.position
+	character.position = board_state[pos.y][pos.x].position
 	board_state[pos.y][pos.x].occupant = character
 
 
@@ -291,7 +252,7 @@ func is_valid_tile(pos: Vector2i) -> bool:
 	
 	var target_tile = board_state[pos.y][pos.x]
 	
-	if target_tile.node == null: 
+	if target_tile == null: 
 		push_error("Attempted move targets a grid tile that is null. Grid position: " + str(pos))
 		return false
 		
