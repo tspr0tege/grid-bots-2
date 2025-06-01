@@ -4,6 +4,7 @@ class_name Character
 
 var grid_pos : Vector2i
 var health_display : Label3D
+var tile_move_speed := .1
 
 @export var control_group := "NONE"
 @export var move_handler: MovementStyle
@@ -29,7 +30,7 @@ func move_to(new_pos) -> void:
 		move_handler.move(self, new_pos)
 	else:
 		var new_tween = get_tree().create_tween()
-		new_tween.tween_property(self, "position", new_pos,.1)
+		new_tween.tween_property(self, "position", new_pos, tile_move_speed)
 
 
 func shoot() -> void:

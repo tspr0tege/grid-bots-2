@@ -1,9 +1,5 @@
 extends Node3D
 
-#const BLUE_CHARACTER = preload("res://scenes/battle-scene/blue_character.tres")
-#const BLUE_FLOOR_MAT = preload("res://scenes/battle-scene/blue_floor.tres")
-#const RED_CHARACTER = preload("res://scenes/battle-scene/red_character.tres")
-#const RED_FLOOR_MAT = preload("res://scenes/battle-scene/red_floor.tres")
 const FLOOR_TILE = preload("res://scenes/battle-scene/floor_tile.tscn")
 const ROCK_CUBE = preload("res://cards/summons/rock-cube/rock_cube.tscn")
 const PUNCH = preload("res://cards/melee/punch/punch.tscn")
@@ -94,31 +90,31 @@ func _unhandled_input(event: InputEvent) -> void:
 					#pass
 
 
-func _attempt_move(character: Character, target_pos: Vector2i):
+func _attempt_move(character: Character, target_pos: Vector2i) -> bool:
 	#print(str(character.name) + " attempting to move to " + str(target_pos))
 	
 	#Check valid coordinates
-	if not is_valid_tile(target_pos): return
+	if not is_valid_tile(target_pos): return false
 	
 	var desired_move = target_pos - character.grid_pos
 	# desired_move.length is 1.0 for adjacent tiles, and roughly 1.4 for diagonals
 	if character.teleport_enabled or desired_move.length() <= 1:
-		if not _execute_move(character, target_pos):
-			print(str(character.name) + " unable to move")
+		return _execute_move(character, target_pos)
 	elif character.diagonal_move_enabled and _execute_move(character, character.grid_pos + move_dir(desired_move, 0)):
-		return
-	elif abs(desired_move.x) > abs(desired_move.y) and _execute_move(character, character.grid_pos + move_dir(desired_move, 1)):
-		return
-	elif _execute_move(character, character.grid_pos + move_dir(desired_move, 2)):
-		return
+		return true
+	elif abs(desired_move.x) <= abs(desired_move.y) and _execute_move(character, character.grid_pos + move_dir(desired_move, 2)):
+		return true
+	elif _execute_move(character, character.grid_pos + move_dir(desired_move, 1)):
+		return true
 	else:
 		print("Character %s unable to move!" % character.name)
+		return false
 
 
 func _execute_move(character: Character, pos: Vector2i) -> bool:
 	#Check Character controlled tile
 	var target_tile = board_state[pos.y][pos.x]
-	if target_tile.control_group != character.control_group: return false
+	if character.control_group != "UNIVERSAL" and target_tile.control_group != character.control_group: return false
 	if target_tile.occupant: return false
 	board_state[character.grid_pos.y][character.grid_pos.x].occupant = null
 	character.grid_pos = pos
@@ -147,12 +143,61 @@ func _attempt_ability(character: Character, card) -> void:
 		"PUNCH":
 			print("Attempting punch")
 			var new_punch = PUNCH.instantiate()
+			new_punch.connect("attempt_push", _attempt_push)
 			player_character.add_child(new_punch)
 			new_punch.global_rotation = Vector3.ZERO
 		"CAPTURE_TILE":
 			print("Attempting to capture tile")
 		_:
 			print("Unknown ability: " + str(card))
+
+
+func _attempt_push(pos: Vector2i, dir: Vector2i, push_dmg: float = 0.0) -> bool:
+	var push_to = pos + dir
+	if !is_valid_tile(pos) or !is_valid_tile(push_to): return false
+	
+	var target : Character = board_state[pos.y][pos.x].occupant
+	var target_tile = board_state[push_to.y][push_to.x]
+	
+	if target == null: return false
+	if !is_instance_of(target, Character): return false
+	
+	if target.is_in_group("Obstacles"): #always moves
+		
+		#move to unoccupied tile
+		if _attempt_move(target, push_to): return true
+		
+		#move to tile occupied by obstacle
+		var obstruction : Character = target_tile.occupant
+		target.move_to(target_tile.node.position)
+		board_state[pos.y][pos.x].occupant = null
+		await get_tree().create_timer(target.tile_move_speed).timeout
+		if obstruction.is_in_group("Obstacles"):
+			var target_hp_node = target.get_node("HpNode")
+			obstruction.get_node("HpNode").take_damage(target_hp_node.HP / 2)
+			target_hp_node.take_damage(target_hp_node.HP)
+			return true
+		#move to tile occupied by non-obstacle (cause knockback)
+		else:
+			if _attempt_knockback(obstruction, dir):
+				obstruction.get_node("HpNode").take_damage(push_dmg)
+				target_tile.occupant = target
+				return true
+			else:
+				var target_hp_node = target.get_node("HpNode")
+				obstruction.get_node("HpNode").take_damage(target_hp_node.HP / 2)
+				target_hp_node.take_damage(target_hp_node.HP)
+				return true
+	else: #all other characters
+		target.get_node("HpNode").take_damage(push_dmg)
+		return _attempt_move(target, push_to)
+	#if  is_instance_valid(target) and target.is_in_group("Character"):
+		#_attempt_move(target, move_to)
+
+
+func _attempt_knockback(character: Character, dir: Vector2i) -> bool:
+	var attempted_pos = character.grid_pos + dir
+	return _attempt_move(character, attempted_pos)
 
 
 func init_board_state():

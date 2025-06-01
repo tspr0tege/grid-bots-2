@@ -26,6 +26,11 @@ window/size/viewport_height=1071
 window/stretch/mode="viewport"
 window/stretch/aspect="expand"
 
+[global_group]
+
+Obstacles=""
+Tiles=""
+
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
