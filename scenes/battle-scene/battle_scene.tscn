@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://b7s8i4yotbhd4"]
+[gd_scene load_steps=29 format=3 uid="uid://b7s8i4yotbhd4"]
 
 [ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battleScene_gameController.gd" id="1_p7nsj"]
 [ext_resource type="Script" uid="uid://d1tg7waqcp1ck" path="res://scenes/battle-scene/scenes_battleScene.gd" id="1_w5c51"]
@@ -15,9 +15,6 @@
 [ext_resource type="Material" uid="uid://b24jr8mu18ac3" path="res://entities/test-character/white_mat.tres" id="11_dllb0"]
 [ext_resource type="AudioStream" uid="uid://cst8b3jc7augb" path="res://entities/common-resources/sfx/hit.wav" id="12_pp0o7"]
 [ext_resource type="AudioStream" uid="uid://ceguwale66mm5" path="res://entities/common-resources/sfx/pew.wav" id="13_daxnq"]
-[ext_resource type="Texture2D" uid="uid://deb1yrrnjhye5" path="res://cards/summons/rock-cube/rock_cube_icon.png" id="16_daxnq"]
-[ext_resource type="Texture2D" uid="uid://cvcsf4nvwlj6k" path="res://cards/melee/punch/punch_icon.png" id="17_6tpmo"]
-[ext_resource type="Texture2D" uid="uid://befwppd8jt0wm" path="res://cards/stage-effects/capture-tile/capture_tile_icon.png" id="18_n0yl0"]
 
 [sub_resource type="Resource" id="Resource_daxnq"]
 resource_local_to_scene = true
@@ -376,7 +373,6 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
-texture = ExtResource("16_daxnq")
 expand_mode = 2
 stretch_mode = 4
 
@@ -391,7 +387,6 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
-texture = ExtResource("17_6tpmo")
 expand_mode = 2
 stretch_mode = 4
 
@@ -406,7 +401,6 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
-texture = ExtResource("18_n0yl0")
 expand_mode = 2
 stretch_mode = 4
 

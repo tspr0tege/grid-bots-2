@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://cbmn3hrs53ye4"]
+[gd_scene load_steps=3 format=3 uid="uid://cbmn3hrs53ye4"]
 
 [ext_resource type="Script" uid="uid://bqaok71jlkuqi" path="res://cards/summons/rock-cube/card-rock_cube.gd" id="1_48fiv"]
+[ext_resource type="Texture2D" uid="uid://deb1yrrnjhye5" path="res://cards/summons/rock-cube/rock_cube_icon.png" id="2_ralcr"]
 
 [node name="Card-rockCube" type="Node"]
 script = ExtResource("1_48fiv")
+ICON = ExtResource("2_ralcr")

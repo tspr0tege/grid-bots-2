@@ -4,7 +4,7 @@ const FLOOR_TILE = preload("res://scenes/battle-scene/floor_tile.tscn")
 
 var player_character: Node = null
 var enemy_character: Node = null
-var grid_size = Vector2i(6, 3) # 3x3 tiles per side
+var grid_size = Vector2i(6, 3)
 
 const RAY_LENGTH = 100
 var screen_tap_origin: Vector2 = Vector2.ZERO
