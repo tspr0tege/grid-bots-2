@@ -2,6 +2,8 @@ extends Node3D
 
 class_name Character
 
+signal character_death(source)
+
 var grid_pos : Vector2i
 var health_display : Label3D
 var tile_move_speed := .1
@@ -44,4 +46,7 @@ func _on_hp_node_hp_changed(new_amt: float) -> void:
 
 
 func _handle_character_death() -> void:
+	
+	await get_tree().create_timer(.2).timeout
+	emit_signal("character_death", self)
 	queue_free()

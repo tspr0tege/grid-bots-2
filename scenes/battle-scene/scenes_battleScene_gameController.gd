@@ -1,5 +1,7 @@
 extends Node3D
 
+signal match_over(player_wins: bool)
+
 const FLOOR_TILE = preload("res://scenes/battle-scene/floor_tile.tscn")
 
 var player_character: Node = null
@@ -257,3 +259,10 @@ func is_valid_tile(pos: Vector2i) -> bool:
 		return false
 		
 	return true
+
+
+func _on_character_death(source: Variant) -> void:
+	if source == player_character:
+		emit_signal("match_over", false)
+	else:
+		emit_signal("match_over", true)

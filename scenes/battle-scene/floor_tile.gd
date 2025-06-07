@@ -7,7 +7,7 @@ var occupant : Character
 
 
 func _set_control_group(group : DataTypes.ControlGroups, reset_in: float = 0.0) -> void:
-	print("Changing control group to " + str(group))
+	#print("Changing control group to " + str(group))
 	if reset_in > 0:
 		var current_group = control_group
 		$ResetTimer.connect("timeout", _set_control_group.bind(current_group))
