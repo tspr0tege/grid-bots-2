@@ -5,6 +5,7 @@ extends Node
 
 var next_card := 0
 var player_deck := [
+	load("res://cards/instant-shot/cannon/card-cannon.tscn").instantiate(),
 	load("res://cards/traps/landmine/card-landmine.tscn").instantiate(),
 	load("res://cards/melee/punch/card-punch.tscn").instantiate(),
 	load("res://cards/summons/rock-cube/card-rock_cube.tscn").instantiate(),

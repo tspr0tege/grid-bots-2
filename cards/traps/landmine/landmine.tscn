@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://3lhxka6365cg"]
 
-[ext_resource type="Script" uid="uid://ds3efx1ltn62d" path="res://cards/traps/landmine/cards-traps-landmine.gd" id="1_4edso"]
+[ext_resource type="Script" uid="uid://ds3efx1ltn62d" path="res://cards/traps/landmine/cards_traps_landmine.gd" id="1_4edso"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_a7ed6"]
 top_radius = 0.25
@@ -52,6 +52,7 @@ bottom_radius = 0.02
 height = 1.0
 radial_segments = 4
 rings = 3
+cap_top = false
 
 [sub_resource type="Curve" id="Curve_0v6ye"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.386364, 1), 0.0494382, 0.0494382, 0, 0, Vector2(0.772727, 1), 0.0, 0.0, 0, 0, Vector2(0.977273, 0.730337), 0.0, 0.0, 0, 0]
