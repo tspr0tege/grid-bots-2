@@ -8,7 +8,8 @@ var player_deck := [
 	load("res://cards/melee/punch/card-punch.tscn").instantiate(),
 	load("res://cards/summons/rock-cube/card-rock_cube.tscn").instantiate(),
 	load("res://cards/stage-effects/capture-tile/card-capture_tile.tscn").instantiate(),
-	load("res://cards/counters/reflect/card-reflect.tscn").instantiate()
+	load("res://cards/counters/reflect/card-reflect.tscn").instantiate(),
+	load("res://cards/buffs/heal-10/card-heal_10.tscn").instantiate(),
 ]
 
 var card_hand := []

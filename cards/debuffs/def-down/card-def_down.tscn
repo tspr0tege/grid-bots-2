@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://pqp6h2gc0qt0"]
+
+[ext_resource type="Script" uid="uid://cn7a5ijxhii6g" path="res://cards/Card.gd" id="1_8wh0f"]
+
+[node name="Card-defDown" type="Node"]
+script = ExtResource("1_8wh0f")
+metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

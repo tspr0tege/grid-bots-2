@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://dwin1n1ce7022"]
+
+[sub_resource type="Gradient" id="Gradient_mic7u"]
+offsets = PackedFloat32Array(0, 0.657895)
+colors = PackedColorArray(0, 0.811765, 0, 0.470588, 0, 1, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_o0egd"]
+gradient = SubResource("Gradient_mic7u")
+fill = 1
+fill_from = Vector2(0.511236, 0.505618)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jfv81"]
+transparency = 1
+albedo_texture = SubResource("GradientTexture2D_o0egd")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_v7lhn"]
+material = SubResource("StandardMaterial3D_jfv81")
+
+[node name="CPUParticles3D" type="CPUParticles3D"]
+emitting = false
+amount = 5
+lifetime = 0.5
+one_shot = true
+mesh = SubResource("PlaneMesh_v7lhn")
+gravity = Vector3(0, 9.8, 0)

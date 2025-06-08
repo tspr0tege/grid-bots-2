@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://blfx5cav15cpk"]
+
+[ext_resource type="Script" uid="uid://cn7a5ijxhii6g" path="res://cards/Card.gd" id="1_unmrm"]
+
+[node name="Card-penDirect" type="Node"]
+script = ExtResource("1_unmrm")
+metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

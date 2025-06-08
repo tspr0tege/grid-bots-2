@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://3eds7rev5aux"]
 
 [ext_resource type="Script" uid="uid://36o1uq7kfo46" path="res://cards/melee/punch/card-punch.gd" id="1_52ffp"]
-[ext_resource type="Texture2D" uid="uid://cvcsf4nvwlj6k" path="res://cards/melee/punch/punch_icon.png" id="2_ccsv5"]
+[ext_resource type="Texture2D" uid="uid://dnyxaboqbd5og" path="res://cards/melee/punch/Punch 02 icon 128 x 128.png" id="2_ccsv5"]
 
 [node name="Card-punch" type="Node"]
 script = ExtResource("1_52ffp")
