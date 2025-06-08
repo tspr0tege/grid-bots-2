@@ -116,9 +116,9 @@ func _execute_move(character: Character, pos: Vector2i) -> bool:
 	var target_tile = board_state[pos.y][pos.x]
 	if character.control_group != DataTypes.ControlGroups.UNIVERSAL and target_tile.control_group != character.control_group: return false
 	if target_tile.occupant: return false
-	board_state[character.grid_pos.y][character.grid_pos.x].occupant = null
+	board_state[character.grid_pos.y][character.grid_pos.x].remove_occupant()
 	character.grid_pos = pos
-	board_state[pos.y][pos.x].occupant = character
+	board_state[pos.y][pos.x].add_occupant(character)
 	character.move_to(board_state[pos.y][pos.x].position)
 	return true
 
@@ -157,7 +157,7 @@ func _attempt_push(pos: Vector2i, dir: Vector2i, push_dmg: float = 0.0) -> bool:
 		#move to tile occupied by obstacle
 		var obstruction : Character = target_tile.occupant
 		target.move_to(target_tile.position)
-		board_state[pos.y][pos.x].occupant = null
+		board_state[pos.y][pos.x].remove_occupant()
 		await get_tree().create_timer(target.tile_move_speed).timeout
 		if obstruction.is_in_group("Obstacles"):
 			obstruction.get_node("HpNode").take_damage(target_hp_node.HP / 2)
@@ -167,7 +167,7 @@ func _attempt_push(pos: Vector2i, dir: Vector2i, push_dmg: float = 0.0) -> bool:
 		else:
 			if _attempt_knockback(obstruction, dir):
 				obstruction.get_node("HpNode").take_damage(push_dmg)
-				target_tile.occupant = target
+				target_tile.add_occupant(target)
 				return true
 			else:
 				obstruction.get_node("HpNode").take_damage(target_hp_node.HP / 2)
@@ -191,7 +191,7 @@ func init_board_state():
 			new_tile.position = Vector3((1.1 * x) + .05, 0, (1.1 * y) + .05)
 			new_tile.grid_coordinates = Vector2i(x, y)
 			#board_state_dict = new_tile
-			new_tile.occupant = null
+			new_tile.remove_occupant()
 			if (x < grid_size.x / 2):
 				new_tile._set_control_group(DataTypes.ControlGroups.BLUE)
 			else:
@@ -207,7 +207,7 @@ func init_board_state():
 func place_character_on_board(character: Character, pos: Vector2i):
 	character.grid_pos = pos
 	character.position = board_state[pos.y][pos.x].position
-	board_state[pos.y][pos.x].occupant = character
+	board_state[pos.y][pos.x].add_occupant(character)
 
 
 func move_dir(target_pos: Vector2i, rule: int) -> Vector2i:
@@ -241,6 +241,17 @@ func linear_search(from_character: Character, search_for: String):
 					return target_tile.occupant
 	
 	return null
+
+
+func tiles_in_group(control_group: DataTypes.ControlGroups) -> Array:
+	var matching_tiles := []
+	
+	for row in board_state:
+		for tile in row:
+			if tile.control_group == control_group:
+				matching_tiles.push_back(tile)
+	
+	return matching_tiles
 
 
 func is_valid_tile(pos: Vector2i) -> bool:

@@ -5,6 +5,7 @@ extends Node
 
 var next_card := 0
 var player_deck := [
+	load("res://cards/traps/landmine/card-landmine.tscn").instantiate(),
 	load("res://cards/melee/punch/card-punch.tscn").instantiate(),
 	load("res://cards/summons/rock-cube/card-rock_cube.tscn").instantiate(),
 	load("res://cards/stage-effects/capture-tile/card-capture_tile.tscn").instantiate(),
@@ -16,8 +17,8 @@ var card_hand := []
 
 func _ready() -> void:
 	get_tree().paused = false
-	card_hand.resize(3)
-	for n in range(3):
+	card_hand.resize(6)
+	for n in range(6):
 		draw_card(n)
 
 
