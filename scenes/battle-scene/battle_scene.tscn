@@ -232,6 +232,7 @@ max_polyphony = 3
 [node name="RedCharacter" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" node_paths=PackedStringArray("animation_player")]
 transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0, 0)
 script = ExtResource("7_rqjoh")
+attacking = false
 control_group = 1
 animation_player = NodePath("ActionPlayer")
 display_health = true

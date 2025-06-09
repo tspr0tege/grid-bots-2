@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://dq8bb15lhvwpd"]
-
-[ext_resource type="Script" uid="uid://cn7a5ijxhii6g" path="res://cards/Card.gd" id="1_q4tjv"]
-
-[node name="Card-cannonBall" type="Node"]
-script = ExtResource("1_q4tjv")
-metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

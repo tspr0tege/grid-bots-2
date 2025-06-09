@@ -20,7 +20,3 @@ debug_color = Color(0, 0.6, 0.701961, 1)
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = ExtResource("1_at28f")
 surface_material_override/0 = SubResource("StandardMaterial3D_j1tcp")
-
-[node name="ResetTimer" type="Timer" parent="."]
-wait_time = 10.0
-one_shot = true
