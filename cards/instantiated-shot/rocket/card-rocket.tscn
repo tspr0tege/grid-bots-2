@@ -1,7 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://duhilnikjdjs6"]
+[gd_scene load_steps=3 format=3 uid="uid://duhilnikjdjs6"]
 
-[ext_resource type="Script" uid="uid://cn7a5ijxhii6g" path="res://cards/Card.gd" id="1_foa1s"]
+[ext_resource type="Script" uid="uid://dffyj55wkpow8" path="res://cards/instantiated-shot/rocket/card_rocket.gd" id="1_foa1s"]
+[ext_resource type="Texture2D" uid="uid://chs5k0dsia67y" path="res://cards/instantiated-shot/rocket/Rocket icon 128 x 128.png" id="2_jiwjn"]
 
-[node name="Card-rocket" type="Node"]
+[node name="Card_Rocket" type="Node"]
 script = ExtResource("1_foa1s")
+ICON = ExtResource("2_jiwjn")
 metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

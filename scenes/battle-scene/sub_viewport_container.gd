@@ -1,7 +1,5 @@
 extends SubViewportContainer
 
-#Camera3D default size: 6.75
-#camera v_offset +/- 0.1 is fairly significant
 const CAMERA_DEFAULT_SIZE = 6.75
 
 
@@ -17,11 +15,9 @@ func _on_sub_viewport_container_item_rect_changed():
 		$SubViewport/Camera3D.v_offset = -(viewportRatio.x - 1)
 	else:
 		$SubViewport/Camera3D.size = CAMERA_DEFAULT_SIZE
-		$SubViewport/Camera3D.v_offset = viewportRatio.x - 1
+	#NOTES:
 	#print(str(viewportRatio))
-	# Past a certain horizontal stretch, the y vector becomes a static 0.991667
-	# When this is true, the camera starts clipping the bottom as x gets above 1.2
-	# It's an INCREDIBLY wide value, but it may not hurt to cover
 	#var minAxis = viewportRatio.min_axis_index()
 	#print(str(minAxis))
-	#$SubViewport/Camera3D.zoom = Vector2(viewportRatio[minAxis], viewportRatio[minAxis])
+	# Past a certain horizontal stretch, the y vector becomes a static 0.991667
+	# When this is true, the camera starts clipping the bottom as x gets above 1.2

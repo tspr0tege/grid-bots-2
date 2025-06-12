@@ -132,6 +132,14 @@ func _attempt_attack(character: Character) -> void:
 		target.get_node("HpNode").take_damage(10)
 
 
+func _attempt_damage(grid_location: Vector2i, amt: float, on_success: Callable = func():pass):
+	
+	var target_tile = board_state[grid_location.y][grid_location.x]
+	if target_tile.occupant:
+		target_tile.occupant.get_node("HpNode").take_damage(amt)
+		on_success.call()
+
+
 func _attempt_ability(caster: Character, card) -> void:
 	card.play_card(caster, %CombatArena)
 

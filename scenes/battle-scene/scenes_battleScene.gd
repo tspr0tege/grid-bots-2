@@ -3,9 +3,9 @@ extends Node
 @onready var abilities_panel = $CanvasLayer/GridContainer/AbilityPanel/VBoxContainer
 @onready var ability_buttons = abilities_panel.get_children()
 
-var next_card := 0
 var player_deck := [
 	#load().instantiate(),
+	load("res://cards/instantiated-shot/rocket/card-rocket.tscn").instantiate(),
 	load("res://cards/thrown/cannon-ball/card_cannon-ball.tscn").instantiate(),
 	load("res://cards/instant-shot/cannon/card-cannon.tscn").instantiate(),
 	load("res://cards/traps/landmine/card-landmine.tscn").instantiate(),
@@ -27,12 +27,9 @@ func _ready() -> void:
 
 func draw_card(index: int) -> void:
 	#var dealt_card = load(player_deck[next_card]).instantiate()
-	var dealt_card = player_deck.pop_at(next_card)
+	var dealt_card = player_deck.pop_front()
 	card_hand[index] = dealt_card
 	ability_buttons[index].get_node("TextureRect").texture = dealt_card.ICON
-	
-	next_card += 1
-	if next_card >= player_deck.size(): next_card = 0
 
 
 func _handle_pause_button() -> void:
