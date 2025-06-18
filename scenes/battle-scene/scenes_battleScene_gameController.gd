@@ -5,18 +5,20 @@ signal match_over(player_wins: bool)
 const FLOOR_TILE = preload("res://scenes/battle-scene/floor_tile.tscn")
 
 var player_character: Node = null
+var player_team := []
 var enemy_character: Node = null
+var enemy_team := []
 var grid_size = Vector2i(6, 3)
 
 const RAY_LENGTH = 100
 var screen_tap_origin: Vector2 = Vector2.ZERO
 
-var board_state : Array = []
+var arena_tiles : Array = []
 
 func _ready():
 	player_character = $PlayerCharacter
 	enemy_character = $RedCharacter
-	init_board_state()
+	init_arena_tiles()
 
 	#player_character.input_signal.connect(_on_input_signal_received)
 	#enemy_character.input_signal.connect(_on_input_signal_received)
@@ -91,8 +93,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _attempt_move(character: Character, target_pos: Vector2i) -> bool:
-	#print(str(character.name) + " attempting to move to " + str(target_pos))
-	
 	#Check valid coordinates
 	if not is_valid_tile(target_pos): return false
 	
@@ -107,19 +107,18 @@ func _attempt_move(character: Character, target_pos: Vector2i) -> bool:
 	elif _execute_move(character, character.grid_pos + move_dir(desired_move, 1)):
 		return true
 	else:
-		print("Character %s unable to move!" % character.name)
-		return false
+		return false #invalid move
 
 
-func _execute_move(character: Character, pos: Vector2i) -> bool:
+func _execute_move(character: Character, to_pos: Vector2i) -> bool:
 	#Check Character controlled tile
-	var target_tile = board_state[pos.y][pos.x]
-	if character.control_group != DataTypes.ControlGroups.UNIVERSAL and target_tile.control_group != character.control_group: return false
+	var target_tile = arena_tiles[to_pos.y][to_pos.x]
+	if character.control_group != Data.CGs.UNIVERSAL and target_tile.control_group != character.control_group: return false
 	if target_tile.occupant: return false
-	board_state[character.grid_pos.y][character.grid_pos.x].remove_occupant()
-	character.grid_pos = pos
-	board_state[pos.y][pos.x].add_occupant(character)
-	character.move_to(board_state[pos.y][pos.x].position)
+	arena_tiles[character.grid_pos.y][character.grid_pos.x].remove_occupant()
+	character.grid_pos = to_pos
+	arena_tiles[to_pos.y][to_pos.x].add_occupant(character)
+	character.move_to(arena_tiles[to_pos.y][to_pos.x].position)
 	return true
 
 
@@ -134,19 +133,19 @@ func _attempt_attack(character: Character) -> void:
 
 func _attempt_damage(grid_location: Vector2i, amt: float, on_success: Callable = func():pass):
 	
-	var target_tile = board_state[grid_location.y][grid_location.x]
+	var target_tile = arena_tiles[grid_location.y][grid_location.x]
 	if target_tile.occupant:
 		target_tile.occupant.get_node("HpNode").take_damage(amt)
 		on_success.call()
 
 
 func _attempt_ability(caster: Character, card) -> void:
-	card.play_card(caster, %CombatArena)
+	card.use_ability(caster, %CombatArena)
 
 
 func _attempt_push(pos: Vector2i, dir: Vector2i, push_dmg: float = 0.0) -> bool:
 	if !is_valid_tile(pos): return false
-	var target : Character = board_state[pos.y][pos.x].occupant
+	var target : Character = arena_tiles[pos.y][pos.x].occupant
 	if target == null: return false
 	
 	if !is_instance_of(target, Character): return false
@@ -155,7 +154,7 @@ func _attempt_push(pos: Vector2i, dir: Vector2i, push_dmg: float = 0.0) -> bool:
 	
 	var push_to = pos + dir
 	if !is_valid_tile(push_to): return false
-	var target_tile = board_state[push_to.y][push_to.x]
+	var target_tile = arena_tiles[push_to.y][push_to.x]
 	
 	if target.is_in_group("Obstacles"): #always moves
 		
@@ -165,7 +164,7 @@ func _attempt_push(pos: Vector2i, dir: Vector2i, push_dmg: float = 0.0) -> bool:
 		#move to tile occupied by obstacle
 		var obstruction : Character = target_tile.occupant
 		target.move_to(target_tile.position)
-		board_state[pos.y][pos.x].remove_occupant()
+		arena_tiles[pos.y][pos.x].remove_occupant()
 		await get_tree().create_timer(target.tile_move_speed).timeout
 		if obstruction.is_in_group("Obstacles"):
 			obstruction.get_node("HpNode").take_damage(target_hp_node.HP / 2)
@@ -190,32 +189,32 @@ func _attempt_knockback(character: Character, dir: Vector2i) -> bool:
 	return _attempt_move(character, attempted_pos)
 
 
-func init_board_state():
-	board_state = []
+func init_arena_tiles():
+	arena_tiles = []
 	for y in range(grid_size.y):
 		var row = []
 		for x in range(grid_size.x):
 			var new_tile = FLOOR_TILE.instantiate()
 			new_tile.position = Vector3((1.1 * x) + .05, 0, (1.1 * y) + .05)
 			new_tile.grid_coordinates = Vector2i(x, y)
-			#board_state_dict = new_tile
+			#arena_tiles_dict = new_tile
 			new_tile.remove_occupant()
 			if (x < grid_size.x / 2):
-				new_tile._set_control_group(DataTypes.ControlGroups.BLUE)
+				new_tile._set_control_group(Data.CGs.BLUE)
 			else:
-				new_tile._set_control_group(DataTypes.ControlGroups.RED)
+				new_tile._set_control_group(Data.CGs.RED)
 			$Floor.add_child(new_tile)
 			row.append(new_tile)
 			
-		board_state.append(row)
+		arena_tiles.append(row)
 	place_character_on_board(player_character, Vector2i(1, 1))
 	place_character_on_board(enemy_character, Vector2i(4, 1))
 
 
 func place_character_on_board(character: Character, pos: Vector2i):
 	character.grid_pos = pos
-	character.position = board_state[pos.y][pos.x].position
-	board_state[pos.y][pos.x].add_occupant(character)
+	character.position = arena_tiles[pos.y][pos.x].position
+	arena_tiles[pos.y][pos.x].add_occupant(character)
 
 
 func move_dir(target_pos: Vector2i, rule: int) -> Vector2i:
@@ -237,13 +236,13 @@ func linear_search(from_character: Character, search_for: String):
 	match search_for:
 		"TILE":
 			for x in range(start_point, end_point, direction):
-				var target_tile = board_state[target_row][x]
+				var target_tile = arena_tiles[target_row][x]
 						
 				if from_character.control_group != target_tile.control_group:
 					return target_tile
 		"CHARACTER":
 			for x in range(start_point, end_point, direction):
-				var target_tile = board_state[target_row][x]
+				var target_tile = arena_tiles[target_row][x]
 						
 				if is_instance_valid(target_tile.occupant):
 					return target_tile.occupant
@@ -251,10 +250,10 @@ func linear_search(from_character: Character, search_for: String):
 	return null
 
 
-func tiles_in_group(control_group: DataTypes.ControlGroups) -> Array:
+func tiles_in_group(control_group: Data.CGs) -> Array:
 	var matching_tiles := []
 	
-	for row in board_state:
+	for row in arena_tiles:
 		for tile in row:
 			if tile.control_group == control_group:
 				matching_tiles.push_back(tile)
@@ -263,19 +262,11 @@ func tiles_in_group(control_group: DataTypes.ControlGroups) -> Array:
 
 
 func is_valid_tile(pos: Vector2i) -> bool:
-	if pos.x < 0 or pos.x >= grid_size.x:
-		push_warning("Attempted move outside of valid grid constraints on the X axis. X value = " + str(pos.x))
-		return false
+	if pos.x < 0 or pos.x >= grid_size.x: return false
+	if pos.y < 0 or pos.y >= grid_size.y: return false
 	
-	if pos.y < 0 or pos.y >= grid_size.y:
-		push_warning("Attempted move outside of valid grid constraints on the Y axis. Y value = " + str(pos.y))
-		return false
-	
-	var target_tile = board_state[pos.y][pos.x]
-	
-	if target_tile == null: 
-		push_error("Attempted move targets a grid tile that is null. Grid position: " + str(pos))
-		return false
+	var target_tile = arena_tiles[pos.y][pos.x]
+	if target_tile == null: return false
 		
 	return true
 
@@ -285,3 +276,11 @@ func _on_character_death(source: Variant) -> void:
 		emit_signal("match_over", false)
 	else:
 		emit_signal("match_over", true)
+
+
+func get_tile_by_coords(coords: Vector2i) -> Node3D:
+	if !is_valid_tile(coords): return null
+	else: return arena_tiles[coords.y][coords.x]
+
+func move_shot(shot):
+	pass

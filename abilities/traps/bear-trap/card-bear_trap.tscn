@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bidpe4bmckmfh"]
+
+[ext_resource type="Script" uid="uid://cn7a5ijxhii6g" path="res://abilities/Ability.gd" id="1_ff7df"]
+
+[node name="Card-bearTrap" type="Node"]
+script = ExtResource("1_ff7df")
+metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

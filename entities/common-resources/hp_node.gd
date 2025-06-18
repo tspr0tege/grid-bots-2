@@ -21,9 +21,19 @@ func take_damage(amt: float) -> void:
 		emit_signal("received_damage", amt)
 	else:
 		emit_signal("character_died")
-	
+
 
 func take_healing(amt: float) -> void:
 	HP += amt
 	emit_signal("HP_changed", HP)
+
+
+func affect_defense(amt: float, time: float) -> void:
+	var current_def = defense
+	get_tree().create_timer(time).timeout.connect(revert_defense.bind(current_def))
 	
+	defense += amt
+
+
+func revert_defense(prev_level: float) -> void:
+	defense = prev_level

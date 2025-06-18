@@ -1,6 +1,5 @@
-extends Node3D
+class_name Character extends Node3D
 
-class_name Character
 
 signal character_death(source)
 
@@ -8,7 +7,7 @@ var grid_pos : Vector2i
 var health_display : Label3D
 var tile_move_speed := .1
 
-@export var control_group := DataTypes.ControlGroups.NONE
+@export var control_group := Data.CGs.NONE
 @export var move_handler: MovementStyle
 @export var teleport_enabled := false
 @export var diagonal_move_enabled := false

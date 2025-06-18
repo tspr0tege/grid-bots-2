@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://dq8bb15lhvwpd"]
+
+[ext_resource type="Script" uid="uid://bfbmht76u4uyu" path="res://abilities/thrown/cannon-ball/abilities_thrown_cannon-ball.gd" id="1_t38yb"]
+[ext_resource type="Texture2D" uid="uid://bwwl4vmrib7od" path="res://abilities/thrown/cannon-ball/Cannonball icon 128 x 128.png" id="2_yewmh"]
+
+[node name="Card_CannonBall" type="Node"]
+script = ExtResource("1_t38yb")
+COST = 3
+ICON = ExtResource("2_yewmh")
+metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

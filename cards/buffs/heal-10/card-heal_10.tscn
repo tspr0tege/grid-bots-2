@@ -1,9 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://bmahnr6r04vhg"]
-
-[ext_resource type="Script" uid="uid://dm5igcymljj6x" path="res://cards/buffs/heal-10/card-heal_10.gd" id="1_4ki4i"]
-[ext_resource type="Texture2D" uid="uid://c5vufphnh5w4c" path="res://cards/buffs/heal-10/Heal icon 128 x 128.png" id="2_ukam7"]
-
-[node name="Card-heal10" type="Node"]
-script = ExtResource("1_4ki4i")
-ICON = ExtResource("2_ukam7")
-metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

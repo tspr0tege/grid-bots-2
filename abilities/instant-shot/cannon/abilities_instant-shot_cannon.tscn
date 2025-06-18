@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://gv5okjbhjklg"]
+
+[ext_resource type="Script" uid="uid://dr4ria7u7h7jo" path="res://abilities/instant-shot/cannon/abilities_instant-shot_cannon.gd" id="1_1lib8"]
+[ext_resource type="Texture2D" uid="uid://c4oa3fniaevwq" path="res://abilities/instant-shot/cannon/Cannon icon 128 x 128.png" id="2_a183n"]
+
+[node name="Card-cannon" type="Node"]
+script = ExtResource("1_1lib8")
+ICON = ExtResource("2_a183n")
+metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://dhsiy6bpi5uhc"]
-
-[ext_resource type="Script" uid="uid://cn7a5ijxhii6g" path="res://cards/Card.gd" id="1_fo0sp"]
-
-[node name="Card-boomerang" type="Node"]
-script = ExtResource("1_fo0sp")
-metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

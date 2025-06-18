@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://crr4hlfliwf3h"]
+
+[ext_resource type="Script" uid="uid://dljauawkfanqw" path="res://abilities/traps/landmine/abilities_traps_landmine.gd" id="1_r81jv"]
+[ext_resource type="Texture2D" uid="uid://bx7r8053hy1tx" path="res://abilities/traps/landmine/Landmine icon 128 x 128.png" id="2_0578w"]
+
+[node name="Card-landmine" type="Node"]
+script = ExtResource("1_r81jv")
+ICON = ExtResource("2_0578w")
+metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

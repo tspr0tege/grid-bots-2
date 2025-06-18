@@ -5,15 +5,16 @@ extends Node
 
 var player_deck := [
 	#load().instantiate(),
-	load("res://cards/instantiated-shot/rocket/card-rocket.tscn").instantiate(),
-	load("res://cards/thrown/cannon-ball/card_cannon-ball.tscn").instantiate(),
-	load("res://cards/instant-shot/cannon/card-cannon.tscn").instantiate(),
-	load("res://cards/traps/landmine/card-landmine.tscn").instantiate(),
-	load("res://cards/melee/punch/card-punch.tscn").instantiate(),
-	load("res://cards/summons/rock-cube/card-rock_cube.tscn").instantiate(),
-	load("res://cards/stage-effects/capture-tile/card-capture_tile.tscn").instantiate(),
-	load("res://cards/counters/reflect/card-reflect.tscn").instantiate(),
-	load("res://cards/buffs/heal-10/card-heal_10.tscn").instantiate(),
+	#load("res://abilities/buffs/heal-10/abilities_buffs_heal-10.tscn").instantiate(),
+	#load("res://abilities/counters/reflect/abilities_counters_reflect.tscn").instantiate(),
+	#load("res://abilities/debuffs/def-down/abilities_debuffs_def-down.tscn").instantiate(),
+	#load("res://abilities/instant-shot/cannon/abilities_instant-shot_cannon.tscn").instantiate(),
+	load("res://abilities/instantiated-shot/rocket/abilities_instantiated-shot_rocket.tscn").instantiate(),
+	load("res://abilities/melee/punch/abilties_melee_punch.tscn").instantiate(),
+	load("res://abilities/stage-effects/capture-tile/abilities_stage-effects_capture-tile.tscn").instantiate(),
+	load("res://abilities/summons/rock-cube/abilities_summons_rock-cube.tscn").instantiate(),
+	load("res://abilities/thrown/cannon-ball/abilities_thrown_cannon-ball.tscn").instantiate(),
+	load("res://abilities/traps/landmine/abilities_traps_landmine.tscn").instantiate(),
 ]
 
 var card_hand := []

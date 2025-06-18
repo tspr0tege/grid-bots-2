@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://cf8bbj3tmtsu"]
+
+[ext_resource type="Script" uid="uid://c0v3jhhf0wt0i" path="res://abilities/counters/reflect/abilities_counters_reflect.gd" id="1_k6llh"]
+[ext_resource type="Texture2D" uid="uid://7mdvmva5b63t" path="res://abilities/counters/reflect/Reflect icon 128 x 128.png" id="2_fqv6t"]
+
+[node name="Card-reflect" type="Node"]
+script = ExtResource("1_k6llh")
+ICON = ExtResource("2_fqv6t")
+metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

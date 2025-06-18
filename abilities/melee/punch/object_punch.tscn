@@ -1,0 +1,74 @@
+[gd_scene load_steps=7 format=3 uid="uid://b7m0vy81afyvh"]
+
+[ext_resource type="Material" uid="uid://c6s1klglreml7" path="res://entities/test-character/red_albedo.tres" id="1_1r5a8"]
+[ext_resource type="Script" uid="uid://rbnay2m4kc4b" path="res://abilities/melee/punch/object_punch.gd" id="1_q5jxh"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_q5jxh"]
+
+[sub_resource type="Animation" id="Animation_407rn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_q5jxh"]
+resource_name = "punch"
+length = 0.3
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(-2, -2),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0.4, 0, 0.4)]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.2),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"_attempt_push"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_x24rh"]
+_data = {
+&"RESET": SubResource("Animation_407rn"),
+&"punch": SubResource("Animation_q5jxh")
+}
+
+[node name="Punch" type="Node3D"]
+script = ExtResource("1_q5jxh")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-2.18557e-08, -0.4, 0, 0.5, -1.74846e-08, 0, 0, 0, 0.5, 0, 0.3, 0)
+mesh = SubResource("CapsuleMesh_q5jxh")
+surface_material_override/0 = ExtResource("1_1r5a8")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_x24rh")
+}
+playback_auto_capture_ease_type = 2
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_finished"]

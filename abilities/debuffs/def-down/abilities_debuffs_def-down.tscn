@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://pqp6h2gc0qt0"]
+
+[ext_resource type="Script" uid="uid://cxv0mpctdhteo" path="res://abilities/debuffs/def-down/abilities_debuffs_def-down.gd" id="1_wdtgq"]
+[ext_resource type="Texture2D" uid="uid://bio34qmdvgqbq" path="res://abilities/debuffs/def-down/Break icon 128 x 128.png" id="2_phql1"]
+
+[node name="Card-defDown" type="Node"]
+script = ExtResource("1_wdtgq")
+ICON = ExtResource("2_phql1")
+metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://3eds7rev5aux"]
+
+[ext_resource type="Script" uid="uid://36o1uq7kfo46" path="res://abilities/melee/punch/abilities_melee_punch.gd" id="1_dvdty"]
+[ext_resource type="Texture2D" uid="uid://dnyxaboqbd5og" path="res://abilities/melee/punch/Punch 02 icon 128 x 128.png" id="2_mwp4t"]
+
+[node name="Card-punch" type="Node"]
+script = ExtResource("1_dvdty")
+ICON = ExtResource("2_mwp4t")
+metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

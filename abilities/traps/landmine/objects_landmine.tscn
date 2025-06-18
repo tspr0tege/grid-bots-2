@@ -1,0 +1,132 @@
+[gd_scene load_steps=14 format=3 uid="uid://3lhxka6365cg"]
+
+[ext_resource type="Script" uid="uid://ds3efx1ltn62d" path="res://abilities/traps/landmine/objects_landmine.gd" id="1_4edso"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_a7ed6"]
+top_radius = 0.25
+bottom_radius = 0.3
+height = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4edso"]
+albedo_color = Color(0.2, 0.2, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sun7r"]
+transparency = 1
+vertex_color_use_as_albedo = true
+ao_light_affect = 0.85
+backlight_enabled = true
+backlight = Color(1, 1, 1, 1)
+disable_receive_shadows = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_s302p"]
+lightmap_size_hint = Vector2i(9, 5)
+material = SubResource("StandardMaterial3D_sun7r")
+radius = 0.25
+height = 0.5
+radial_segments = 16
+rings = 8
+
+[sub_resource type="Curve" id="Curve_nxmk2"]
+_data = [Vector2(0, 0.449438), 0.0, 0.0, 0, 0, Vector2(0.710227, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_rnupa"]
+colors = PackedColorArray(0.775063, 0.775063, 0.775063, 1, 0.18359, 0.18359, 0.18359, 1)
+
+[sub_resource type="Gradient" id="Gradient_hibvk"]
+colors = PackedColorArray(1, 1, 1, 1, 0.336608, 0.336608, 0.336608, 1)
+
+[sub_resource type="Gradient" id="Gradient_44dtl"]
+colors = PackedColorArray(1, 1, 1, 1, 0.501407, 0.501406, 0.501406, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qm7ev"]
+transparency = 1
+blend_mode = 1
+vertex_color_use_as_albedo = true
+emission = Color(1, 1, 1, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_lpvse"]
+material = SubResource("StandardMaterial3D_qm7ev")
+top_radius = 0.0
+bottom_radius = 0.02
+height = 1.0
+radial_segments = 4
+rings = 3
+cap_top = false
+
+[sub_resource type="Curve" id="Curve_0v6ye"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.386364, 1), 0.0494382, 0.0494382, 0, 0, Vector2(0.772727, 1), 0.0, 0.0, 0, 0, Vector2(0.977273, 0.730337), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Gradient" id="Gradient_4r5ee"]
+offsets = PackedFloat32Array(0.366667, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 0.447059, 0, 1)
+
+[node name="Landmine" type="Node3D"]
+script = ExtResource("1_4edso")
+metadata/_custom_type_script = "uid://csdhphprk885m"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+mesh = SubResource("CylinderMesh_a7ed6")
+surface_material_override/0 = SubResource("StandardMaterial3D_4edso")
+
+[node name="Explosion" type="Node3D" parent="."]
+
+[node name="Smoke" type="CPUParticles3D" parent="Explosion"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+emitting = false
+amount = 40
+one_shot = true
+explosiveness = 0.9
+randomness = 1.0
+mesh = SubResource("SphereMesh_s302p")
+emission_shape = 1
+emission_sphere_radius = 0.5
+direction = Vector3(0.1, 1, 0.1)
+spread = 10.0
+gravity = Vector3(0, 3, 0)
+damping_min = 1.0
+damping_max = 1.2
+scale_amount_curve = SubResource("Curve_nxmk2")
+color = Color(0.270588, 0.270588, 0.270588, 0.733333)
+color_ramp = SubResource("Gradient_rnupa")
+color_initial_ramp = SubResource("Gradient_hibvk")
+
+[node name="Fire" type="CPUParticles3D" parent="Explosion"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+emitting = false
+amount = 40
+one_shot = true
+explosiveness = 0.9
+randomness = 1.0
+mesh = SubResource("SphereMesh_s302p")
+emission_shape = 1
+emission_sphere_radius = 0.5
+direction = Vector3(0.1, 1, 0.1)
+spread = 10.0
+gravity = Vector3(0, 3, 0)
+damping_min = 1.0
+damping_max = 1.2
+scale_amount_curve = SubResource("Curve_nxmk2")
+color = Color(1, 0.356863, 0, 1)
+color_ramp = SubResource("Gradient_44dtl")
+color_initial_ramp = SubResource("Gradient_hibvk")
+
+[node name="Sparks" type="CPUParticles3D" parent="Explosion"]
+emitting = false
+amount = 20
+one_shot = true
+explosiveness = 1.0
+randomness = 1.0
+lifetime_randomness = 0.5
+mesh = SubResource("CylinderMesh_lpvse")
+particle_flag_align_y = true
+direction = Vector3(0.1, 1, 0.1)
+spread = 90.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 1.0
+initial_velocity_max = 1.5
+scale_amount_curve = SubResource("Curve_0v6ye")
+color = Color(1, 0.913725, 0.0117647, 1)
+color_ramp = SubResource("Gradient_4r5ee")
