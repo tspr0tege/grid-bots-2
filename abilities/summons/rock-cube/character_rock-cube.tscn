@@ -11,9 +11,10 @@ size = Vector3(0.3, 0.3, 0.3)
 
 [node name="RockCube" type="Node3D" groups=["Obstacles"]]
 script = ExtResource("1_20oar")
+move_damage = 20.0
 control_group = 3
 display_health = true
-metadata/_custom_type_script = "uid://djxr7o5ldgyi3"
+metadata/_custom_type_script = "uid://pu2dbh82q1op"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)

@@ -26,8 +26,8 @@ func _ready() -> void:
 		add_child(health_display)
 
 
-func move_to(new_pos) -> void:
-	if move_handler:
+func move_to(new_pos: Vector3, pushed := false) -> void:
+	if !pushed and move_handler:
 		move_handler.move(self, new_pos)
 	else:
 		var new_tween = get_tree().create_tween()

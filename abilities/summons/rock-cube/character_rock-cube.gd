@@ -1,4 +1,4 @@
-extends Character
+extends Obstacle
 
 func _handle_character_death() -> void:
 	var death_particles = $CPUParticles3D.duplicate()

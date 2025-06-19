@@ -5,4 +5,5 @@
 
 [node name="Card-rockCube" type="Node"]
 script = ExtResource("1_48fiv")
+COST = 3
 ICON = ExtResource("2_ralcr")

@@ -92,34 +92,54 @@ func _unhandled_input(event: InputEvent) -> void:
 					#pass
 
 
-func _attempt_move(character: Character, target_pos: Vector2i) -> bool:
+func _attempt_move(character: Character, target_pos: Vector2i, push := false) -> bool:
 	#Check valid coordinates
 	if not is_valid_tile(target_pos): return false
 	
 	var desired_move = target_pos - character.grid_pos
 	# desired_move.length is 1.0 for adjacent tiles, and roughly 1.4 for diagonals
 	if character.teleport_enabled or desired_move.length() <= 1:
-		return _execute_move(character, target_pos)
-	elif character.diagonal_move_enabled and _execute_move(character, character.grid_pos + move_dir(desired_move, 0)):
+		return await _execute_move(character, target_pos, push)
+	elif character.diagonal_move_enabled and await _execute_move(character, character.grid_pos + move_dir(desired_move, 0), push):
 		return true
-	elif abs(desired_move.x) <= abs(desired_move.y) and _execute_move(character, character.grid_pos + move_dir(desired_move, 2)):
+	elif abs(desired_move.x) <= abs(desired_move.y) and await _execute_move(character, character.grid_pos + move_dir(desired_move, 2), push):
 		return true
-	elif _execute_move(character, character.grid_pos + move_dir(desired_move, 1)):
+	elif await _execute_move(character, character.grid_pos + move_dir(desired_move, 1), push):
 		return true
 	else:
 		return false #invalid move
 
 
-func _execute_move(character: Character, to_pos: Vector2i) -> bool:
+func _execute_move(character: Character, to_pos: Vector2i, push := false) -> bool:
 	#Check Character controlled tile
-	var target_tile = arena_tiles[to_pos.y][to_pos.x]
+	var target_tile = get_tile_by_coords(to_pos)
 	if character.control_group != Data.CGs.UNIVERSAL and target_tile.control_group != character.control_group: return false
-	if target_tile.occupant: return false
-	arena_tiles[character.grid_pos.y][character.grid_pos.x].remove_occupant()
-	character.grid_pos = to_pos
-	arena_tiles[to_pos.y][to_pos.x].add_occupant(character)
-	character.move_to(arena_tiles[to_pos.y][to_pos.x].position)
-	return true
+	if target_tile.occupant and !is_instance_of(character, Obstacle): return false
+	
+	#Definitely going to move
+	get_tile_by_coords(character.grid_pos).remove_occupant()
+	
+	if target_tile.occupant: #obstacle moving to an occupied tile
+		var obstruction = target_tile.occupant
+		var next_tile = to_pos - character.grid_pos
+		var push_successful = !is_instance_of(obstruction, Obstacle) and await _attempt_move(obstruction, to_pos + next_tile)
+		if push_successful:
+			obstruction.get_node("HpNode").take_damage(character.move_damage)
+			target_tile.add_occupant(character)
+			character.grid_pos = to_pos
+			character.move_to(target_tile.position, push)
+		else: #obstacle deals death damage
+			var char_hp_node = character.get_node("HpNode")
+			character.move_to(target_tile.position)
+			await get_tree().create_timer(character.tile_move_speed).timeout
+			obstruction.get_node("HpNode").take_damage(char_hp_node.HP / 2)
+			char_hp_node.take_damage(char_hp_node.HP)
+		return true
+	else: #moving to unoccupied tile
+		target_tile.add_occupant(character)
+		character.grid_pos = to_pos
+		character.move_to(target_tile.position, push)
+		return true
 
 
 func _attempt_attack(character: Character) -> void:
@@ -131,62 +151,20 @@ func _attempt_attack(character: Character) -> void:
 		target.get_node("HpNode").take_damage(10)
 
 
-func _attempt_damage(grid_location: Vector2i, amt: float, on_success: Callable = func():pass):
+func _attempt_damage(grid_coords: Vector2i, amt: float, on_success: Callable = func():pass) -> bool:
+	var target_tile = get_tile_by_coords(grid_coords)
+	if target_tile == null: return false
 	
-	var target_tile = arena_tiles[grid_location.y][grid_location.x]
 	if target_tile.occupant:
 		target_tile.occupant.get_node("HpNode").take_damage(amt)
-		on_success.call()
+		on_success.call() #Using this in rocket
+		return true
+	else:
+		return false
 
 
 func _attempt_ability(caster: Character, card) -> void:
 	card.use_ability(caster, %CombatArena)
-
-
-func _attempt_push(pos: Vector2i, dir: Vector2i, push_dmg: float = 0.0) -> bool:
-	if !is_valid_tile(pos): return false
-	var target : Character = arena_tiles[pos.y][pos.x].occupant
-	if target == null: return false
-	
-	if !is_instance_of(target, Character): return false
-	var target_hp_node = target.get_node("HpNode")
-	target_hp_node.take_damage(push_dmg)
-	
-	var push_to = pos + dir
-	if !is_valid_tile(push_to): return false
-	var target_tile = arena_tiles[push_to.y][push_to.x]
-	
-	if target.is_in_group("Obstacles"): #always moves
-		
-		#move to unoccupied tile
-		if _attempt_move(target, push_to): return true
-		
-		#move to tile occupied by obstacle
-		var obstruction : Character = target_tile.occupant
-		target.move_to(target_tile.position)
-		arena_tiles[pos.y][pos.x].remove_occupant()
-		await get_tree().create_timer(target.tile_move_speed).timeout
-		if obstruction.is_in_group("Obstacles"):
-			obstruction.get_node("HpNode").take_damage(target_hp_node.HP / 2)
-			target_hp_node.take_damage(target_hp_node.HP)
-			return true
-		#move to tile occupied by non-obstacle (cause knockback)
-		else:
-			if _attempt_knockback(obstruction, dir):
-				obstruction.get_node("HpNode").take_damage(push_dmg)
-				target_tile.add_occupant(target)
-				return true
-			else:
-				obstruction.get_node("HpNode").take_damage(target_hp_node.HP / 2)
-				target_hp_node.take_damage(target_hp_node.HP)
-				return true
-	else: #all other characters
-		return _attempt_move(target, push_to)
-
-
-func _attempt_knockback(character: Character, dir: Vector2i) -> bool:
-	var attempted_pos = character.grid_pos + dir
-	return _attempt_move(character, attempted_pos)
 
 
 func init_arena_tiles():

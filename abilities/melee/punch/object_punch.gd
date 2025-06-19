@@ -1,17 +1,15 @@
 extends Node3D
 
-signal attempt_push(pos, dir, dmg)
-
+signal attempt_push
+signal attempt_damage
 
 func _ready() -> void:
 	$AnimationPlayer.play("punch")
 
 
-func _attempt_push() -> void:
-	var caster = get_parent()
-	var attacking_pos = caster.grid_pos
-	attacking_pos.x += caster.attack_direction
-	emit_signal("attempt_push", attacking_pos, Vector2i(caster.attack_direction, 0), 50.0)
+func execute_hit() -> void:
+	attempt_damage.emit()
+	attempt_push.emit()
 
 
 func _on_animation_finished(anim_name: StringName) -> void:
