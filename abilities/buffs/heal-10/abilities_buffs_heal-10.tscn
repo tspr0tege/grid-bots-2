@@ -5,5 +5,6 @@
 
 [node name="Card-heal10" type="Node"]
 script = ExtResource("1_fs4sg")
+COST = 1
 ICON = ExtResource("2_3m8lj")
 metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

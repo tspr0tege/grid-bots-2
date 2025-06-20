@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://b7s8i4yotbhd4"]
+[gd_scene load_steps=28 format=3 uid="uid://b7s8i4yotbhd4"]
 
 [ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battleScene_gameController.gd" id="1_p7nsj"]
 [ext_resource type="Script" uid="uid://d1tg7waqcp1ck" path="res://scenes/battle-scene/scenes_battleScene.gd" id="1_w5c51"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://c08lgbln8qfyn" path="res://entities/common-resources/character.tscn" id="4_dllb0"]
 [ext_resource type="Material" uid="uid://c6s1klglreml7" path="res://entities/test-character/red_albedo.tres" id="4_snvd5"]
 [ext_resource type="Script" uid="uid://1cq45k43fpfc" path="res://entities/common-resources/movement/MovementQuickHop.gd" id="5_3k3j3"]
+[ext_resource type="PackedScene" uid="uid://dgbmwfed8cfja" path="res://abilities/instant-shot/test-shot/abilities_instant-shot_test-shot.tscn" id="6_daxnq"]
 [ext_resource type="PackedScene" uid="uid://ck7yv7nnq5hna" path="res://entities/common-resources/hp_node.tscn" id="6_pp0o7"]
 [ext_resource type="Texture2D" uid="uid://d3v0aeruwqfx6" path="res://scenes/battle-scene/pause-button.svg" id="7_ftv0g"]
 [ext_resource type="Script" uid="uid://bhngbrs7oyjqy" path="res://entities/test-character/red_character.gd" id="7_rqjoh"]
@@ -59,34 +60,6 @@ tracks/0/keys = {
 _data = {
 &"RESET": SubResource("Animation_6tpmo"),
 &"white_flash": SubResource("Animation_2u67o")
-}
-
-[sub_resource type="Animation" id="Animation_n0yl0"]
-length = 0.001
-
-[sub_resource type="Animation" id="Animation_daxnq"]
-resource_name = "shoot"
-length = 0.1
-tracks/0/type = "audio"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Shoot")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"clips": [{
-"end_offset": 0.0,
-"start_offset": 0.0,
-"stream": ExtResource("13_daxnq")
-}],
-"times": PackedFloat32Array(0)
-}
-tracks/0/use_blend = true
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_osimj"]
-_data = {
-&"RESET": SubResource("Animation_n0yl0"),
-&"shoot": SubResource("Animation_daxnq")
 }
 
 [sub_resource type="Animation" id="Animation_pp0o7"]
@@ -191,16 +164,11 @@ script = ExtResource("1_p7nsj")
 
 [node name="Floor" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena"]
 
-[node name="PlayerCharacter" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" node_paths=PackedStringArray("animation_player") instance=ExtResource("4_dllb0")]
+[node name="PlayerCharacter" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" instance=ExtResource("4_dllb0")]
 control_group = 2
 move_handler = SubResource("Resource_daxnq")
-animation_player = NodePath("ActionPlayer")
 display_health = true
-
-[node name="HpNode" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter" node_paths=PackedStringArray("animation_player", "hit_sfx") instance=ExtResource("6_pp0o7")]
-HP = 200.0
-animation_player = NodePath("../WhiteFlash")
-hit_sfx = NodePath("../Hit")
+BASE_ATTACK = ExtResource("6_daxnq")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter"]
 mesh = ExtResource("2_snvd5")
@@ -216,11 +184,6 @@ libraries = {
 &"": SubResource("AnimationLibrary_n0yl0")
 }
 
-[node name="ActionPlayer" type="AnimationPlayer" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter"]
-libraries = {
-&"": SubResource("AnimationLibrary_osimj")
-}
-
 [node name="Shoot" type="AudioStreamPlayer" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter"]
 max_polyphony = 3
 
@@ -229,13 +192,17 @@ stream = ExtResource("12_pp0o7")
 volume_db = -6.0
 max_polyphony = 3
 
-[node name="RedCharacter" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" node_paths=PackedStringArray("animation_player")]
+[node name="HpNode" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter" node_paths=PackedStringArray("animation_player", "hit_sfx") instance=ExtResource("6_pp0o7")]
+MAX_HP = 500.0
+animation_player = NodePath("../WhiteFlash")
+hit_sfx = NodePath("../Hit")
+
+[node name="RedCharacter" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena"]
 transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0, 0)
 script = ExtResource("7_rqjoh")
-attacking = false
 control_group = 1
-animation_player = NodePath("ActionPlayer")
 display_health = true
+BASE_ATTACK = ExtResource("6_daxnq")
 attack_direction = -1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter"]
@@ -249,6 +216,7 @@ surface_material_override/5 = ExtResource("4_snvd5")
 
 [node name="HpNode" type="Node" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter" node_paths=PackedStringArray("animation_player", "hit_sfx")]
 script = ExtResource("8_b0dkb")
+MAX_HP = 150.0
 animation_player = NodePath("../WhiteFlash")
 hit_sfx = NodePath("../Hit")
 

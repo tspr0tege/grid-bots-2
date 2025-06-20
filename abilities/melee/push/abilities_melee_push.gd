@@ -8,4 +8,4 @@ func use_ability(caster: Character, arena : Node3D) -> bool:
 	var target: Character = arena.get_tile_by_coords(target_coords).occupant
 	if target == null: return false
 	
-	return await arena._attempt_move(target, target_coords + Vector2i(caster.attack_direction, 0), true)
+	return await arena._execute_move(target, target_coords + Vector2i(caster.attack_direction, 0), true)

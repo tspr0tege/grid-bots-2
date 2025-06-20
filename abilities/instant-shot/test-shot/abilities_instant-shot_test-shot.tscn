@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dgbmwfed8cfja"]
+
+[ext_resource type="Script" uid="uid://g2ewx03xhqa5" path="res://abilities/instant-shot/test-shot/abilities_instant-shot_test-shot.gd" id="1_5x7bp"]
+[ext_resource type="AudioStream" uid="uid://d2e07vyq72gpy" path="res://abilities/instant-shot/test-shot/pew.wav" id="2_wq5kj"]
+
+[node name="Abilities-InstantShot-TestShot" type="Node"]
+script = ExtResource("1_5x7bp")
+metadata/_custom_type_script = "uid://cn7a5ijxhii6g"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_wq5kj")

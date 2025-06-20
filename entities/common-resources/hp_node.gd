@@ -4,11 +4,15 @@ signal received_damage(attempted_amount: float)
 signal HP_changed(new_amt: float)
 signal character_died
 
-@export var HP: float = 100
+@export var MAX_HP: float = 100
 @export var animation_player: AnimationPlayer
 @export var hit_sfx: AudioStreamPlayer
 @export_range(0.0, 1.0) var defense: float = 0.0
 
+var HP: float
+
+func _ready() -> void:
+	HP = MAX_HP
 
 func take_damage(amt: float) -> void:
 	var received_damage = amt * (1.0 - defense)

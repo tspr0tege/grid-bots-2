@@ -5,9 +5,7 @@ signal match_over(player_wins: bool)
 const FLOOR_TILE = preload("res://scenes/battle-scene/floor_tile.tscn")
 
 var player_character: Node = null
-var player_team := []
 var enemy_character: Node = null
-var enemy_team := []
 var grid_size = Vector2i(6, 3)
 
 const RAY_LENGTH = 100
@@ -92,19 +90,19 @@ func _unhandled_input(event: InputEvent) -> void:
 					#pass
 
 
-func _attempt_move(character: Character, target_pos: Vector2i, push := false) -> bool:
+func _attempt_move(character: Character, target_pos: Vector2i) -> bool:
 	#Check valid coordinates
 	if not is_valid_tile(target_pos): return false
 	
 	var desired_move = target_pos - character.grid_pos
 	# desired_move.length is 1.0 for adjacent tiles, and roughly 1.4 for diagonals
 	if character.teleport_enabled or desired_move.length() <= 1:
-		return await _execute_move(character, target_pos, push)
-	elif character.diagonal_move_enabled and await _execute_move(character, character.grid_pos + move_dir(desired_move, 0), push):
+		return await _execute_move(character, target_pos)
+	elif character.diagonal_move_enabled and await _execute_move(character, character.grid_pos + move_dir(desired_move, 0)):
 		return true
-	elif abs(desired_move.x) <= abs(desired_move.y) and await _execute_move(character, character.grid_pos + move_dir(desired_move, 2), push):
+	elif abs(desired_move.x) <= abs(desired_move.y) and await _execute_move(character, character.grid_pos + move_dir(desired_move, 2)):
 		return true
-	elif await _execute_move(character, character.grid_pos + move_dir(desired_move, 1), push):
+	elif await _execute_move(character, character.grid_pos + move_dir(desired_move, 1)):
 		return true
 	else:
 		return false #invalid move
@@ -113,16 +111,20 @@ func _attempt_move(character: Character, target_pos: Vector2i, push := false) ->
 func _execute_move(character: Character, to_pos: Vector2i, push := false) -> bool:
 	#Check Character controlled tile
 	var target_tile = get_tile_by_coords(to_pos)
+	if target_tile == null: return false
+	#Character moving to invalid control_group tile
 	if character.control_group != Data.CGs.UNIVERSAL and target_tile.control_group != character.control_group: return false
+	#Character moving to occupied tile
 	if target_tile.occupant and !is_instance_of(character, Obstacle): return false
 	
 	#Definitely going to move
 	get_tile_by_coords(character.grid_pos).remove_occupant()
 	
-	if target_tile.occupant: #obstacle moving to an occupied tile
+	#obstacle moving to an occupied tile
+	if is_instance_of(character, Obstacle) and target_tile.occupant: 
 		var obstruction = target_tile.occupant
 		var next_tile = to_pos - character.grid_pos
-		var push_successful = !is_instance_of(obstruction, Obstacle) and await _attempt_move(obstruction, to_pos + next_tile)
+		var push_successful = !is_instance_of(obstruction, Obstacle) and await _execute_move(obstruction, to_pos + next_tile, true)
 		if push_successful:
 			obstruction.get_node("HpNode").take_damage(character.move_damage)
 			target_tile.add_occupant(character)
@@ -142,15 +144,6 @@ func _execute_move(character: Character, to_pos: Vector2i, push := false) -> boo
 		return true
 
 
-func _attempt_attack(character: Character) -> void:
-	#execute attack animation
-	character.shoot()
-	#print("Found a target at %s. Target name: %s" % [Vector2i(x, target_row), target_tile.occupant.name])
-	var target = linear_search(character, "CHARACTER")
-	if target != null:
-		target.get_node("HpNode").take_damage(10)
-
-
 func _attempt_damage(grid_coords: Vector2i, amt: float, on_success: Callable = func():pass) -> bool:
 	var target_tile = get_tile_by_coords(grid_coords)
 	if target_tile == null: return false
@@ -163,8 +156,22 @@ func _attempt_damage(grid_coords: Vector2i, amt: float, on_success: Callable = f
 		return false
 
 
-func _attempt_ability(caster: Character, card) -> void:
-	card.use_ability(caster, %CombatArena)
+func _attempt_healing(character: Character, amt: float, overheal := false) -> bool:
+	var target_hp_node = character.get_node("HpNode")
+	if overheal:
+		target_hp_node.take_healing(amt)
+		return true
+	
+	var valid_healing = target_hp_node.MAX_HP - target_hp_node.HP
+	if valid_healing > 0:
+		target_hp_node.take_healing(valid_healing if valid_healing < amt else amt)
+		return true
+	
+	return false
+
+
+func _attempt_ability(caster: Character, ability: Ability) -> void:
+	ability.use_ability(caster, %CombatArena)
 
 
 func init_arena_tiles():
@@ -189,10 +196,11 @@ func init_arena_tiles():
 	place_character_on_board(enemy_character, Vector2i(4, 1))
 
 
-func place_character_on_board(character: Character, pos: Vector2i):
-	character.grid_pos = pos
-	character.position = arena_tiles[pos.y][pos.x].position
-	arena_tiles[pos.y][pos.x].add_occupant(character)
+func place_character_on_board(character: Character, coords: Vector2i):
+	var target_tile = get_tile_by_coords(coords)
+	character.grid_pos = coords
+	character.position = target_tile.position
+	target_tile.add_occupant(character)
 
 
 func move_dir(target_pos: Vector2i, rule: int) -> Vector2i:
@@ -205,27 +213,37 @@ func move_dir(target_pos: Vector2i, rule: int) -> Vector2i:
 	return direction
 
 
-func linear_search(from_character: Character, search_for: String):
-	var target_row = from_character.grid_pos.y
-	var direction = from_character.attack_direction
-	var start_point = from_character.grid_pos.x + direction
-	var end_point = grid_size.x if direction > 0 else -1
+func search_row(coords: Vector2i, direction: int, search_for: Callable) -> Node3D:
+	var target_row = coords.y
+	var start_point = coords.x + direction
+	var end_point = grid_size.x if direction > 0 else 0
+	var search_selection = arena_tiles[target_row].slice(start_point, end_point, direction)
+	if end_point == 0: search_selection.push_back(arena_tiles[target_row][0])
 	
-	match search_for:
-		"TILE":
-			for x in range(start_point, end_point, direction):
-				var target_tile = arena_tiles[target_row][x]
-						
-				if from_character.control_group != target_tile.control_group:
-					return target_tile
-		"CHARACTER":
-			for x in range(start_point, end_point, direction):
-				var target_tile = arena_tiles[target_row][x]
-						
-				if is_instance_valid(target_tile.occupant):
-					return target_tile.occupant
+	for tile in search_selection:
+		var found = search_for.call(tile)
+		if found: return found
 	
 	return null
+
+
+func search_col(col_number: int, search_for: Callable) -> Node3D:
+	for i in range(3):
+		var found = search_for.call(arena_tiles[col_number][i])
+		if found: return found
+	
+	return null
+
+
+func for_tile(target_tile: Node3D, control_group: Data.CGs) -> Node3D:
+	if target_tile.control_group == control_group:
+		return target_tile
+	else:
+		return null
+
+
+func for_character(target_tile: Node3D) -> Character:
+	return target_tile.occupant
 
 
 func tiles_in_group(control_group: Data.CGs) -> Array:

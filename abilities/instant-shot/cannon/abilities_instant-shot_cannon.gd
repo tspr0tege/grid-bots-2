@@ -12,9 +12,8 @@ func use_ability(caster : Character, arena : Node3D) -> bool:
 	new_cannon.get_node("Blast").connect("finished", new_cannon.queue_free)
 	caster.add_child(new_cannon)
 	
-	var target = arena.linear_search(caster, "CHARACTER")
+	var target = arena.search_row(caster.grid_pos, caster.attack_direction, arena.for_character)
 	if target: 
-		target.get_node("HpNode").take_damage(dmg)
-		return true
-	else:
-		return false
+		arena._attempt_damage(target.grid_pos, dmg)
+	
+	return true

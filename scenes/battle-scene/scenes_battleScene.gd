@@ -5,15 +5,15 @@ extends Node
 
 var player_deck := [
 	#load().instantiate(),
-	#load("res://abilities/buffs/heal-10/abilities_buffs_heal-10.tscn").instantiate(),
-	#load("res://abilities/counters/reflect/abilities_counters_reflect.tscn").instantiate(),
-	#load("res://abilities/debuffs/def-down/abilities_debuffs_def-down.tscn").instantiate(),
+	load("res://abilities/buffs/heal-10/abilities_buffs_heal-10.tscn").instantiate(),
+	load("res://abilities/counters/reflect/abilities_counters_reflect.tscn").instantiate(),
+	load("res://abilities/debuffs/def-down/abilities_debuffs_def-down.tscn").instantiate(),
 	#load("res://abilities/instant-shot/cannon/abilities_instant-shot_cannon.tscn").instantiate(),
 	load("res://abilities/instantiated-shot/rocket/abilities_instantiated-shot_rocket.tscn").instantiate(),
-	load("res://abilities/melee/punch/abilties_melee_punch.tscn").instantiate(),
+	#load("res://abilities/melee/punch/abilties_melee_punch.tscn").instantiate(),
 	load("res://abilities/stage-effects/capture-tile/abilities_stage-effects_capture-tile.tscn").instantiate(),
 	load("res://abilities/summons/rock-cube/abilities_summons_rock-cube.tscn").instantiate(),
-	load("res://abilities/thrown/cannon-ball/abilities_thrown_cannon-ball.tscn").instantiate(),
+	#load("res://abilities/thrown/cannon-ball/abilities_thrown_cannon-ball.tscn").instantiate(),
 	load("res://abilities/traps/landmine/abilities_traps_landmine.tscn").instantiate(),
 ]
 
@@ -27,19 +27,16 @@ func _ready() -> void:
 
 
 func draw_card(index: int) -> void:
-	#var dealt_card = load(player_deck[next_card]).instantiate()
-	var dealt_card = player_deck.pop_front()
-	card_hand[index] = dealt_card
-	ability_buttons[index].get_node("TextureRect").texture = dealt_card.ICON
+	var new_card = player_deck.pop_front()
+	card_hand[index] = new_card
+	ability_buttons[index].get_node("TextureRect").texture = new_card.ICON
 
 
 func _handle_pause_button() -> void:
 	if get_tree().paused:
-		#print("Unpaused")
 		%PauseMenu.visible = false
 		get_tree().paused = false
 	else:
-		#print("Paused")
 		get_tree().paused = true
 		%PauseMenu.visible = true
 
@@ -49,8 +46,8 @@ func _on_quit_button_pressed() -> void:
 	SceneManager.load_menu()
 
 
-func _UI_input_fire_button_pressed() -> void:
-	%CombatArena._attempt_attack(%CombatArena.player_character)
+func _UI_input_fire_button_pressed() -> void:	
+	%CombatArena.player_character.use_base_attack(%CombatArena)
 
 
 func _UI_input_use_ability(index: int) -> void:
