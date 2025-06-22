@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://b7s8i4yotbhd4"]
+[gd_scene load_steps=31 format=3 uid="uid://b7s8i4yotbhd4"]
 
 [ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battleScene_gameController.gd" id="1_p7nsj"]
 [ext_resource type="Script" uid="uid://d1tg7waqcp1ck" path="res://scenes/battle-scene/scenes_battleScene.gd" id="1_w5c51"]
@@ -8,9 +8,11 @@
 [ext_resource type="PackedScene" uid="uid://c08lgbln8qfyn" path="res://entities/common-resources/character.tscn" id="4_dllb0"]
 [ext_resource type="Material" uid="uid://c6s1klglreml7" path="res://entities/test-character/red_albedo.tres" id="4_snvd5"]
 [ext_resource type="Script" uid="uid://1cq45k43fpfc" path="res://entities/common-resources/movement/MovementQuickHop.gd" id="5_3k3j3"]
+[ext_resource type="Script" uid="uid://g2ewx03xhqa5" path="res://abilities/instant-shot/test-shot/abilities_instant-shot_test-shot.gd" id="6_6tpmo"]
 [ext_resource type="PackedScene" uid="uid://dgbmwfed8cfja" path="res://abilities/instant-shot/test-shot/abilities_instant-shot_test-shot.tscn" id="6_daxnq"]
 [ext_resource type="PackedScene" uid="uid://ck7yv7nnq5hna" path="res://entities/common-resources/hp_node.tscn" id="6_pp0o7"]
 [ext_resource type="Texture2D" uid="uid://d3v0aeruwqfx6" path="res://scenes/battle-scene/pause-button.svg" id="7_ftv0g"]
+[ext_resource type="AudioStream" uid="uid://d2e07vyq72gpy" path="res://abilities/instant-shot/test-shot/pew.wav" id="7_n0yl0"]
 [ext_resource type="Script" uid="uid://bhngbrs7oyjqy" path="res://entities/test-character/red_character.gd" id="7_rqjoh"]
 [ext_resource type="Script" uid="uid://ryh2edxq3u5e" path="res://entities/common-resources/hp_node.gd" id="8_b0dkb"]
 [ext_resource type="Material" uid="uid://b24jr8mu18ac3" path="res://entities/test-character/white_mat.tres" id="11_dllb0"]
@@ -23,6 +25,20 @@ script = ExtResource("5_3k3j3")
 duration = 0.15
 hop_height = 0.12
 metadata/_custom_type_script = "uid://1cq45k43fpfc"
+
+[sub_resource type="PackedScene" id="PackedScene_6tpmo"]
+resource_local_to_scene = true
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"names": PackedStringArray("Abilities-InstantShot-TestShot", "script", "metadata/_custom_type_script", "Node", "AudioStreamPlayer", "stream"),
+"node_count": 2,
+"node_paths": [],
+"nodes": PackedInt32Array(-1, -1, 3, 0, -1, 2, 1, 0, 2, 1, 0, 0, 0, 4, 4, -1, 1, 5, 2, 0),
+"variants": [ExtResource("6_6tpmo"), "uid://cn7a5ijxhii6g", ExtResource("7_n0yl0")],
+"version": 3
+}
 
 [sub_resource type="Animation" id="Animation_6tpmo"]
 length = 0.001
@@ -168,7 +184,7 @@ script = ExtResource("1_p7nsj")
 control_group = 2
 move_handler = SubResource("Resource_daxnq")
 display_health = true
-BASE_ATTACK = ExtResource("6_daxnq")
+BASE_ATTACK = SubResource("PackedScene_6tpmo")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter"]
 mesh = ExtResource("2_snvd5")
@@ -473,7 +489,6 @@ text = "Quit"
 [connection signal="character_death" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" method="_on_character_death"]
 [connection signal="HP_changed" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter/HpNode" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter" method="_on_hp_node_hp_changed"]
 [connection signal="character_died" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter/HpNode" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter" method="_handle_character_death"]
-[connection signal="attempt_attack" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" method="_attempt_attack"]
 [connection signal="attempt_move" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" method="_attempt_move"]
 [connection signal="character_death" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" method="_on_character_death"]
 [connection signal="HP_changed" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter/HpNode" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/RedCharacter" method="_on_hp_node_hp_changed"]

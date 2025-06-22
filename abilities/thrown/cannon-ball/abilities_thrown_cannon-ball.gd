@@ -31,4 +31,5 @@ func use_ability(caster : Character, arena : Node3D) -> bool:
 	new_ball.connect("arc_completed", target_tile.add_shot.bind(new_ball))
 	new_ball.connect("hit_floor", target_tile.remove_shot.bind(new_ball.shots_index))
 	new_ball.connect("hit_floor", target_tile.break_tile)	
+	new_ball.connect("attempt_damage", arena._attempt_damage)
 	return true

@@ -21,7 +21,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
 mesh = SubResource("BoxMesh_sktmq")
 
 [node name="HpNode" parent="." instance=ExtResource("2_l4t62")]
-HP = 200.0
 
 [node name="CPUParticles3D" type="CPUParticles3D" parent="."]
 emitting = false

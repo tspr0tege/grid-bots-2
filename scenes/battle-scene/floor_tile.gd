@@ -36,7 +36,7 @@ func repair_tile() -> void:
 func add_occupant(new_occupant: Character) -> void:
 	occupant = new_occupant
 	for trap in traps:
-		trap.call(new_occupant)
+		trap.call()
 	traps = []
 	
 	for shot in shots:
@@ -48,16 +48,14 @@ func remove_occupant() -> void:
 	occupant = null
 
 
-func add_shot(shot):
-	if occupant:
-		shot._hit_character(occupant)
+func add_shot(shot: Projectile):
+	shot.grid_coords = grid_coordinates
+	if occupant and occupant.control_group != shot.control_group:
+		shot._hit_character()
 	else:
 		shot.shots_index = shots.size()
-		shot.grid_coords = grid_coordinates
 		shots.push_back(shot)
 
 
-func remove_shot(index):
-	print("Removing shot at index: " + str(index))
-	print("Shot name: " + str(shots[index].name))
+func remove_shot(index: int) -> void:
 	shots.pop_at(index)

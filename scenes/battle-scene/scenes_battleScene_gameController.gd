@@ -144,16 +144,22 @@ func _execute_move(character: Character, to_pos: Vector2i, push := false) -> boo
 		return true
 
 
-func _attempt_damage(grid_coords: Vector2i, amt: float, on_success: Callable = func():pass) -> bool:
+func _attempt_damage(grid_coords: Vector2i, amt: float) -> bool:
 	var target_tile = get_tile_by_coords(grid_coords)
 	if target_tile == null: return false
+	if target_tile.occupant == null: return false
 	
-	if target_tile.occupant:
-		target_tile.occupant.get_node("HpNode").take_damage(amt)
-		on_success.call() #Using this in rocket
+	var target_hp_node = target_tile.occupant.get_node("HpNode")
+	if !target_hp_node.is_shielded:
+		target_hp_node.take_damage(amt)
 		return true
-	else:
-		return false
+	
+	var adjusted_dmg = target_hp_node.shield_effect.call(amt)
+	if adjusted_dmg > 0:
+		target_hp_node.take_damage(amt)
+		return true
+	
+	return false
 
 
 func _attempt_healing(character: Character, amt: float, overheal := false) -> bool:
@@ -267,10 +273,11 @@ func is_valid_tile(pos: Vector2i) -> bool:
 	return true
 
 
-func _on_character_death(source: Variant) -> void:
-	if source == player_character:
+func _on_character_death(character: Character) -> void:
+	get_tile_by_coords(character.grid_pos).remove_occupant()
+	if character == player_character:
 		emit_signal("match_over", false)
-	else:
+	if character == enemy_character:
 		emit_signal("match_over", true)
 
 
@@ -278,5 +285,14 @@ func get_tile_by_coords(coords: Vector2i) -> Node3D:
 	if !is_valid_tile(coords): return null
 	else: return arena_tiles[coords.y][coords.x]
 
-func move_shot(shot):
-	pass
+func _attempt_move_shot(from_coords: Vector2i, to_coords: Vector2i, shot: Projectile) -> void:
+	var current_tile = get_tile_by_coords(from_coords)
+	current_tile.remove_shot(shot.shots_index)
+	#shot.grid_coords = to_coords
+	var new_tile = get_tile_by_coords(to_coords)
+	if new_tile:
+		new_tile.add_shot(shot)
+	else:
+		shot.exit_arena()
+		return
+	

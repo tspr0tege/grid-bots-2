@@ -9,17 +9,20 @@ signal character_died
 @export var hit_sfx: AudioStreamPlayer
 @export_range(0.0, 1.0) var defense: float = 0.0
 
+var is_shielded: bool = false
+var shield_effect: Callable
+
 var HP: float
 
 func _ready() -> void:
 	HP = MAX_HP
 
 func take_damage(amt: float) -> void:
-	var received_damage = amt * (1.0 - defense)
-	HP -= received_damage
+	var net_damage = amt * (1.0 - defense)
+	HP -= net_damage
 	HP = max(HP, 0)
 	if animation_player: animation_player.play("white_flash")
-	if received_damage > 0: emit_signal("HP_changed", HP)
+	if net_damage > 0: emit_signal("HP_changed", HP)
 	if HP > 0:
 		if hit_sfx: hit_sfx.play()
 		emit_signal("received_damage", amt)
@@ -30,6 +33,11 @@ func take_damage(amt: float) -> void:
 func take_healing(amt: float) -> void:
 	HP += amt
 	emit_signal("HP_changed", HP)
+
+
+func connect_shield(shield_program: Callable) -> void:
+	is_shielded = true
+	shield_effect = shield_program
 
 
 func affect_defense(amt: float, time: float) -> void:

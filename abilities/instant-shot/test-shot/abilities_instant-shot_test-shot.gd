@@ -1,6 +1,6 @@
 extends Ability
 
-var dmg := 10.0
+@export var dmg := 10.0
 
 func use_ability(caster : Character, arena : Node3D) -> bool:
 	#coords: Vector2i, direction: int, search_for: Callable

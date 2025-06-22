@@ -2,8 +2,5 @@
 
 [ext_resource type="Script" uid="uid://ryh2edxq3u5e" path="res://entities/common-resources/hp_node.gd" id="1_csgda"]
 
-[node name="HpNode" type="Node" node_paths=PackedStringArray("animation_player", "hit_sfx")]
+[node name="HpNode" type="Node"]
 script = ExtResource("1_csgda")
-HP = 1000.0
-animation_player = NodePath("")
-hit_sfx = NodePath("")

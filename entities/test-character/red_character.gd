@@ -1,7 +1,6 @@
 extends Character
 
 signal attempt_move(character, to_coords)
-signal attempt_attack(character, action)
 
 @export var attacking : bool = true
 

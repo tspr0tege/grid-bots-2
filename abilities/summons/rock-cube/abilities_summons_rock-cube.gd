@@ -8,6 +8,7 @@ func use_ability(caster : Character, arena : Node3D) -> bool:
 	if target_tile.occupant: return false #Replace this with damage behavior
 	
 	var new_rock_cube = ROCK_CUBE.instantiate()
+	new_rock_cube.connect("character_death", arena._on_character_death)
 	arena.add_child(new_rock_cube)
 	arena.place_character_on_board(new_rock_cube, target_tile.grid_coordinates)
 	return true

@@ -53,6 +53,6 @@ func _on_hp_node_hp_changed(new_amt: float) -> void:
 
 func _handle_character_death() -> void:
 	
-	await get_tree().create_timer(.2).timeout
 	emit_signal("character_death", self)
+	await get_tree().create_timer(.2).timeout
 	queue_free()

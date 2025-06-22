@@ -1,11 +1,11 @@
-extends Shot
+extends Projectile
 
 signal arc_completed
 signal hit_floor
 var live := false
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if live and $Path/PathFollow3D/MeshInstance3D.global_position.y <= 0:
 		emit_signal("hit_floor")
 		live = false

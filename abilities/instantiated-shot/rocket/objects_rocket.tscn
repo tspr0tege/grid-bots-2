@@ -1,28 +1,30 @@
-[gd_scene load_steps=4 format=3 uid="uid://cem4x4366r8ik"]
+[gd_scene load_steps=4 format=3 uid="uid://d2n6bk3ym717s"]
 
-[ext_resource type="Script" uid="uid://bu71okvirdkyu" path="res://abilities/instantiated-shot/rocket/objects_rocket.gd" id="1_4cogp"]
+[ext_resource type="Script" uid="uid://dlhmdpej105ot" path="res://abilities/Projectile.gd" id="1_a0jp8"]
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_srm4g"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_a0jp8"]
 top_radius = 0.1
 bottom_radius = 0.1
 height = 0.25
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_06x4n"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_cn2pe"]
 top_radius = 0.0
 bottom_radius = 0.1
 height = 0.25
 cap_top = false
 
-[node name="Rocket" type="Node3D"]
-script = ExtResource("1_4cogp")
+[node name="Objects-Rocket" type="Node3D"]
+script = ExtResource("1_a0jp8")
+dmg = 20.0
+metadata/_custom_type_script = "uid://dlhmdpej105ot"
 
 [node name="Cylinder" type="MeshInstance3D" parent="."]
-transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
-mesh = SubResource("CylinderMesh_srm4g")
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, -0.2, 0, 0)
+mesh = SubResource("CylinderMesh_a0jp8")
 
 [node name="Cone" type="MeshInstance3D" parent="Cylinder"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
-mesh = SubResource("CylinderMesh_06x4n")
+mesh = SubResource("CylinderMesh_cn2pe")
 skeleton = NodePath("../..")
 
 [node name="Label3D" type="Label3D" parent="."]
