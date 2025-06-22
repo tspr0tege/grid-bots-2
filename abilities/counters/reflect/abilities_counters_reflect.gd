@@ -9,7 +9,7 @@ var shield_object: Node3D
 func use_ability(caster : Character, arena : Node3D) -> bool:
 	var new_shield = REFLECT.instantiate()
 	shield_object = new_shield
-	new_shield.get_node("Timer").connect("timeout", _remove_shield.bind(new_shield))
+	new_shield.get_node("Timer").connect("timeout", _remove_shield)
 	caster.add_child(new_shield)
 	
 	caster_hp_node = caster.get_node("HpNode")

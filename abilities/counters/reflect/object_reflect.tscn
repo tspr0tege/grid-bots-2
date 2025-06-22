@@ -1,6 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dds65oid4ggto"]
-
-[ext_resource type="Script" uid="uid://clx1mgamhvtsn" path="res://abilities/counters/reflect/object_reflect.gd" id="1_g854s"]
+[gd_scene load_steps=3 format=3 uid="uid://dds65oid4ggto"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_ai1ge"]
 
@@ -9,7 +7,6 @@ transparency = 1
 albedo_color = Color(0, 0.729412, 1, 0.376471)
 
 [node name="Reflect" type="Node3D"]
-script = ExtResource("1_g854s")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
@@ -20,4 +17,4 @@ surface_material_override/0 = SubResource("StandardMaterial3D_ed2fy")
 one_shot = true
 autostart = true
 
-[connection signal="timeout" from="Timer" to="." method="remove_self"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

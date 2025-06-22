@@ -1,9 +1,11 @@
 extends Node3D
 
 signal match_over(player_wins: bool)
+signal update_energy_display(amount: float)
 
 const FLOOR_TILE = preload("res://scenes/battle-scene/floor_tile.tscn")
 
+var player_energy: float = 20.0
 var player_character: Node = null
 var enemy_character: Node = null
 var grid_size = Vector2i(6, 3)
@@ -22,7 +24,10 @@ func _ready():
 	#enemy_character.input_signal.connect(_on_input_signal_received)
 
 
-func _process(_delta):
+func _process(delta):
+	player_energy += delta
+	emit_signal("update_energy_display", player_energy)
+	
 	if Input.is_action_just_pressed("ui_left"):
 		_attempt_move(player_character, player_character.grid_pos + Vector2i(-1, 0))
 	elif Input.is_action_just_pressed("ui_right"):
@@ -176,8 +181,8 @@ func _attempt_healing(character: Character, amt: float, overheal := false) -> bo
 	return false
 
 
-func _attempt_ability(caster: Character, ability: Ability) -> void:
-	ability.use_ability(caster, %CombatArena)
+func _attempt_ability(caster: Character, ability: Ability) -> bool:
+	return ability.use_ability(caster, %CombatArena)
 
 
 func init_arena_tiles():

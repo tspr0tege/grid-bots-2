@@ -5,5 +5,6 @@
 
 [node name="Card-punch" type="Node"]
 script = ExtResource("1_dvdty")
+COST = 15
 ICON = ExtResource("2_mwp4t")
 metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

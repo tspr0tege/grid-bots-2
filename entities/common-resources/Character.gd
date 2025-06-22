@@ -20,6 +20,7 @@ var base_attack: Ability
 func _ready() -> void:
 	if BASE_ATTACK:
 		base_attack = BASE_ATTACK.instantiate()
+		base_attack.COST = 0
 		add_child(base_attack)
 	
 	if display_health:
@@ -52,7 +53,6 @@ func _on_hp_node_hp_changed(new_amt: float) -> void:
 
 
 func _handle_character_death() -> void:
-	
 	emit_signal("character_death", self)
 	await get_tree().create_timer(.2).timeout
 	queue_free()

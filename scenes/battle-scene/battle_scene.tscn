@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://b7s8i4yotbhd4"]
+[gd_scene load_steps=33 format=3 uid="uid://b7s8i4yotbhd4"]
 
 [ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battleScene_gameController.gd" id="1_p7nsj"]
 [ext_resource type="Script" uid="uid://d1tg7waqcp1ck" path="res://scenes/battle-scene/scenes_battleScene.gd" id="1_w5c51"]
@@ -143,6 +143,22 @@ _data = {
 &"RESET": SubResource("Animation_2x875"),
 &"shoot": SubResource("Animation_1vmax")
 }
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6tpmo"]
+bg_color = Color(0.190762, 0.190762, 0.190762, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n0yl0"]
+bg_color = Color(0.288793, 0.500798, 0.320133, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pp0o7"]
 bg_color = Color(0, 0, 0, 0.627451)
@@ -362,6 +378,14 @@ mouse_filter = 2
 expand_mode = 2
 stretch_mode = 4
 
+[node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+step = 0.1
+fill_mode = 3
+tint_under = Color(1, 1, 1, 0.294118)
+
 [node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -375,6 +399,14 @@ size_flags_horizontal = 4
 mouse_filter = 2
 expand_mode = 2
 stretch_mode = 4
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer2"]
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+step = 0.1
+fill_mode = 3
+tint_under = Color(1, 1, 1, 0.294118)
 
 [node name="MarginContainer3" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
 layout_mode = 2
@@ -390,6 +422,14 @@ mouse_filter = 2
 expand_mode = 2
 stretch_mode = 4
 
+[node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer3"]
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+step = 0.1
+fill_mode = 3
+tint_under = Color(1, 1, 1, 0.294118)
+
 [node name="MarginContainer4" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -403,6 +443,14 @@ size_flags_horizontal = 4
 mouse_filter = 2
 expand_mode = 2
 stretch_mode = 4
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer4"]
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+step = 0.1
+fill_mode = 3
+tint_under = Color(1, 1, 1, 0.294118)
 
 [node name="MarginContainer5" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
 layout_mode = 2
@@ -418,6 +466,14 @@ mouse_filter = 2
 expand_mode = 2
 stretch_mode = 4
 
+[node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer5"]
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+step = 0.1
+fill_mode = 3
+tint_under = Color(1, 1, 1, 0.294118)
+
 [node name="MarginContainer6" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -432,10 +488,40 @@ mouse_filter = 2
 expand_mode = 2
 stretch_mode = 4
 
-[node name="BottomPanel" type="PanelContainer" parent="CanvasLayer/GridContainer"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer6"]
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+step = 0.1
+fill_mode = 3
+tint_under = Color(1, 1, 1, 0.294118)
+
+[node name="EnergyBar" type="PanelContainer" parent="CanvasLayer/GridContainer"]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/GridContainer/EnergyBar"]
+layout_mode = 2
+
+[node name="TextureProgressBar" type="ProgressBar" parent="CanvasLayer/GridContainer/EnergyBar/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_styles/background = SubResource("StyleBoxFlat_6tpmo")
+theme_override_styles/fill = SubResource("StyleBoxFlat_n0yl0")
+step = 0.1
+value = 20.0
+fill_mode = 1
+show_percentage = false
+
+[node name="Label" type="Label" parent="CanvasLayer/GridContainer/EnergyBar/HBoxContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+text = "10"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="FireButton" type="Button" parent="CanvasLayer/GridContainer"]
 layout_mode = 2
@@ -486,6 +572,7 @@ text = "Quit"
 
 [connection signal="item_rect_changed" from="CanvasLayer/GridContainer/SubViewportContainer" to="CanvasLayer/GridContainer/SubViewportContainer" method="_on_sub_viewport_container_item_rect_changed"]
 [connection signal="match_over" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" to="." method="_on_combat_arena_match_over"]
+[connection signal="update_energy_display" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" to="." method="_update_energy"]
 [connection signal="character_death" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" method="_on_character_death"]
 [connection signal="HP_changed" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter/HpNode" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter" method="_on_hp_node_hp_changed"]
 [connection signal="character_died" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter/HpNode" to="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena/PlayerCharacter" method="_handle_character_death"]

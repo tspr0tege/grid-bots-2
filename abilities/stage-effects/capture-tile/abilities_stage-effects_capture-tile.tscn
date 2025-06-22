@@ -5,5 +5,6 @@
 
 [node name="Card-captureTile" type="Node"]
 script = ExtResource("1_edjxw")
+COST = 20
 ICON = ExtResource("2_eyqn2")
 metadata/_custom_type_script = "uid://cn7a5ijxhii6g"
