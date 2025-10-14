@@ -66,8 +66,14 @@ func start_online_match() -> void:
 	combatants.push_back(func(arena) -> void:
 		arena.enemy_character = PLAYER_CHARACTER.instantiate()
 		arena.enemy_character.rotation.y = 180
+		arena.enemy_character.attack_direction = -1
 		arena.get_node("%CombatArena").add_child(arena.enemy_character)
-		online_client.connect("opponent_move", func(coords):arena._execute_move.call(arena.enemy_character, coords))
+		online_client.connect("opponent_move", func(coords):
+			arena._execute_move.call(arena.enemy_character, coords)
+			)
+		online_client.connect("opponent_use_ability", func(uid): 
+			arena._attempt_ability.call(arena.enemy_character, Data.ability_deck[uid])
+			)
 		arena.place_character_on_board(arena.enemy_character, Vector2i(4, 1))
 		)
 	

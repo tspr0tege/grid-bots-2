@@ -7,4 +7,5 @@
 script = ExtResource("1_k6llh")
 COST = 4
 ICON = ExtResource("2_fqv6t")
+UID = "CR00"
 metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

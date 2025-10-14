@@ -13,6 +13,7 @@ signal message_received(message: Variant)
 signal received_new_room_code(code)
 
 signal opponent_move(to_pos)
+signal opponent_use_ability(ability_uid)
 
 
 func connect_to_url(url: String) -> int:
@@ -125,6 +126,17 @@ func handle_remote_input(input: Dictionary) -> void:
 			#}
 			var target_coords = Vector2i(5 - input.to_coords.x, input.to_coords.y)
 			opponent_move.emit(target_coords)
+		"ABILITY":
+			#var move_input = {
+				#"origin": Data.multiplayer_id,
+				#"type": "game_input",
+				#"input": {
+					#"opponent_id": Data.opponent_id,
+					#"action": "ABILITY",
+					#"ability_id": ability_id,
+				#}
+			#}
+			opponent_use_ability.emit(input.ability_id)
 		_:
 			print("Remote input received, with no match statement to handle it.")
 

@@ -5,6 +5,7 @@
 
 [node name="Abilities-InstantShot-TestShot" type="Node"]
 script = ExtResource("1_5x7bp")
+UID = "ISTS10"
 metadata/_custom_type_script = "uid://cn7a5ijxhii6g"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]

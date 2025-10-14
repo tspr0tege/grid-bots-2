@@ -7,3 +7,4 @@
 script = ExtResource("1_48fiv")
 COST = 25
 ICON = ExtResource("2_ralcr")
+UID = "SRC"

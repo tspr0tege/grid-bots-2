@@ -7,4 +7,5 @@
 script = ExtResource("1_edjxw")
 COST = 20
 ICON = ExtResource("2_edjxw")
+UID = "SECT"
 metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

@@ -7,7 +7,7 @@ extends Node
 const ready_frame = preload("res://abilities/icon frame 128 x 128.png")
 
 
-var player_deck := [
+var ability_list := [
 	#load().instantiate(),
 	load("res://abilities/stage-effects/capture-tile/abilities_stage-effects_capture-tile.tscn").instantiate(),
 	load("res://abilities/summons/rock-cube/abilities_summons_rock-cube.tscn").instantiate(),
@@ -20,11 +20,18 @@ var player_deck := [
 	load("res://abilities/melee/punch/abilties_melee_punch.tscn").instantiate(),
 	load("res://abilities/traps/landmine/abilities_traps_landmine.tscn").instantiate(),
 ]
+var player_deck = []
 
 var card_hand := []
 
 func _ready() -> void:
 	get_tree().paused = false
+	
+	for ability in ability_list:
+		Data.ability_deck[ability.UID] = ability
+		player_deck.push_back(ability.UID)
+		
+	
 	card_hand.resize(6)
 	for n in range(6):
 		draw_card(n)
@@ -35,10 +42,10 @@ func draw_card(index: int) -> void:
 	card_hand[index] = new_card
 	#ability_buttons[index].get_node("TextureRect").texture = new_card.ICON
 	var button = abilities_panel.get_child(index).get_node("TextureProgressBar")
-	button.texture_under = new_card.ICON
-	button.texture_progress = new_card.ICON
+	button.texture_under = Data.ability_deck[new_card].ICON
+	button.texture_progress = Data.ability_deck[new_card].ICON
 	button.texture_over = null
-	button.max_value = new_card.COST
+	button.max_value = Data.ability_deck[new_card].COST
 	button.value = %CombatArena.player_energy
 
 
@@ -61,10 +68,10 @@ func _UI_input_fire_button_pressed() -> void:
 
 
 func _UI_input_use_ability(index: int) -> void:
-	if %CombatArena.player_energy < card_hand[index].COST: return
+	if %CombatArena.player_energy < Data.ability_deck[card_hand[index]].COST: return
 	
-	if %CombatArena._attempt_ability(%CombatArena.player_character, card_hand[index]):
-		%CombatArena.player_energy -= card_hand[index].COST
+	if %CombatArena._attempt_ability(%CombatArena.player_character, Data.ability_deck[card_hand[index]]):
+		%CombatArena.player_energy -= Data.ability_deck[card_hand[index]].COST
 		player_deck.push_back(card_hand[index])
 		draw_card(index)
 
@@ -86,7 +93,7 @@ func _update_energy(value: float) -> void:
 	for i in range(6):
 		var progress_bar = abilities[i].get_node("TextureProgressBar")
 		progress_bar.value = value
-		if progress_bar.texture_over and value < card_hand[i].COST: 
+		if progress_bar.texture_over and value < Data.ability_deck[card_hand[i]].COST: 
 			progress_bar.texture_over = null
-		if !progress_bar.texture_over and value >= card_hand[i].COST:
+		if !progress_bar.texture_over and value >= Data.ability_deck[card_hand[i]].COST:
 			progress_bar.texture_over = ready_frame

@@ -150,6 +150,7 @@ func _execute_move(character: Character, to_pos: Vector2i, push := false) -> boo
 	var target_tile = get_tile_by_coords(to_pos)
 	get_tile_by_coords(character.grid_pos).remove_occupant()
 	
+	#TODO:Remove "push" from move, and separate it's logic into the ability script. This will require revisiting the obstacle movement logic.
 	#obstacle moving to an occupied tile
 	if is_instance_of(character, Obstacle) and target_tile.occupant: 
 		var obstruction = target_tile.occupant
@@ -207,7 +208,24 @@ func _attempt_healing(character: Character, amt: float, overheal := false) -> bo
 
 
 func _attempt_ability(caster: Character, ability: Ability) -> bool:
+	if is_instance_valid(SceneManager.online_client) and caster == player_character:
+		transmit_ability(ability.UID)
 	return ability.use_ability(caster, %CombatArena)
+
+
+func transmit_ability(ability_id) -> void:
+	print("Sending local ability input to remote opponent")
+	var move_input = {
+		"origin": Data.multiplayer_id,
+		"type": "game_input",
+		"input": {
+			"opponent_id": Data.opponent_id,
+			"action": "ABILITY",
+			"ability_id": ability_id,
+		}
+	}
+	
+	SceneManager.online_client.send_local_input_to_remote(move_input)
 
 
 func init_arena_tiles():
