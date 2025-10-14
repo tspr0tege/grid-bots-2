@@ -1,0 +1,18 @@
+# Made in Blockbench 4.12.6
+newmtl m_bcfa225e-e64c-9f67-1836-f81cd04036af
+map_Kd head.png
+newmtl m_0e1c8358-3f56-7135-c25e-ffdc945f7afa
+map_Kd shoulder.png
+newmtl m_0c0ee950-9760-1d7e-5252-af720a912b04
+map_Kd black.png
+newmtl m_65831440-19a2-7fd9-d607-46e2c075cd4a
+map_Kd lower arm.png
+newmtl m_73e161da-b988-f413-3019-335a95caf33e
+map_Kd hand.png
+newmtl m_85db1c44-c2da-3bcb-264d-f785bea806ee
+map_Kd hip.png
+newmtl m_77a1e267-2e2f-9865-51c2-6f5fee1cdba5
+map_Kd lower leg.png
+newmtl m_bcc1de92-d235-fc1d-db77-005e455d60f3
+map_Kd chest.png
+newmtl none

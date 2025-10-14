@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://6i7c5oga1pog"]
 
 [ext_resource type="Script" uid="uid://n4rkkuyt1qvm" path="res://abilities/stage-effects/capture-tile/abilities_stage-effects_capture-tile.gd" id="1_edjxw"]
-[ext_resource type="Texture2D" uid="uid://befwppd8jt0wm" path="res://abilities/stage-effects/capture-tile/capture_tile_icon.png" id="2_eyqn2"]
+[ext_resource type="Texture2D" uid="uid://cykqcteuew5s7" path="res://abilities/stage-effects/capture-tile/Capture Tile 01 icon 128 x 128.png" id="2_edjxw"]
 
 [node name="Card-captureTile" type="Node"]
 script = ExtResource("1_edjxw")
 COST = 20
-ICON = ExtResource("2_eyqn2")
+ICON = ExtResource("2_edjxw")
 metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

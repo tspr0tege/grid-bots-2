@@ -2,8 +2,11 @@ extends Node3D
 
 signal match_over(player_wins: bool)
 signal update_energy_display(amount: float)
+signal player_input(input_data: Dictionary)
 
 const FLOOR_TILE = preload("res://scenes/battle-scene/floor_tile.tscn")
+const PLAYER_CHARACTER = preload("res://entities/test-character/player_character.tscn")
+const RED_CHARACTER = preload("res://entities/test-character/red_character.tscn")
 
 var player_energy: float = 20.0
 var player_character: Node = null
@@ -16,16 +19,15 @@ var screen_tap_origin: Vector2 = Vector2.ZERO
 var arena_tiles : Array = []
 
 func _ready():
-	player_character = $PlayerCharacter
-	enemy_character = $RedCharacter
 	init_arena_tiles()
+	SceneManager.load_combatants(self)
 
 	#player_character.input_signal.connect(_on_input_signal_received)
 	#enemy_character.input_signal.connect(_on_input_signal_received)
 
 
 func _process(delta):
-	player_energy += delta
+	player_energy = clamp(player_energy + delta, 0, 100)
 	emit_signal("update_energy_display", player_energy)
 	
 	if Input.is_action_just_pressed("ui_left"):
@@ -62,58 +64,28 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch and event.pressed: 
 		#print("Touch screen pressed")
 		screen_tap_origin = event.position
-	elif event is InputEventKey and event.pressed:
-		# f=70 g=71
-		match event.keycode:
-			70:
-				print("Hurt player")
-				$BlueCharacter.get_node("HpNode").take_damage(10.5)
-			71:
-				print("Hurt weiner")
-				$RedCharacter.get_node("HpNode").take_damage(20)
-		
-		#if event is InputEventScreenTouch && !event.pressed:
-			#print("Touch screen released")
-			#screen_tap_origin = Vector2.ZERO
-			#%GameSpaceRaycast
-			#var from = $"../Camera3D".project_ray_origin(event.position)
-			#var to = from + $"../Camera3D".project_ray_normal(event.position) * 1000
-			#var space_state = get_world_3d().direct_space_state #direct_space_state or space?
-			#var viewport = get_viewport()
-			#var camera = get_viewport().get_camera_3d()
-			#var from = camera.project_ray_origin(event.position)
-			#var to = from + camera.project_ray_normal(event.position) * 1000
-	#
-			#var space_state = get_world_3d().direct_space_state
-			#var result = space_state.intersect_ray(from, to, [], collision_mask)
-			#var result = false
-	#
-			#if result:
-				#var clicked_tile = result.collider
-				#if "GridTile" in clicked_tile.name:  # Or check group or metadata
-					#handle_grid_click(clicked_tile)
-					#pass
+	#elif event is InputEventKey and event.pressed:
+		## f=70 g=71
+		#match event.keycode:
+			#70:
+				#print("Hurt player")
+				#$BlueCharacter.get_node("HpNode").take_damage(10.5)
+			#71:
+				#print("Hurt weiner")
+				#$RedCharacter.get_node("HpNode").take_damage(20)
 
 
-func _attempt_move(character: Character, target_pos: Vector2i) -> bool:
-	#Check valid coordinates
-	if not is_valid_tile(target_pos): return false
-	
-	var desired_move = target_pos - character.grid_pos
-	# desired_move.length is 1.0 for adjacent tiles, and roughly 1.4 for diagonals
-	if character.teleport_enabled or desired_move.length() <= 1:
-		return await _execute_move(character, target_pos)
-	elif character.diagonal_move_enabled and await _execute_move(character, character.grid_pos + move_dir(desired_move, 0)):
-		return true
-	elif abs(desired_move.x) <= abs(desired_move.y) and await _execute_move(character, character.grid_pos + move_dir(desired_move, 2)):
-		return true
-	elif await _execute_move(character, character.grid_pos + move_dir(desired_move, 1)):
-		return true
-	else:
-		return false #invalid move
+func move_dir(target_pos: Vector2i, rule: int) -> Vector2i:
+	#rule: 0 = diagonal, 1 = favor x, 2 = favor y
+	var direction := Vector2i.ZERO
+	if target_pos.x != 0 and rule != 2:
+		direction.x = target_pos.x / abs(target_pos.x)
+	if target_pos.y != 0 and rule != 1:
+		direction.y = target_pos.y / abs(target_pos.y)
+	return direction
 
 
-func _execute_move(character: Character, to_pos: Vector2i, push := false) -> bool:
+func is_valid_move(character: Character, to_pos: Vector2i) -> bool:
 	#Check Character controlled tile
 	var target_tile = get_tile_by_coords(to_pos)
 	if target_tile == null: return false
@@ -123,6 +95,59 @@ func _execute_move(character: Character, to_pos: Vector2i, push := false) -> boo
 	if target_tile.occupant and !is_instance_of(character, Obstacle): return false
 	
 	#Definitely going to move
+	return true
+
+
+func _attempt_move(character: Character, target_pos: Vector2i) -> bool:
+	#Check valid coordinates
+	if not is_valid_tile(target_pos): return false
+	
+	var desired_move = target_pos - character.grid_pos
+	# desired_move.length is 1.0 for adjacent tiles, and roughly 1.4 for diagonals
+	if (character.teleport_enabled or desired_move.length() <= 1) and is_valid_move(character, target_pos):
+		if is_instance_valid(SceneManager.online_client): transmit_move(character, target_pos)
+		return await _execute_move(character, target_pos)
+		
+	elif character.diagonal_move_enabled and await is_valid_move(character, character.grid_pos + move_dir(desired_move, 0)):
+		var coords = character.grid_pos + move_dir(desired_move, 0)
+		if is_instance_valid(SceneManager.online_client): transmit_move(character, coords)
+		_execute_move(character, coords)
+		return true
+		
+	elif abs(desired_move.x) <= abs(desired_move.y) and await is_valid_move(character, character.grid_pos + move_dir(desired_move, 2)):
+		var coords = character.grid_pos + move_dir(desired_move, 2)
+		if is_instance_valid(SceneManager.online_client): transmit_move(character, coords)
+		_execute_move(character, coords)
+		return true
+		
+	elif await is_valid_move(character, character.grid_pos + move_dir(desired_move, 1)):
+		var coords = character.grid_pos + move_dir(desired_move, 1)
+		if is_instance_valid(SceneManager.online_client): transmit_move(character, coords)
+		_execute_move(character, coords)
+		return true
+	else:
+		return false #invalid move
+
+
+func transmit_move(character: Character, to_pos: Vector2i) -> void:
+	print("Sending local movement input to remote opponent")
+	var move_input = {
+		"origin": Data.multiplayer_id,
+		"type": "game_input",
+		"input": {
+			"opponent_id": Data.opponent_id,
+			"action": "MOVE",
+			"from_coords": {"x": character.grid_pos.x, "y": character.grid_pos.y},
+			"to_coords": {"x": to_pos.x, "y": to_pos.y},
+			#validation info (move abilities, etc)
+		}
+	}
+	
+	SceneManager.online_client.send_local_input_to_remote(move_input)
+
+func _execute_move(character: Character, to_pos: Vector2i, push := false) -> bool:
+	
+	var target_tile = get_tile_by_coords(to_pos)
 	get_tile_by_coords(character.grid_pos).remove_occupant()
 	
 	#obstacle moving to an occupied tile
@@ -203,8 +228,6 @@ func init_arena_tiles():
 			row.append(new_tile)
 			
 		arena_tiles.append(row)
-	place_character_on_board(player_character, Vector2i(1, 1))
-	place_character_on_board(enemy_character, Vector2i(4, 1))
 
 
 func place_character_on_board(character: Character, coords: Vector2i):
@@ -212,16 +235,6 @@ func place_character_on_board(character: Character, coords: Vector2i):
 	character.grid_pos = coords
 	character.position = target_tile.position
 	target_tile.add_occupant(character)
-
-
-func move_dir(target_pos: Vector2i, rule: int) -> Vector2i:
-	#rule: 0 = diagonal, 1 = favor x, 2 = favor y
-	var direction := Vector2i.ZERO
-	if target_pos.x != 0 and rule != 2:
-		direction.x = target_pos.x / abs(target_pos.x)
-	if target_pos.y != 0 and rule != 1:
-		direction.y = target_pos.y / abs(target_pos.y)
-	return direction
 
 
 func search_row(coords: Vector2i, direction: int, search_for: Callable) -> Node3D:

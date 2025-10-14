@@ -7,6 +7,8 @@ func _handle_button_input(button_name: String) -> void:
 		"START":
 			#print("Start game")
 			SceneManager.start_local_match()
+		"ONLINE":
+			SceneManager.goto_multiplayer()
 		"QUIT":
 			#print("Close program")
 			get_tree().quit()

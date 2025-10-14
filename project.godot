@@ -10,8 +10,8 @@ config_version=5
 
 [application]
 
-config/name="Grid Bots 2"
-run/main_scene="uid://b7s8i4yotbhd4"
+config/name="Grid Bots"
+run/main_scene="uid://bf0143pgxvrpv"
 config/features=PackedStringArray("4.4", "Mobile")
 config/icon="res://icon.svg"
 
@@ -35,6 +35,10 @@ Tiles=""
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
+
+[physics]
+
+common/physics_ticks_per_second=50
 
 [rendering]
 

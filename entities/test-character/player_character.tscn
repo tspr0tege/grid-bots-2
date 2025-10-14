@@ -1,0 +1,58 @@
+[gd_scene load_steps=11 format=3 uid="uid://d2emdno3lst2n"]
+
+[ext_resource type="Script" uid="uid://cokt0oy2u836f" path="res://entities/net-navi/entities_net-navi.gd" id="1_oicya"]
+[ext_resource type="Script" uid="uid://1cq45k43fpfc" path="res://entities/common-resources/movement/MovementQuickHop.gd" id="2_5mku2"]
+[ext_resource type="PackedScene" uid="uid://dgbmwfed8cfja" path="res://abilities/instant-shot/test-shot/abilities_instant-shot_test-shot.tscn" id="3_q8kns"]
+[ext_resource type="PackedScene" uid="uid://eqw8myo5rupx" path="res://entities/net-navi/obj/net_navi.tscn" id="4_8861x"]
+[ext_resource type="AudioStream" uid="uid://cst8b3jc7augb" path="res://entities/common-resources/sfx/hit.wav" id="8_0okdf"]
+[ext_resource type="PackedScene" uid="uid://ck7yv7nnq5hna" path="res://entities/common-resources/hp_node.tscn" id="9_1rgcw"]
+
+[sub_resource type="Resource" id="Resource_6tpmo"]
+script = ExtResource("2_5mku2")
+duration = 0.15
+hop_height = 0.12
+metadata/_custom_type_script = "uid://1cq45k43fpfc"
+
+[sub_resource type="Animation" id="Animation_6tpmo"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_2u67o"]
+resource_name = "white_flash"
+length = 0.1
+step = 0.05
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_n0yl0"]
+_data = {
+&"RESET": SubResource("Animation_6tpmo"),
+&"white_flash": SubResource("Animation_2u67o")
+}
+
+[node name="PlayerCharacter" type="Node3D"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)
+script = ExtResource("1_oicya")
+control_group = 2
+move_handler = SubResource("Resource_6tpmo")
+display_health = true
+BASE_ATTACK = ExtResource("3_q8kns")
+
+[node name="NetNavi" parent="." instance=ExtResource("4_8861x")]
+
+[node name="WhiteFlash" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_n0yl0")
+}
+
+[node name="Shoot" type="AudioStreamPlayer" parent="."]
+max_polyphony = 3
+
+[node name="Hit" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_0okdf")
+volume_db = -6.0
+max_polyphony = 3
+
+[node name="HpNode" parent="." node_paths=PackedStringArray("hit_sfx") instance=ExtResource("9_1rgcw")]
+MAX_HP = 500.0
+hit_sfx = NodePath("../Hit")
+
+[connection signal="HP_changed" from="HpNode" to="." method="_on_hp_node_hp_changed"]
+[connection signal="character_died" from="HpNode" to="." method="_handle_character_death"]

@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dth2lg7uj2klw"]
+
+[ext_resource type="Texture2D" uid="uid://cr4drvjahxcq6" path="res://entities/test-character/texture test_0.png" id="1_o163w"]
+
+[resource]
+resource_name = "material_0"
+transparency = 2
+alpha_scissor_threshold = 0.05
+alpha_antialiasing_mode = 0
+cull_mode = 2
+albedo_color = Color(0.564706, 0, 0.0901961, 1)
+albedo_texture = ExtResource("1_o163w")
+texture_filter = 0
+texture_repeat = false

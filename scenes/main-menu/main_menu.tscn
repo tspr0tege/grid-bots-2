@@ -56,10 +56,16 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Start"
 
+[node name="Online" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Play Online"
+
 [node name="Quit" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Quit"
 
 [connection signal="pressed" from="VBoxContainer/Start" to="." method="_handle_button_input" binds= ["START"]]
+[connection signal="pressed" from="VBoxContainer/Online" to="." method="_handle_button_input" binds= ["ONLINE"]]
 [connection signal="pressed" from="VBoxContainer/Quit" to="." method="_handle_button_input" binds= ["QUIT"]]

@@ -1,0 +1,124 @@
+[gd_scene load_steps=15 format=3 uid="uid://c02qnwmp31l8y"]
+
+[ext_resource type="Script" uid="uid://bhngbrs7oyjqy" path="res://entities/test-character/red_character.gd" id="1_p2mnf"]
+[ext_resource type="PackedScene" uid="uid://dgbmwfed8cfja" path="res://abilities/instant-shot/test-shot/abilities_instant-shot_test-shot.tscn" id="2_2cqou"]
+[ext_resource type="ArrayMesh" uid="uid://crr2al4gl0ad4" path="res://entities/test-character/figurine.obj" id="3_ijiqy"]
+[ext_resource type="Material" uid="uid://c6s1klglreml7" path="res://entities/test-character/red_albedo.tres" id="4_025e1"]
+[ext_resource type="Script" uid="uid://ryh2edxq3u5e" path="res://entities/common-resources/hp_node.gd" id="5_uxay1"]
+[ext_resource type="Material" uid="uid://b24jr8mu18ac3" path="res://entities/test-character/white_mat.tres" id="6_gpa8e"]
+[ext_resource type="AudioStream" uid="uid://ceguwale66mm5" path="res://entities/common-resources/sfx/pew.wav" id="7_5hq87"]
+[ext_resource type="AudioStream" uid="uid://cst8b3jc7augb" path="res://entities/common-resources/sfx/hit.wav" id="8_jupf8"]
+
+[sub_resource type="Animation" id="Animation_pp0o7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:material_override")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [null]
+}
+
+[sub_resource type="Animation" id="Animation_3k3j3"]
+resource_name = "white_flash"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:material_override")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [ExtResource("6_gpa8e"), null]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_daxnq"]
+_data = {
+&"RESET": SubResource("Animation_pp0o7"),
+&"white_flash": SubResource("Animation_3k3j3")
+}
+
+[sub_resource type="Animation" id="Animation_2x875"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_1vmax"]
+resource_name = "shoot"
+length = 0.1
+tracks/0/type = "audio"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Shoot")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("7_5hq87")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/0/use_blend = true
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_72c04"]
+_data = {
+&"RESET": SubResource("Animation_2x875"),
+&"shoot": SubResource("Animation_1vmax")
+}
+
+[node name="RedCharacter" type="Node3D"]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0, 0)
+script = ExtResource("1_p2mnf")
+control_group = 1
+display_health = true
+BASE_ATTACK = ExtResource("2_2cqou")
+attack_direction = -1
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = ExtResource("3_ijiqy")
+surface_material_override/0 = ExtResource("4_025e1")
+surface_material_override/1 = ExtResource("4_025e1")
+surface_material_override/2 = ExtResource("4_025e1")
+surface_material_override/3 = ExtResource("4_025e1")
+surface_material_override/4 = ExtResource("4_025e1")
+surface_material_override/5 = ExtResource("4_025e1")
+
+[node name="HpNode" type="Node" parent="." node_paths=PackedStringArray("animation_player", "hit_sfx")]
+script = ExtResource("5_uxay1")
+MAX_HP = 150.0
+animation_player = NodePath("../WhiteFlash")
+hit_sfx = NodePath("../Hit")
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[node name="WhiteFlash" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_daxnq")
+}
+
+[node name="ActionPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_72c04")
+}
+
+[node name="Hit" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_jupf8")
+volume_db = -4.0
+max_polyphony = 3
+
+[node name="Shoot" type="AudioStreamPlayer" parent="."]
+max_polyphony = 3
+
+[connection signal="HP_changed" from="HpNode" to="." method="_on_hp_node_hp_changed"]
+[connection signal="character_died" from="HpNode" to="." method="_handle_character_death"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
