@@ -27,7 +27,7 @@ func _ready():
 
 
 func _process(delta):
-	player_energy = clamp(player_energy + delta, 0, 100)
+	player_energy = clamp(player_energy + delta * 2, 0, 100)
 	emit_signal("update_energy_display", player_energy)
 	
 	if Input.is_action_just_pressed("ui_left"):
@@ -144,6 +144,7 @@ func transmit_move(character: Character, to_pos: Vector2i) -> void:
 	}
 	
 	SceneManager.online_client.send_local_input_to_remote(move_input)
+
 
 func _execute_move(character: Character, to_pos: Vector2i, push := false) -> bool:
 	

@@ -30,7 +30,7 @@ func _ready() -> void:
 	for ability in ability_list:
 		Data.ability_deck[ability.UID] = ability
 		player_deck.push_back(ability.UID)
-		
+	
 	
 	card_hand.resize(6)
 	for n in range(6):

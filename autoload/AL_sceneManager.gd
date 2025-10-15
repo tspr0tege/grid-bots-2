@@ -67,6 +67,7 @@ func start_online_match() -> void:
 		arena.enemy_character = PLAYER_CHARACTER.instantiate()
 		arena.enemy_character.rotation.y = 180
 		arena.enemy_character.attack_direction = -1
+		arena.enemy_character.control_group = Data.CGs.RED
 		arena.get_node("%CombatArena").add_child(arena.enemy_character)
 		online_client.connect("opponent_move", func(coords):
 			arena._execute_move.call(arena.enemy_character, coords)

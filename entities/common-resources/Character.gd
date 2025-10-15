@@ -14,6 +14,8 @@ var base_attack: Ability
 @export var diagonal_move_enabled := false
 @export var display_health: bool = false
 @export var BASE_ATTACK: PackedScene
+@export var animation_player: AnimationPlayer
+const available_animations = ["shoot", "move", "run", "idle"]
 @export_range(-1, 1, 2) var attack_direction = 1
 
 
@@ -21,6 +23,7 @@ func _ready() -> void:
 	if BASE_ATTACK:
 		base_attack = BASE_ATTACK.instantiate()
 		base_attack.COST = 0
+		Data.ability_deck[base_attack.UID] = base_attack
 		add_child(base_attack)
 	
 	if display_health:
@@ -30,6 +33,25 @@ func _ready() -> void:
 		health_display.no_depth_test = true
 		health_display.text = str(floori($HpNode.HP))
 		add_child(health_display)
+	
+	if animation_player:
+		animation_player.connect("animation_finished", _on_animation_finished)
+
+
+func animate_action(animation) -> void:
+	if !is_instance_valid(animation_player): 
+		print("No AnimationPlayer assigned to %s. Unable to run % animation." % [self.name, animation])
+		return
+	
+	if available_animations.has(animation):
+		animation_player.play(animation)
+	else:
+		print("%s does not have an animation named %s" % [self.name, animation])
+
+
+func _on_animation_finished(anim_name: StringName) -> void:
+	if anim_name != "idle":
+		animation_player.play("idle")
 
 
 func move_to(new_pos: Vector3, pushed := false) -> void:

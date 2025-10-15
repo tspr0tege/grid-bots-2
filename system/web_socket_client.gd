@@ -154,8 +154,8 @@ func generate_invite_code() -> void:
 	}
 	if socket.get_ready_state() != socket.STATE_OPEN:
 		next_action = create_signal
-		connect_to_url("ws://127.0.0.1:9080")
-		#connect_to_url("wss://tactical-chess.xyz")
+		#connect_to_url("ws://127.0.0.1:9080")
+		connect_to_url("wss://tactical-chess.xyz")
 	else:
 		socket.put_packet(JSON.stringify(create_signal).to_utf8_buffer())
 
@@ -169,7 +169,7 @@ func claim_invite_code(code) -> void:
 	}
 	if socket.get_ready_state() != socket.STATE_OPEN:
 		next_action = join_signal
-		connect_to_url("ws://127.0.0.1:9080")
-		#connect_to_url("wss://tactical-chess.xyz")
+		#connect_to_url("ws://127.0.0.1:9080")
+		connect_to_url("wss://tactical-chess.xyz")
 	else:
 		socket.put_packet(JSON.stringify(join_signal).to_utf8_buffer())

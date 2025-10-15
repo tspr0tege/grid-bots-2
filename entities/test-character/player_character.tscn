@@ -27,15 +27,53 @@ _data = {
 &"white_flash": SubResource("Animation_2u67o")
 }
 
-[node name="PlayerCharacter" type="Node3D"]
+[node name="PlayerCharacter" type="Node3D" node_paths=PackedStringArray("animation_player")]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)
 script = ExtResource("1_oicya")
 control_group = 2
 move_handler = SubResource("Resource_6tpmo")
 display_health = true
 BASE_ATTACK = ExtResource("3_q8kns")
+animation_player = NodePath("NetNavi/blockbench_export/AnimationPlayer")
 
 [node name="NetNavi" parent="." instance=ExtResource("4_8861x")]
+script = null
+
+[node name="base" parent="NetNavi/blockbench_export/Node" index="0"]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, -0.375, -0.25)
+
+[node name="head2" parent="NetNavi/blockbench_export/Node/base/chest2/neck2" index="1"]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, 0, 0.10625, 0)
+
+[node name="left arm" parent="NetNavi/blockbench_export/Node/base/chest2" index="2"]
+transform = Transform3D(0.700401, -0.71346, 0.0203161, 0.698268, 0.690828, 0.187557, -0.147849, -0.117179, 0.982044, 0.39375, 0.26875, 0)
+
+[node name="lower arm2" parent="NetNavi/blockbench_export/Node/base/chest2/left arm/upper arm2" index="1"]
+transform = Transform3D(1, 0, 0, 0, -0.21644, 0.976296, 0, -0.976296, -0.21644, 0, -0.375, 0)
+
+[node name="right arm" parent="NetNavi/blockbench_export/Node/base/chest2" index="3"]
+transform = Transform3D(0.906991, 0.42007, 0.0301537, -0.418746, 0.891856, 0.17101, 0.0449435, -0.167731, 0.984808, -0.39375, 0.26875, 0)
+
+[node name="lower_arm2" parent="NetNavi/blockbench_export/Node/base/chest2/right arm/upper_arm2" index="1"]
+transform = Transform3D(0.953717, -0.300706, -4.37114e-08, -0.150353, -0.476859, 0.866025, -0.260419, -0.825943, -0.5, 0, -0.375, 0)
+
+[node name="left upper leg2" parent="NetNavi/blockbench_export/Node/base/lower body" index="1"]
+transform = Transform3D(0.898566, -0.43836, -0.0204897, 0.352088, 0.692279, 0.629908, -0.261942, -0.573228, 0.7764, 0.125, -0.1875, 0)
+
+[node name="left lower leg2" parent="NetNavi/blockbench_export/Node/base/lower body/left upper leg2" index="1"]
+transform = Transform3D(1, 0, 0, 0, 0.793353, -0.608761, 0, 0.608761, 0.793353, 0.0625, -0.5625, 0)
+
+[node name="left foot2" parent="NetNavi/blockbench_export/Node/base/lower body/left upper leg2/left lower leg2" index="1"]
+transform = Transform3D(0.928602, 0.361502, -0.0837541, -0.363744, 0.931412, -0.0127362, 0.0734054, 0.042292, 0.996405, 0.075, -0.725, 0)
+
+[node name="right upper leg2" parent="NetNavi/blockbench_export/Node/base/lower body" index="2"]
+transform = Transform3D(0.858108, 0.498604, -0.122654, -0.279671, 0.654188, 0.702724, 0.43062, -0.568711, 0.70081, -0.075, -0.19375, 0)
+
+[node name="right lower leg2" parent="NetNavi/blockbench_export/Node/base/lower body/right upper leg2" index="1"]
+transform = Transform3D(1, 0, 0, 0, 0.382684, -0.92388, 0, 0.92388, 0.382684, -0.0625, -0.5625, 0)
+
+[node name="right foot2" parent="NetNavi/blockbench_export/Node/base/lower body/right upper leg2/right lower leg2" index="1"]
+transform = Transform3D(0.965812, -0.257523, 0.029809, 0.226344, 0.893718, 0.387346, -0.126391, -0.367356, 0.921453, -0.08125, -0.73125, 0)
 
 [node name="WhiteFlash" type="AnimationPlayer" parent="."]
 libraries = {
@@ -56,3 +94,6 @@ hit_sfx = NodePath("../Hit")
 
 [connection signal="HP_changed" from="HpNode" to="." method="_on_hp_node_hp_changed"]
 [connection signal="character_died" from="HpNode" to="." method="_handle_character_death"]
+
+[editable path="NetNavi"]
+[editable path="NetNavi/blockbench_export"]

@@ -4,6 +4,7 @@ extends Ability
 
 func use_ability(caster : Character, arena : Node3D) -> bool:
 	#coords: Vector2i, direction: int, search_for: Callable
+	caster.animate_action("shoot")
 	var target = arena.search_row(caster.grid_pos, caster.attack_direction, arena.for_character)
 	if target:
 		#grid_coords: Vector2i, amt: float, on_success: Callable = func():pass
