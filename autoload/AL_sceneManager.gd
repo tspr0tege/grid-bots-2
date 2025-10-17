@@ -72,9 +72,9 @@ func start_online_match() -> void:
 		online_client.connect("opponent_move", func(coords):
 			arena._execute_move.call(arena.enemy_character, coords)
 			)
-		online_client.connect("opponent_use_ability", func(uid): 
-			arena._attempt_ability.call(arena.enemy_character, Data.ability_deck[uid])
-			)
+		#online_client.connect("opponent_use_ability", func(uid): 
+			#arena._attempt_ability.call(arena.enemy_character, Data.ability_deck[uid])
+			#)
 		arena.place_character_on_board(arena.enemy_character, Vector2i(4, 1))
 		)
 	

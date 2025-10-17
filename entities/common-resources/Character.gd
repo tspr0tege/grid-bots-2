@@ -29,7 +29,7 @@ func _ready() -> void:
 	if display_health:
 		health_display = Label3D.new()
 		health_display.offset.y = -50
-		health_display.set_billboard_mode(1)
+		health_display.set_billboard_mode(BaseMaterial3D.BillboardMode.BILLBOARD_ENABLED)
 		health_display.no_depth_test = true
 		health_display.text = str(floori($HpNode.HP))
 		add_child(health_display)
@@ -40,7 +40,7 @@ func _ready() -> void:
 
 func animate_action(animation) -> void:
 	if !is_instance_valid(animation_player): 
-		print("No AnimationPlayer assigned to %s. Unable to run % animation." % [self.name, animation])
+		print("No AnimationPlayer assigned to %s. Unable to run %s animation." % [self.name, animation])
 		return
 	
 	if available_animations.has(animation):
@@ -64,7 +64,7 @@ func move_to(new_pos: Vector3, pushed := false) -> void:
 
 func use_base_attack(arena: Node3D) -> void:
 	if base_attack:
-		base_attack.use_ability(self, arena)
+		arena._attempt_ability(self, base_attack)
 	else:
 		push_error("%s's use_base_attack function was called, with no BASE_ATTACK Script assigned." % self.name)
 

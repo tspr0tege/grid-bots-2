@@ -24,9 +24,10 @@ corner_radius_bottom_left = 5
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pp0o7"]
 bg_color = Color(0, 0, 0, 0.627451)
 
-[node name="BattleScene" type="Node"]
+[node name="BattleScene" type="Node" node_paths=PackedStringArray("ARENA")]
 process_mode = 3
 script = ExtResource("1_w5c51")
+ARENA = NodePath("CanvasLayer/GridContainer/BattleContainer/SubViewport/CombatArena")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -38,39 +39,39 @@ grow_horizontal = 2
 grow_vertical = 2
 columns = 2
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer/GridContainer"]
+[node name="BattleContainer" type="SubViewportContainer" parent="CanvasLayer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 stretch = true
 script = ExtResource("2_dgigb")
 
-[node name="SubViewport" type="SubViewport" parent="CanvasLayer/GridContainer/SubViewportContainer"]
+[node name="SubViewport" type="SubViewport" parent="CanvasLayer/GridContainer/BattleContainer"]
 process_mode = 1
 handle_input_locally = false
 size = Vector2i(1700, 867)
 render_target_update_mode = 4
 
-[node name="CombatArena" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport"]
+[node name="CombatArena" type="Node3D" parent="CanvasLayer/GridContainer/BattleContainer/SubViewport"]
 unique_name_in_owner = true
 script = ExtResource("1_p7nsj")
 
-[node name="Floor" type="Node3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena"]
+[node name="Floor" type="Node3D" parent="CanvasLayer/GridContainer/BattleContainer/SubViewport/CombatArena"]
 
-[node name="Camera3D" type="Camera3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport"]
+[node name="Camera3D" type="Camera3D" parent="CanvasLayer/GridContainer/BattleContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 0.829038, 0.559193, 0, -0.559193, 0.829038, 2.8, 3.15, 4.7)
 keep_aspect = 0
 projection = 1
 fov = 7.0
 size = 6.75
 
-[node name="GameSpaceRaycast" type="RayCast3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D"]
+[node name="GameSpaceRaycast" type="RayCast3D" parent="CanvasLayer/GridContainer/BattleContainer/SubViewport/Camera3D"]
 unique_name_in_owner = true
 
-[node name="CanvasLayer" type="CanvasLayer" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D"]
+[node name="CanvasLayer" type="CanvasLayer" parent="CanvasLayer/GridContainer/BattleContainer/SubViewport/Camera3D"]
 process_mode = 3
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer"]
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/GridContainer/BattleContainer/SubViewport/Camera3D/CanvasLayer"]
 process_mode = 3
 top_level = true
 anchors_preset = 1
@@ -82,7 +83,7 @@ offset_right = -20.0
 offset_bottom = 120.0
 grow_horizontal = 0
 
-[node name="TextureButton" type="TextureButton" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PanelContainer"]
+[node name="TextureButton" type="TextureButton" parent="CanvasLayer/GridContainer/BattleContainer/SubViewport/Camera3D/CanvasLayer/PanelContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -91,7 +92,7 @@ texture_normal = ExtResource("7_ftv0g")
 ignore_texture_size = true
 stretch_mode = 4
 
-[node name="PauseMenu" type="PanelContainer" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer"]
+[node name="PauseMenu" type="PanelContainer" parent="CanvasLayer/GridContainer/BattleContainer/SubViewport/Camera3D/CanvasLayer"]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 8
@@ -106,11 +107,11 @@ offset_bottom = 268.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu"]
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/GridContainer/BattleContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu"]
 layout_mode = 2
 color = Color(0.629675, 0.629675, 0.629675, 0.784314)
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/GridContainer/BattleContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -119,25 +120,25 @@ theme_override_constants/margin_top = 200
 theme_override_constants/margin_right = 200
 theme_override_constants/margin_bottom = 200
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GridContainer/BattleContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/GridContainer/BattleContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "PAUSED"
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer/VBoxContainer"]
+[node name="Spacer" type="Control" parent="CanvasLayer/GridContainer/BattleContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 
-[node name="Button" type="Button" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="CanvasLayer/GridContainer/BattleContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "QUIT TO MAIN MENU"
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="CanvasLayer/GridContainer/SubViewportContainer/SubViewport"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="CanvasLayer/GridContainer/BattleContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, 0, 0, 0)
 
 [node name="AbilityPanel" type="PanelContainer" parent="CanvasLayer/GridContainer"]
@@ -354,11 +355,11 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 50
 text = "Quit"
 
-[connection signal="item_rect_changed" from="CanvasLayer/GridContainer/SubViewportContainer" to="CanvasLayer/GridContainer/SubViewportContainer" method="_on_sub_viewport_container_item_rect_changed"]
-[connection signal="match_over" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" to="." method="_on_combat_arena_match_over"]
-[connection signal="update_energy_display" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/CombatArena" to="." method="_update_energy"]
-[connection signal="pressed" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PanelContainer/TextureButton" to="." method="_handle_pause_button"]
-[connection signal="pressed" from="CanvasLayer/GridContainer/SubViewportContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer/VBoxContainer/Button" to="." method="_on_quit_button_pressed"]
+[connection signal="item_rect_changed" from="CanvasLayer/GridContainer/BattleContainer" to="CanvasLayer/GridContainer/BattleContainer" method="_on_sub_viewport_container_item_rect_changed"]
+[connection signal="match_over" from="CanvasLayer/GridContainer/BattleContainer/SubViewport/CombatArena" to="." method="_on_combat_arena_match_over"]
+[connection signal="update_energy_display" from="CanvasLayer/GridContainer/BattleContainer/SubViewport/CombatArena" to="." method="_update_energy"]
+[connection signal="pressed" from="CanvasLayer/GridContainer/BattleContainer/SubViewport/Camera3D/CanvasLayer/PanelContainer/TextureButton" to="." method="_handle_pause_button"]
+[connection signal="pressed" from="CanvasLayer/GridContainer/BattleContainer/SubViewport/Camera3D/CanvasLayer/PauseMenu/MarginContainer/VBoxContainer/Button" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer/Button" to="." method="_UI_input_use_ability" binds= [0]]
 [connection signal="pressed" from="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer2/Button" to="." method="_UI_input_use_ability" binds= [1]]
 [connection signal="pressed" from="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer3/Button" to="." method="_UI_input_use_ability" binds= [2]]

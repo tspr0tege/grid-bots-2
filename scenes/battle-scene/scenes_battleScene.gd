@@ -1,23 +1,25 @@
 extends Node
 
+@export var ARENA : Node3D
+
 @onready var abilities_panel = $CanvasLayer/GridContainer/AbilityPanel/VBoxContainer
 @onready var ability_buttons = abilities_panel.get_children()
 @onready var energy_bar: ProgressBar = $CanvasLayer/GridContainer/EnergyBar/HBoxContainer/TextureProgressBar
 @onready var energy_count: Label = $CanvasLayer/GridContainer/EnergyBar/HBoxContainer/Label
 const ready_frame = preload("res://abilities/icon frame 128 x 128.png")
-
+var PUSH = load("res://abilities/melee/push/abilities_melee_push.tscn").instantiate()
 
 var ability_list := [
 	#load().instantiate(),
 	load("res://abilities/stage-effects/capture-tile/abilities_stage-effects_capture-tile.tscn").instantiate(),
 	load("res://abilities/summons/rock-cube/abilities_summons_rock-cube.tscn").instantiate(),
 	load("res://abilities/thrown/cannon-ball/abilities_thrown_cannon-ball.tscn").instantiate(),
+	load("res://abilities/instantiated-shot/rocket/abilities_instantiated-shot_rocket.tscn").instantiate(),
+	load("res://abilities/melee/punch/abilties_melee_punch.tscn").instantiate(),
+	load("res://abilities/instant-shot/cannon/abilities_instant-shot_cannon.tscn").instantiate(),
 	load("res://abilities/debuffs/def-down/abilities_debuffs_def-down.tscn").instantiate(),
 	load("res://abilities/counters/reflect/abilities_counters_reflect.tscn").instantiate(),
 	load("res://abilities/buffs/heal-10/abilities_buffs_heal-10.tscn").instantiate(),
-	load("res://abilities/instantiated-shot/rocket/abilities_instantiated-shot_rocket.tscn").instantiate(),
-	load("res://abilities/instant-shot/cannon/abilities_instant-shot_cannon.tscn").instantiate(),
-	load("res://abilities/melee/punch/abilties_melee_punch.tscn").instantiate(),
 	load("res://abilities/traps/landmine/abilities_traps_landmine.tscn").instantiate(),
 ]
 var player_deck = []
@@ -30,10 +32,11 @@ func _ready() -> void:
 	for ability in ability_list:
 		Data.ability_deck[ability.UID] = ability
 		player_deck.push_back(ability.UID)
+	Data.ability_deck[PUSH.UID] = PUSH
 	
-	
-	card_hand.resize(6)
-	for n in range(6):
+	var hand_size = clamp(ability_list.size(), 0, 6)
+	card_hand.resize(hand_size)
+	for n in range(hand_size):
 		draw_card(n)
 
 
@@ -46,7 +49,7 @@ func draw_card(index: int) -> void:
 	button.texture_progress = Data.ability_deck[new_card].ICON
 	button.texture_over = null
 	button.max_value = Data.ability_deck[new_card].COST
-	button.value = %CombatArena.player_energy
+	button.value = ARENA.player_energy
 
 
 func _handle_pause_button() -> void:
@@ -64,14 +67,15 @@ func _on_quit_button_pressed() -> void:
 
 
 func _UI_input_fire_button_pressed() -> void:	
-	%CombatArena.player_character.use_base_attack(%CombatArena)
+	ARENA.player_character.use_base_attack(ARENA)
 
 
 func _UI_input_use_ability(index: int) -> void:
-	if %CombatArena.player_energy < Data.ability_deck[card_hand[index]].COST: return
+	#not enough energy
+	if ARENA.player_energy < Data.ability_deck[card_hand[index]].COST: return
 	
-	if %CombatArena._attempt_ability(%CombatArena.player_character, Data.ability_deck[card_hand[index]]):
-		%CombatArena.player_energy -= Data.ability_deck[card_hand[index]].COST
+	if ARENA._attempt_ability(ARENA.player_character, Data.ability_deck[card_hand[index]]):
+		ARENA.player_energy -= Data.ability_deck[card_hand[index]].COST
 		player_deck.push_back(card_hand[index])
 		draw_card(index)
 
@@ -90,7 +94,7 @@ func _update_energy(value: float) -> void:
 	energy_bar.value = value
 	energy_count.text = str(floori(value))
 	var abilities = abilities_panel.get_children()
-	for i in range(6):
+	for i in range(card_hand.size()):
 		var progress_bar = abilities[i].get_node("TextureProgressBar")
 		progress_bar.value = value
 		if progress_bar.texture_over and value < Data.ability_deck[card_hand[i]].COST: 

@@ -6,7 +6,7 @@ extends Control
 @onready var join_room_button: Button = $HBoxContainer/Join/JoinRoom
 
 signal join_room_with_code(code)
-signal room_code_received(code)
+#signal room_code_received(code)
 signal generate_invite_code
 
 func _ready() -> void:
@@ -36,3 +36,7 @@ func _on_join_code_changed(new_text: String) -> void:
 
 func _on_join_room_pressed() -> void:
 	join_room_with_code.emit(join_code_input.text)
+
+
+func _on_join_code_submitted(new_text: String) -> void:
+	join_room_button.emit("pressed")

@@ -7,13 +7,15 @@ var last_state := WebSocketPeer.STATE_CLOSED
 var next_action : Dictionary = {}
 #var remote_opponent_id = null
 
+var ARENA : Node3D
+
 signal connected_to_server()
 signal connection_closed()
 signal message_received(message: Variant)
-signal received_new_room_code(code)
+#signal received_new_room_code(code)
 
 signal opponent_move(to_pos)
-signal opponent_use_ability(ability_uid)
+#signal opponent_use_ability(ability_uid)
 
 
 func connect_to_url(url: String) -> int:
@@ -91,7 +93,7 @@ func poll() -> void:
 					SceneManager.start_online_match()
 					
 				"game_input":
-					print("Processing input from remote")
+					#print("Processing input from remote")
 					handle_remote_input(data)
 					
 				"error":
@@ -106,44 +108,44 @@ func _process(_delta: float) -> void:
 
 
 func handle_remote_input(input: Dictionary) -> void:
-	print(input.action)
-	#received_remote_input.emit(input)
+	for key in input:
+		if typeof(input[key]) == TYPE_DICTIONARY and input[key].has("x"):
+			if input[key].has("z"):
+				input[key] = Data.vec3_from_dict(input[key])
+				input[key].x = 5 - input[key].x
+			elif typeof(input[key].x) == TYPE_INT:
+				input[key] = Data.coords_from_dict(input[key])
+				input[key].x = 5 - input[key].x
+			else:
+				input[key] = Data.vec2_from_dict(input[key])
+				input[key].x = 5 - input[key].x
+	
 	match input.action:
 		"MOVE":
 			#0,0 is upper left grid pos, 5,2 is lower right (from player perspective)
 			#y positioning will not change. But x position is reversed.
 			#all x-coord values from remote need to be converted to 5-x
 			
-			#Example JSON
-			#{"origin": Data.multiplayer_id,
-				#"type": "game_input",
-				#"input": {
-					#"opponent_id": Data.opponent_id,
-					#"action": "MOVE",
-					#"from_coords": {"x": character.grid_pos.x, "y": character.grid_pos.y},
-					#"to_coords": {"x": to_pos.x, "y": to_pos.y},
-				#}
-			#}
-			var target_coords = Vector2i(5 - input.to_coords.x, input.to_coords.y)
-			opponent_move.emit(target_coords)
+			opponent_move.emit(input.to_coords)
 		"ABILITY":
-			#var move_input = {
-				#"origin": Data.multiplayer_id,
-				#"type": "game_input",
-				#"input": {
-					#"opponent_id": Data.opponent_id,
-					#"action": "ABILITY",
-					#"ability_id": ability_id,
-				#}
-			#}
-			opponent_use_ability.emit(input.ability_id)
+			ARENA._execute_ability(input)
 		_:
 			print("Remote input received, with no match statement to handle it.")
 
 
 func send_local_input_to_remote(input) -> void:
-	print("Sending local input to remote")
-	socket.send_text(JSON.stringify(input))
+	for key in input:
+		if typeof(input[key]) == TYPE_VECTOR3:
+			input[key] = Data.vec3_to_dict(input[key])
+		elif typeof(input[key]) == TYPE_VECTOR2I:
+			input[key] = Data.coords_to_dict(input[key])
+		elif typeof(input[key]) == TYPE_VECTOR2:
+			input[key] = Data.vec2_to_dict(input[key])
+	socket.send_text(JSON.stringify({
+		"origin": Data.multiplayer_id,
+		"type": "game_input",
+		"input": input
+	}))
 
 
 func generate_invite_code() -> void:

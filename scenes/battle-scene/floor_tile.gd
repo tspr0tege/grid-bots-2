@@ -3,8 +3,12 @@ extends Area3D
 @export var grid_coordinates : Vector2i
 @export var control_group : Data.CGs
 var occupant : Character
-var traps := []
+var trap : Trap3D
+#var traps := []
 var shots := []
+
+signal occupant_added(occupant)
+signal occupant_removed(occupant)
 #state : tbd
 
 
@@ -35,9 +39,7 @@ func repair_tile() -> void:
 
 func add_occupant(new_occupant: Character) -> void:
 	occupant = new_occupant
-	for trap in traps:
-		trap.call()
-	traps = []
+	occupant_added.emit(new_occupant)
 	
 	for shot in shots:
 		shot._hit_character(new_occupant)
@@ -45,6 +47,7 @@ func add_occupant(new_occupant: Character) -> void:
 
 
 func remove_occupant() -> void:
+	occupant_removed.emit(occupant)
 	occupant = null
 
 

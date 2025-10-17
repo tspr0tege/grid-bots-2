@@ -4,6 +4,13 @@ extends Trap3D
 @onready var fire: CPUParticles3D = $Explosion/Fire
 @onready var sparks: CPUParticles3D = $Explosion/Sparks
 
+var control_group := Data.CGs.UNIVERSAL
+
+
+func _ready() -> void:
+	visible = true
+	#visible = Data.player_control_group == control_group
+
 
 func trigger_trap() -> void:
 	#class contains reference to grid_coordinates

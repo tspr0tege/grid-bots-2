@@ -5,12 +5,25 @@ var PUSH = load("res://abilities/melee/push/abilities_melee_push.tscn").instanti
 
 const dmg := 50.0
 
-func use_ability(caster: Character, arena : Node3D) -> bool:
+
+func validate(caster, _arena) -> Dictionary:
+	instructions.target_type = "OCCUPANT"
+	instructions.target_coords = caster.grid_pos
+	instructions.ability_id = UID
+	instructions.can_cast = true
+	
+	instructions.target_pos = caster.grid_pos + Vector2i(caster.attack_direction, 0)
+	#var position_offset = Vector3(.5 * caster.attack_direction, 0.5, 0)
+	
+	return instructions
+
+
+func cast(arena, final_instructions) -> void:
 	var new_punch = PUNCH.instantiate()
-	var target_pos = caster.grid_pos + Vector2i(caster.attack_direction, 0)
+	var target_pos = final_instructions.target_pos
+	var caster = final_instructions.target
 	
 	new_punch.connect("attempt_damage", arena._attempt_damage.bind(target_pos, dmg))
-	new_punch.connect("attempt_push", PUSH.use_ability.bind(caster, arena))
+	new_punch.connect("attempt_push", arena._attempt_ability.bind(caster, PUSH))
 	caster.add_child(new_punch)
 	new_punch.global_rotation = Vector3.ZERO
-	return true

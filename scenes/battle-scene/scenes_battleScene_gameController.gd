@@ -21,9 +21,9 @@ var arena_tiles : Array = []
 func _ready():
 	init_arena_tiles()
 	SceneManager.load_combatants(self)
-
-	#player_character.input_signal.connect(_on_input_signal_received)
-	#enemy_character.input_signal.connect(_on_input_signal_received)
+	if SceneManager.online_client:
+		SceneManager.online_client.ARENA = self
+		connect("player_input", SceneManager.online_client.send_local_input_to_remote)
 
 
 func _process(delta):
@@ -108,19 +108,19 @@ func _attempt_move(character: Character, target_pos: Vector2i) -> bool:
 		if is_instance_valid(SceneManager.online_client): transmit_move(character, target_pos)
 		return await _execute_move(character, target_pos)
 		
-	elif character.diagonal_move_enabled and await is_valid_move(character, character.grid_pos + move_dir(desired_move, 0)):
+	elif character.diagonal_move_enabled and is_valid_move(character, character.grid_pos + move_dir(desired_move, 0)):
 		var coords = character.grid_pos + move_dir(desired_move, 0)
 		if is_instance_valid(SceneManager.online_client): transmit_move(character, coords)
 		_execute_move(character, coords)
 		return true
 		
-	elif abs(desired_move.x) <= abs(desired_move.y) and await is_valid_move(character, character.grid_pos + move_dir(desired_move, 2)):
+	elif abs(desired_move.x) <= abs(desired_move.y) and is_valid_move(character, character.grid_pos + move_dir(desired_move, 2)):
 		var coords = character.grid_pos + move_dir(desired_move, 2)
 		if is_instance_valid(SceneManager.online_client): transmit_move(character, coords)
 		_execute_move(character, coords)
 		return true
 		
-	elif await is_valid_move(character, character.grid_pos + move_dir(desired_move, 1)):
+	elif is_valid_move(character, character.grid_pos + move_dir(desired_move, 1)):
 		var coords = character.grid_pos + move_dir(desired_move, 1)
 		if is_instance_valid(SceneManager.online_client): transmit_move(character, coords)
 		_execute_move(character, coords)
@@ -130,17 +130,13 @@ func _attempt_move(character: Character, target_pos: Vector2i) -> bool:
 
 
 func transmit_move(character: Character, to_pos: Vector2i) -> void:
-	print("Sending local movement input to remote opponent")
+	#print("Sending local movement input to remote opponent")
 	var move_input = {
-		"origin": Data.multiplayer_id,
-		"type": "game_input",
-		"input": {
-			"opponent_id": Data.opponent_id,
-			"action": "MOVE",
-			"from_coords": {"x": character.grid_pos.x, "y": character.grid_pos.y},
-			"to_coords": {"x": to_pos.x, "y": to_pos.y},
-			#validation info (move abilities, etc)
-		}
+		"opponent_id": Data.opponent_id,
+		"action": "MOVE",
+		"from_coords": character.grid_pos,
+		"to_coords": to_pos,
+		#validation info (move abilities, etc)
 	}
 	
 	SceneManager.online_client.send_local_input_to_remote(move_input)
@@ -209,9 +205,32 @@ func _attempt_healing(character: Character, amt: float, overheal := false) -> bo
 
 
 func _attempt_ability(caster: Character, ability: Ability) -> bool:
-	if is_instance_valid(SceneManager.online_client) and caster == player_character:
-		transmit_ability(ability.UID)
-	return ability.use_ability(caster, %CombatArena)
+	#if is_instance_valid(SceneManager.online_client) and caster == player_character:
+		#transmit_ability(ability.UID)
+	#return ability.use_ability(caster, %CombatArena)
+	var instructions = ability.validate(caster, %CombatArena)
+	if instructions.can_cast == false:
+		print(instructions.reason)
+		return false
+	else:
+		player_input.emit(instructions.duplicate(true))
+		_execute_ability(instructions)
+		return true
+
+
+func _execute_ability(instructions: Dictionary) -> void:
+	match instructions.target_type:
+		"TILE":
+			instructions.target = get_tile_by_coords(instructions.target_coords)
+		"OCCUPANT":
+			if instructions.target_coords != null:
+				instructions.target = get_tile_by_coords(instructions.target_coords).occupant
+			else:
+				instructions.target = null
+		_:
+			print("_execute_ability received instructions without a target_type. Instructions: " + str(instructions))
+	var ability = Data.ability_deck[instructions.ability_id]
+	ability.cast(self, instructions)
 
 
 func transmit_ability(ability_id) -> void:
@@ -322,6 +341,7 @@ func get_tile_by_coords(coords: Vector2i) -> Node3D:
 	if !is_valid_tile(coords): return null
 	else: return arena_tiles[coords.y][coords.x]
 
+
 func _attempt_move_shot(from_coords: Vector2i, to_coords: Vector2i, shot: Projectile) -> void:
 	var current_tile = get_tile_by_coords(from_coords)
 	current_tile.remove_shot(shot.shots_index)
@@ -332,4 +352,3 @@ func _attempt_move_shot(from_coords: Vector2i, to_coords: Vector2i, shot: Projec
 	else:
 		shot.exit_arena()
 		return
-	
