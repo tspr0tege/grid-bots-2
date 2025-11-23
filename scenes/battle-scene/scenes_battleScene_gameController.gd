@@ -134,8 +134,10 @@ func transmit_move(character: Character, to_pos: Vector2i) -> void:
 	var move_input = {
 		"opponent_id": Data.opponent_id,
 		"action": "MOVE",
-		"from_coords": character.grid_pos,
-		"to_coords": to_pos,
+		"vectors":{
+			"from_coords": character.grid_pos,
+			"to_coords": to_pos,
+		}
 		#validation info (move abilities, etc)
 	}
 	
@@ -219,12 +221,13 @@ func _attempt_ability(caster: Character, ability: Ability) -> bool:
 
 
 func _execute_ability(instructions: Dictionary) -> void:
+	print("Instructions in _execute_ability: " + str(instructions))
 	match instructions.target_type:
 		"TILE":
-			instructions.target = get_tile_by_coords(instructions.target_coords)
+			instructions.target = get_tile_by_coords(instructions.vectors.target_coords)
 		"OCCUPANT":
 			if instructions.target_coords != null:
-				instructions.target = get_tile_by_coords(instructions.target_coords).occupant
+				instructions.target = get_tile_by_coords(instructions.vectors.target_coords).occupant
 			else:
 				instructions.target = null
 		_:

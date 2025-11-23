@@ -39,4 +39,4 @@ func _on_join_room_pressed() -> void:
 
 
 func _on_join_code_submitted(new_text: String) -> void:
-	join_room_button.emit("pressed")
+	join_room_button.pressed.emit()

@@ -1,43 +1,6 @@
-extends Node3D
+extends Projectile
 
-signal update_tile_position(new_coords: Vector2i)
-signal attempt_damage(coords: Vector2i, damage: float)
-
-var grid_coords: Vector2i = Vector2i.ZERO
-var shots_index: int
-@export var travel_direction: int = 1
-@export var control_group: Data.CGs = Data.CGs.NONE
-@export var move_speed: float = 4
-@export var dmg: float = 20.0
-
-
-func _process(delta: float) -> void:
-	_movement_behavior(delta)
-	var new_grid_coords = Vector2i(floor(position.x / 1.1), floor(position.y / 1.1))
-	if grid_coords != new_grid_coords:
-		emit_signal("update_tile_position", new_grid_coords)
-
-
-func _movement_behavior(delta: float) -> void:
-	position.x += (travel_direction * move_speed) * delta
-
-
-func _hit_character() -> void:
-	emit_signal("attempt_damage", grid_coords, dmg)
-	queue_free()
-
-
-func exit_arena() -> void:
-	queue_free()
-
-#class_name Shot extends Node3D
-#
-#@export var dmg := 1.0
-#signal attempt_damage(grid_coords: Vector2i, amt: float)
-#var grid_coords: Vector2i
-#var shots_index: int
-#
-#func _hit_character(target: Character):
-	##emit_signal("attempt_damage", grid_coords, dmg)
-	#target.get_node("HpNode").take_damage(dmg)
-	#queue_free()
+func _on_tree_entered() -> void:
+	if travel_direction < 1: 
+		rotation.y = deg_to_rad(180)
+		$Cylinder.position.x = .2

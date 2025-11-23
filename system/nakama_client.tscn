@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://xy1w1ehdfmja"]
+
+[ext_resource type="Script" uid="uid://3jslqu671yh7" path="res://system/nakama_client.gd" id="1_njfst"]
+
+[node name="NakamaClient" type="Node"]
+script = ExtResource("1_njfst")

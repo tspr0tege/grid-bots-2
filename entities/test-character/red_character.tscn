@@ -78,6 +78,7 @@ _data = {
 [node name="RedCharacter" type="Node3D"]
 transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0, 0)
 script = ExtResource("1_p2mnf")
+attacking = false
 control_group = 1
 display_health = true
 BASE_ATTACK = ExtResource("2_2cqou")

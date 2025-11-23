@@ -25,5 +25,6 @@ func cast(arena, final_instructions) -> void:
 	
 	new_punch.connect("attempt_damage", arena._attempt_damage.bind(target_pos, dmg))
 	new_punch.connect("attempt_push", arena._attempt_ability.bind(caster, PUSH))
-	caster.add_child(new_punch)
+	caster.right_hand_anchor.add_child(new_punch)
+	caster.animate_action("punch")
 	new_punch.global_rotation = Vector3.ZERO

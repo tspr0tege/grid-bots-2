@@ -15,7 +15,7 @@ var base_attack: Ability
 @export var display_health: bool = false
 @export var BASE_ATTACK: PackedScene
 @export var animation_player: AnimationPlayer
-const available_animations = ["shoot", "move", "run", "idle"]
+#const available_animations = ["shoot", "move", "run", "ready", "punch"]
 @export_range(-1, 1, 2) var attack_direction = 1
 
 
@@ -38,20 +38,22 @@ func _ready() -> void:
 		animation_player.connect("animation_finished", _on_animation_finished)
 
 
-func animate_action(animation) -> void:
+func animate_action(animation_name) -> void:
 	if !is_instance_valid(animation_player): 
-		print("No AnimationPlayer assigned to %s. Unable to run %s animation." % [self.name, animation])
+		print("No AnimationPlayer assigned to %s. Unable to run %s animation." % [self.name, animation_name])
 		return
 	
-	if available_animations.has(animation):
-		animation_player.play(animation)
+	if attack_direction < 1: animation_name += "2"
+	
+	if animation_player.has_animation(animation_name):
+		animation_player.play(animation_name)
 	else:
-		print("%s does not have an animation named %s" % [self.name, animation])
+		print("%s does not have an animation named %s" % [self.name, animation_name])
 
 
-func _on_animation_finished(anim_name: StringName) -> void:
-	if anim_name != "idle":
-		animation_player.play("idle")
+func _on_animation_finished(anim_name: String) -> void:
+	if !anim_name.begins_with("ready"):
+		animation_player.play("ready" if attack_direction > 0 else "ready2")
 
 
 func move_to(new_pos: Vector3, pushed := false) -> void:

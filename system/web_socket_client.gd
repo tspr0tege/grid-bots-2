@@ -108,17 +108,12 @@ func _process(_delta: float) -> void:
 
 
 func handle_remote_input(input: Dictionary) -> void:
-	for key in input:
-		if typeof(input[key]) == TYPE_DICTIONARY and input[key].has("x"):
-			if input[key].has("z"):
-				input[key] = Data.vec3_from_dict(input[key])
-				input[key].x = 5 - input[key].x
-			elif typeof(input[key].x) == TYPE_INT:
-				input[key] = Data.coords_from_dict(input[key])
-				input[key].x = 5 - input[key].x
-			else:
-				input[key] = Data.vec2_from_dict(input[key])
-				input[key].x = 5 - input[key].x
+	if input.has("vectors"):
+		for key in input.vectors:
+			input.vectors[key] = str_to_var(input.vectors[key])
+			input.vectors[key].x = 5 - input.vectors[key].x
+	
+	if input.has("travel_direction"): input.travel_direction *= -1
 	
 	match input.action:
 		"MOVE":
@@ -126,7 +121,7 @@ func handle_remote_input(input: Dictionary) -> void:
 			#y positioning will not change. But x position is reversed.
 			#all x-coord values from remote need to be converted to 5-x
 			
-			opponent_move.emit(input.to_coords)
+			opponent_move.emit(input.vectors.to_coords)
 		"ABILITY":
 			ARENA._execute_ability(input)
 		_:
@@ -134,13 +129,10 @@ func handle_remote_input(input: Dictionary) -> void:
 
 
 func send_local_input_to_remote(input) -> void:
-	for key in input:
-		if typeof(input[key]) == TYPE_VECTOR3:
-			input[key] = Data.vec3_to_dict(input[key])
-		elif typeof(input[key]) == TYPE_VECTOR2I:
-			input[key] = Data.coords_to_dict(input[key])
-		elif typeof(input[key]) == TYPE_VECTOR2:
-			input[key] = Data.vec2_to_dict(input[key])
+	if input.has("vectors"):
+		for key in input.vectors:
+			input.vectors[key] = var_to_str(input.vectors[key])
+	
 	socket.send_text(JSON.stringify({
 		"origin": Data.multiplayer_id,
 		"type": "game_input",
@@ -156,8 +148,8 @@ func generate_invite_code() -> void:
 	}
 	if socket.get_ready_state() != socket.STATE_OPEN:
 		next_action = create_signal
-		#connect_to_url("ws://127.0.0.1:9080")
-		connect_to_url("wss://tactical-chess.xyz")
+		connect_to_url("ws://127.0.0.1:9080")
+		#connect_to_url("wss://tactical-chess.xyz")
 	else:
 		socket.put_packet(JSON.stringify(create_signal).to_utf8_buffer())
 
@@ -171,7 +163,7 @@ func claim_invite_code(code) -> void:
 	}
 	if socket.get_ready_state() != socket.STATE_OPEN:
 		next_action = join_signal
-		#connect_to_url("ws://127.0.0.1:9080")
-		connect_to_url("wss://tactical-chess.xyz")
+		connect_to_url("ws://127.0.0.1:9080")
+		#connect_to_url("wss://tactical-chess.xyz")
 	else:
 		socket.put_packet(JSON.stringify(join_signal).to_utf8_buffer())

@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 SceneManager="*res://autoload/AL_sceneManager.gd"
 Data="*res://autoload/AL_data.gd"
+Nakama="*res://system/nakama/addons/com.heroiclabs.nakama/Nakama.gd"
 
 [display]
 

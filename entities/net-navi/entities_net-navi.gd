@@ -1,5 +1,6 @@
 extends Character
 
+@export var right_hand_anchor : Node3D
 
 func move_to(new_pos: Vector3, pushed := false) -> void:
 	if !pushed and move_handler:

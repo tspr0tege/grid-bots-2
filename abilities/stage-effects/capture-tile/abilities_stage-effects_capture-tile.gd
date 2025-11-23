@@ -14,10 +14,11 @@ func validate(caster: Character, arena: Node3D) -> Dictionary:
 		return instructions
 	
 	instructions.can_cast = true
-	instructions.target_coords = target.grid_coordinates
+	instructions.vectors = {"target_coords": target.grid_coordinates}
 	instructions.new_cg = caster.control_group
 	return instructions
 
 
 func cast(_arena: Node3D, final_instructions: Dictionary) -> void:
+	#print(final_instructions)
 	final_instructions.target._set_control_group(final_instructions.new_cg)
