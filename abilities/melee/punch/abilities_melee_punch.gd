@@ -7,12 +7,15 @@ const dmg := 50.0
 
 
 func validate(caster, _arena) -> Dictionary:
+	var target_pos = caster.grid_pos + Vector2i(caster.attack_direction, 0)
 	instructions.target_type = "OCCUPANT"
-	instructions.target_coords = caster.grid_pos
+	instructions.vectors = {
+		"target_coords": caster.grid_pos,
+		"target_pos": target_pos,
+	}
 	instructions.ability_id = UID
 	instructions.can_cast = true
 	
-	instructions.target_pos = caster.grid_pos + Vector2i(caster.attack_direction, 0)
 	#var position_offset = Vector3(.5 * caster.attack_direction, 0.5, 0)
 	
 	return instructions
@@ -20,7 +23,7 @@ func validate(caster, _arena) -> Dictionary:
 
 func cast(arena, final_instructions) -> void:
 	var new_punch = PUNCH.instantiate()
-	var target_pos = final_instructions.target_pos
+	var target_pos = final_instructions.vectors.target_pos
 	var caster = final_instructions.target
 	
 	new_punch.connect("attempt_damage", arena._attempt_damage.bind(target_pos, dmg))

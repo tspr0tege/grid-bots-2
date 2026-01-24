@@ -19,7 +19,9 @@ func validate(caster, arena) -> Dictionary:
 		return instructions
 	
 	var target_tile = possible_locations[randi_range(0, possible_locations.size() - 1)]	
-	instructions.target_coords = target_tile.grid_coordinates
+	instructions.vectors = {
+		"target_coords": target_tile.grid_coordinates
+	}
 	instructions.can_cast = true
 	instructions.ability_id = UID
 	instructions.target_type = "TILE"

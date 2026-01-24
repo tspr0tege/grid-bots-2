@@ -1,6 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://djxxeitmfhi2l"]
-
-[ext_resource type="Script" uid="uid://be6i0cxv0d8i1" path="res://scenes/online-multiplayer/scenes_onlineMultiplayer.gd" id="1_k31pq"]
+[gd_scene format=3 uid="uid://7qhrmhbgdg1q"]
 
 [node name="OnlineMultiplayer" type="Control"]
 layout_mode = 3
@@ -9,128 +7,113 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_k31pq")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.2, 0.2, 0.2, 1)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ConnectionInput" type="VBoxContainer" parent="PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Label" type="Label" parent="PanelContainer/HBoxContainer/ConnectionInput"]
+layout_mode = 2
+text = "Connect to Server"
+
+[node name="SessionButton" type="Button" parent="PanelContainer/HBoxContainer/ConnectionInput"]
+layout_mode = 2
+text = "Create Online Session"
+
+[node name="SocketButton" type="Button" parent="PanelContainer/HBoxContainer/ConnectionInput"]
+layout_mode = 2
+text = "Create Socket Connection"
+
+[node name="MatchmakingButton" type="Button" parent="PanelContainer/HBoxContainer/ConnectionInput"]
+layout_mode = 2
+text = "Join Matchmaking Queue"
+
+[node name="ConnectionOutput" type="PanelContainer" parent="PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/ConnectionOutput"]
+layout_mode = 2
+alignment = 1
+
+[node name="Client" type="Label" parent="PanelContainer/HBoxContainer/ConnectionOutput/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "CLIENT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ClientData" type="RichTextLabel" parent="PanelContainer/HBoxContainer/ConnectionOutput/VBoxContainer"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+fit_content = true
+scroll_following = true
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Session" type="Label" parent="PanelContainer/HBoxContainer/ConnectionOutput/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "SESSION"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SessionData" type="RichTextLabel" parent="PanelContainer/HBoxContainer/ConnectionOutput/VBoxContainer"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+fit_content = true
+scroll_following = true
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Socket" type="Label" parent="PanelContainer/HBoxContainer/ConnectionOutput/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "SOCKET"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SocketData" type="RichTextLabel" parent="PanelContainer/HBoxContainer/ConnectionOutput/VBoxContainer"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+fit_content = true
+scroll_following = true
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LoadingScreen" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-alignment = 1
 
-[node name="Create" type="VBoxContainer" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 4
-
-[node name="Label" type="Label" parent="HBoxContainer/Create"]
+[node name="Label" type="Label" parent="LoadingScreen"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
-text = "Create Match"
+text = "Loading..."
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="HBoxContainer/Create"]
-custom_minimum_size = Vector2(0, 50)
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="HBoxContainer/Create"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 20
-text = "Room Code:"
-horizontal_alignment = 1
-
-[node name="RoomCodeDisplay" type="Label" parent="HBoxContainer/Create"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 60
-text = "####"
-horizontal_alignment = 1
-
-[node name="Spacer2" type="Control" parent="HBoxContainer/Create"]
-custom_minimum_size = Vector2(0, 25)
-layout_mode = 2
-
-[node name="CreateRoom" type="Button" parent="HBoxContainer/Create"]
-custom_minimum_size = Vector2(100, 50)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 20
-text = "Generate Room Code"
-
-[node name="Join" type="VBoxContainer" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 4
-
-[node name="Label2" type="Label" parent="HBoxContainer/Join"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Join Match"
-horizontal_alignment = 1
-
-[node name="Spacer" type="Control" parent="HBoxContainer/Join"]
-custom_minimum_size = Vector2(0, 50)
-layout_mode = 2
-
-[node name="Label3" type="Label" parent="HBoxContainer/Join"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 20
-text = "Enter Room Code:"
-horizontal_alignment = 1
-
-[node name="JoinCodeInput" type="LineEdit" parent="HBoxContainer/Join"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 60
-placeholder_text = "####"
-alignment = 1
-max_length = 4
-
-[node name="Spacer2" type="Control" parent="HBoxContainer/Join"]
-custom_minimum_size = Vector2(0, 25)
-layout_mode = 2
-
-[node name="JoinRoom" type="Button" parent="HBoxContainer/Join"]
-custom_minimum_size = Vector2(100, 50)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 20
-disabled = true
-text = "Join"
-
-[node name="Cancel" type="Button" parent="."]
-custom_minimum_size = Vector2(300, 50)
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -150.0
-offset_top = -121.0
-offset_right = 150.0
-offset_bottom = -58.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 40
-text = "Cancel"
-
-[connection signal="pressed" from="HBoxContainer/Create/CreateRoom" to="." method="_on_create_room_pressed"]
-[connection signal="text_changed" from="HBoxContainer/Join/JoinCodeInput" to="." method="_on_join_code_changed"]
-[connection signal="text_submitted" from="HBoxContainer/Join/JoinCodeInput" to="." method="_on_join_code_submitted"]
-[connection signal="pressed" from="HBoxContainer/Join/JoinRoom" to="." method="_on_join_room_pressed"]
-[connection signal="pressed" from="Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/ConnectionInput/SessionButton" to="." method="_on_connectionInput_button_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/ConnectionInput/SocketButton" to="." method="_on_socket_button_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/ConnectionInput/MatchmakingButton" to="." method="_on_matchmaking_button_pressed"]

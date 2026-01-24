@@ -5,7 +5,7 @@ func validate(caster: Character, arena: Node3D) -> Dictionary:
 	var target = arena.enemy_character if caster == arena.player_character else arena.player_character
 	instructions.ability_id = UID
 	instructions.target_type = "OCCUPANT"
-	instructions.target_coords = target.grid_pos
+	instructions.vectors = {"target_coords": target.grid_pos}
 	instructions.can_cast = true
 	
 	return instructions

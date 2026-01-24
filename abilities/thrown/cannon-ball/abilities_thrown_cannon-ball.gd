@@ -19,8 +19,10 @@ func validate(caster, arena) -> Dictionary:
 		return instructions
 
 	instructions.can_cast = true
-	instructions.start_pos = caster.position
-	instructions.target_coords = target_tile.grid_coordinates
+	instructions.vectors = {
+		"start_pos": caster.position,
+		"target_coords": target_tile.grid_coordinates,
+	}
 	
 	return instructions
 
@@ -31,7 +33,7 @@ func cast(arena, final_instructions) -> void:
 	arena.add_child(new_ball)
 	
 	#create curve
-	var start_pos = final_instructions.start_pos
+	var start_pos = final_instructions.vectors.start_pos
 	start_pos.y += .5
 	var end_pos = target_tile.position
 	end_pos.y += .5	

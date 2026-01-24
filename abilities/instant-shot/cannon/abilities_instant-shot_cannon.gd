@@ -17,9 +17,9 @@ func validate(caster: Character, arena: Node3D) -> Dictionary:
 	
 	var target = arena.search_row(caster.grid_pos, caster.attack_direction, arena.for_character)
 	if target:
-		instructions.target_coords = target.grid_pos
+		instructions.vectors = {"target_coords": target.grid_pos}
 	else:
-		instructions.target_coords = null
+		instructions.vectors = {"target_coords": null}
 	instructions.can_cast = true
 	
 	return instructions
@@ -27,4 +27,4 @@ func validate(caster: Character, arena: Node3D) -> Dictionary:
 
 func cast(arena: Node3D, final_instructions: Dictionary) -> void:
 	if final_instructions.target:
-		arena._attempt_damage(final_instructions.target_coords, dmg)
+		arena._attempt_damage(final_instructions.vectors.target_coords, dmg)

@@ -226,7 +226,7 @@ func _execute_ability(instructions: Dictionary) -> void:
 		"TILE":
 			instructions.target = get_tile_by_coords(instructions.vectors.target_coords)
 		"OCCUPANT":
-			if instructions.target_coords != null:
+			if instructions.vectors.target_coords != null:
 				instructions.target = get_tile_by_coords(instructions.vectors.target_coords).occupant
 			else:
 				instructions.target = null

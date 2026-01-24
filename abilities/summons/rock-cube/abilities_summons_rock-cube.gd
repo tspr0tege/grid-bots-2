@@ -18,7 +18,7 @@ func validate(caster, arena) -> Dictionary:
 		return instructions
 		
 	instructions.can_cast = true
-	instructions.target_coords = target_tile.grid_coordinates
+	instructions.vectors = {"target_coords": target_tile.grid_coordinates}
 	
 	return instructions
 

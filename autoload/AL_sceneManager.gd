@@ -1,7 +1,8 @@
 extends Node
 
 var player_id: String = ""
-var match_result: String = "" # "win", "lose", "draw"
+#var match_result: String = "" # "win", "lose", "draw"
+enum match_result {win, lose, draw}
 
 signal request_invite_code
 signal room_code_received(code)
@@ -16,7 +17,9 @@ const MENU_SCENE := "res://scenes/main-menu/main_menu.tscn"
 const BATTLE_SCENE := "res://scenes/battle-scene/battle_scene.tscn"
 const ONLINE_SCENE = "res://scenes/online-multiplayer/online_multiplayer.tscn"
 
-const WEB_SOCKET_CLIENT := preload("res://system/web_socket_client.tscn")
+const WEB_SOCKET_CLIENT := preload("res://system/nakama_client.tscn")
+#const WEB_SOCKET_CLIENT := preload("res://system/web_socket_client.tscn")
+#const NAKAMA_CLIENT := preload()
 #var scene : PackedScene
 const PLAYER_CHARACTER = preload("res://entities/test-character/player_character.tscn")
 const RED_CHARACTER = preload("res://entities/test-character/red_character.tscn")
@@ -59,7 +62,7 @@ func start_online_match() -> void:
 	combatants.push_back(func(arena) -> void:
 		arena.player_character = PLAYER_CHARACTER.instantiate()
 		arena.get_node("%CombatArena").add_child(arena.player_character)
-		#arena.get_node("%CombatArena").connect("player_input", online_client.send_local_input_to_remote)
+		arena.get_node("%CombatArena").connect("player_input", online_client.send_local_input_to_remote)
 		arena.place_character_on_board(arena.player_character, Vector2i(1, 1))
 		)
 	
@@ -87,16 +90,9 @@ func goto_multiplayer() -> void:
 	
 	online_client = WEB_SOCKET_CLIENT.instantiate()
 	get_tree().root.add_child(online_client)
-	connect("request_invite_code", online_client.generate_invite_code)
-	connect("attempt_join_room", online_client.claim_invite_code)
-	
-	#online_client.connect("received_new_room_code", scene.display_new_room_code)
-	#scene.connect("join_room_with_code", online_client.claim_invite_code)
-	#scene.connect("generate_invite_code", online_client.generate_invite_code)
-	#signal join_room_with_code(code)
-	#signal room_code_received(code)
-	#generate_invite_code
-	#claim_invite_code(code)
+	online_client.connect("match_connected", start_online_match)
+	#connect("request_invite_code", online_client.generate_invite_code)
+	#connect("attempt_join_room", online_client.claim_invite_code)
 
 
 func load_menu() -> void:

@@ -10,7 +10,7 @@ var shield_object: Node3D
 func validate(caster: Character, _arena: Node3D) -> Dictionary:
 	instructions.ability_id = UID
 	instructions.target_type = "OCCUPANT"
-	instructions.target_coords = caster.grid_pos
+	instructions.vectors = {"target_coords": caster.grid_pos}
 	instructions.can_cast = true
 	
 	return instructions

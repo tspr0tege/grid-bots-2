@@ -21,11 +21,13 @@ func validate(caster, arena) -> Dictionary:
 		Data.ability_deck[UID] = self
 	
 	instructions.can_cast = true
-	instructions.target_coords = target_coords
-	instructions.push_to = target_coords + Vector2i(caster.attack_direction, 0)
+	instructions.vectors = {
+		"target_coords": target_coords,
+		"push_to": target_coords + Vector2i(caster.attack_direction, 0)
+	}
 	return instructions
 
 
 func cast(arena, final_instructions) -> void:
-	arena._execute_move(final_instructions.target, final_instructions.push_to, true)
+	arena._execute_move(final_instructions.target, final_instructions.vectors.push_to, true)
 	

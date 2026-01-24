@@ -11,13 +11,13 @@ func validate(caster, arena) -> Dictionary:
 	$AudioStreamPlayer.play()
 	var target = arena.search_row(caster.grid_pos, caster.attack_direction, arena.for_character)
 	if target:
-		instructions.target_coords = target.grid_pos
+		instructions.vectors = {"target_coords": target.grid_pos}
 	else:
-		instructions.target_coords = null
+		instructions.vectors = {"target_coords": null}
 	
 	return instructions
 
 
 func cast(arena, final_instructions) -> void:
 	if final_instructions.target:
-		arena._attempt_damage(final_instructions.target_coords, dmg)
+		arena._attempt_damage(final_instructions.vectors.target_coords, dmg)

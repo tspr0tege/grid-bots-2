@@ -22,7 +22,7 @@ func validate(caster: Character, _arena: Node3D) -> Dictionary:
 	instructions.heal_amt = min(hp_lost, heal_amt)
 	instructions.can_cast = true
 	instructions.target_type = "OCCUPANT"
-	instructions.target_coords = caster.grid_pos
+	instructions.vectors = {"target_coords": caster.grid_pos}
 	
 	return instructions
 

@@ -12,14 +12,14 @@ config_version=5
 
 config/name="Grid Bots"
 run/main_scene="uid://bf0143pgxvrpv"
-config/features=PackedStringArray("4.4", "Mobile")
+config/features=PackedStringArray("4.4", "Mobile", "Redot")
 config/icon="res://icon.svg"
 
 [autoload]
 
 SceneManager="*res://autoload/AL_sceneManager.gd"
 Data="*res://autoload/AL_data.gd"
-Nakama="*res://system/nakama/addons/com.heroiclabs.nakama/Nakama.gd"
+Nakama="*res://system/nakama-client/addons/com.heroiclabs.nakama/Nakama.gd"
 
 [display]
 
