@@ -1,13 +1,16 @@
 extends Ability
 
 
-func validate(caster: Character, arena: Node3D) -> Dictionary:
+func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	#search in row for a tile that is NOT matching the character and switch it
 	#var target = arena.linear_search(caster, "TILE")
-	instructions.ability_id = UID
-	instructions.target_type = "TILE"
+	var caster = amx.get_character_by_id(caster_id)
+	var instructions := {
+		"ability_id": UID,
+		"target_type": "TILE",
+	}
 	var opponent_cg = Data.opposing_group(caster)
-	var target = arena.search_row(caster.grid_pos, caster.attack_direction, arena.for_tile.bind(opponent_cg))
+	var target = amx.find_arena_tile_in_row_by_control_group(caster.grid_pos, caster.attack_direction, opponent_cg)
 	if target == null:
 		instructions.can_cast = false
 		instructions.reason = "No tile found, for conversion."
@@ -19,6 +22,7 @@ func validate(caster: Character, arena: Node3D) -> Dictionary:
 	return instructions
 
 
-func cast(_arena: Node3D, final_instructions: Dictionary) -> void:
+func cast(amx : AbilityMethodsExport, instructions: Dictionary) -> void:
 	#print(final_instructions)
-	final_instructions.target._set_control_group(final_instructions.control_group)
+	$AudioStreamPlayer.play()
+	instructions.target._set_control_group(instructions.control_group)

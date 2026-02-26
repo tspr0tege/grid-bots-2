@@ -13,13 +13,13 @@ var ability_list := [
 	#load().instantiate(),
 	load("res://abilities/stage-effects/capture-tile/abilities_stage-effects_capture-tile.tscn").instantiate(),
 	#load("res://abilities/summons/rock-cube/abilities_summons_rock-cube.tscn").instantiate(),
-	#load("res://abilities/thrown/cannon-ball/abilities_thrown_cannon-ball.tscn").instantiate(),
-	load("res://abilities/instantiated-shot/rocket/abilities_instantiated-shot_rocket.tscn").instantiate(),
-	load("res://abilities/melee/punch/abilties_melee_punch.tscn").instantiate(),
+	load("res://abilities/thrown/cannon-ball/abilities_thrown_cannon-ball.tscn").instantiate(),
+	#load("res://abilities/instantiated-shot/rocket/abilities_instantiated-shot_rocket.tscn").instantiate(),
+	#load("res://abilities/melee/punch/abilties_melee_punch.tscn").instantiate(),
 	load("res://abilities/instant-shot/cannon/abilities_instant-shot_cannon.tscn").instantiate(),
 	#load("res://abilities/debuffs/def-down/abilities_debuffs_def-down.tscn").instantiate(),
 	load("res://abilities/counters/reflect/abilities_counters_reflect.tscn").instantiate(),
-	load("res://abilities/buffs/heal-10/abilities_buffs_heal-10.tscn").instantiate(),
+	#load("res://abilities/buffs/heal-10/abilities_buffs_heal-10.tscn").instantiate(),
 	#load("res://abilities/traps/landmine/abilities_traps_landmine.tscn").instantiate(),
 ]
 var player_deck = []
@@ -38,6 +38,7 @@ func _ready() -> void:
 	card_hand.resize(hand_size)
 	for n in range(hand_size):
 		draw_card(n)
+	#print_tree_pretty()
 
 
 func draw_card(index: int) -> void:
@@ -49,33 +50,19 @@ func draw_card(index: int) -> void:
 	button.texture_progress = Data.ability_deck[new_card].ICON
 	button.texture_over = null
 	button.max_value = Data.ability_deck[new_card].COST
-	button.value = ARENA.player_energy
-
-
-func _handle_pause_button() -> void:
-	if get_tree().paused:
-		%PauseMenu.visible = false
-		get_tree().paused = false
-	else:
-		get_tree().paused = true
-		%PauseMenu.visible = true
-
-
-func _on_quit_button_pressed() -> void:
-	get_tree().paused = false
-	SceneManager.load_menu()
+	button.value = $MatchController.player_energy
 
 
 func _UI_input_fire_button_pressed() -> void:	
-	ARENA.player_character.use_base_attack(ARENA)
+	$MatchController.player_character.use_base_attack(ARENA)
 
 
 func _UI_input_use_ability(index: int) -> void:
 	#not enough energy
-	if ARENA.player_energy < Data.ability_deck[card_hand[index]].COST: return
+	if $MatchController.player_energy < Data.ability_deck[card_hand[index]].COST: return
 	
-	if ARENA._attempt_ability(ARENA.player_character, Data.ability_deck[card_hand[index]]):
-		ARENA.player_energy -= Data.ability_deck[card_hand[index]].COST
+	if $MatchController._attempt_ability($MatchController.player_character, Data.ability_deck[card_hand[index]]):
+		$MatchController.player_energy -= Data.ability_deck[card_hand[index]].COST
 		player_deck.push_back(card_hand[index])
 		draw_card(index)
 
@@ -90,6 +77,7 @@ func _on_combat_arena_match_over(player_wins: bool) -> void:
 	%MatchResult.text = result
 	$CanvasLayer/MatchOver.visible = true
 
+
 func _update_energy(value: float) -> void:
 	energy_bar.value = value
 	energy_count.text = str(floori(value))
@@ -101,3 +89,17 @@ func _update_energy(value: float) -> void:
 			progress_bar.texture_over = null
 		if !progress_bar.texture_over and value >= Data.ability_deck[card_hand[i]].COST:
 			progress_bar.texture_over = ready_frame
+
+
+func _handle_pause_button() -> void:
+	if get_tree().paused:
+		%PauseMenu.visible = false
+		get_tree().paused = false
+	else:
+		get_tree().paused = true
+		%PauseMenu.visible = true
+
+
+func _on_quit_button_pressed() -> void:
+	get_tree().paused = false
+	SceneManager.load_menu()

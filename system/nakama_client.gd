@@ -7,14 +7,16 @@ var session : NakamaSession
 var socket : NakamaSocket
 var online_match : NakamaRTAPI.Match
 
-signal match_connected
+signal match_connected(opponent_id)
 signal opponent_move(to_pos)
 
 var ARENA : Node3D
 
 func _ready():
-	client = await Nakama.create_client("temporary_key", "127.0.0.1", 7350, "http")
+	#client = Nakama.create_client("temporary_key", "127.0.0.1", 7350, "http")
+	client = Nakama.create_client("temporary_key", "tactical-chess.xyz", 443, "https")
 	client.timeout = 10
+	print("Client created; moving to session creation")
 	create_online_session()
 
 
@@ -51,8 +53,8 @@ func join_matchmaking_queue() -> void:
 	var query = "*" #postgres matching query?
 	var min_players : int = 2
 	var max_players : int = 2
-	var string_properties = { "mode": "sabotage" }
-	var numeric_properties = { "skill": 125 }
+	#var string_properties = { "mode": "sabotage" }
+	#var numeric_properties = { "skill": 125 }
 	
 	var matchmaker_ticket : NakamaRTAPI.MatchmakerTicket = await socket.add_matchmaker_async(query, min_players, max_players)
 	
@@ -69,6 +71,7 @@ func _on_matchmaker_matched(p_matched : NakamaRTAPI.MatchmakerMatched):
 	#users[n] props: <MatchmakerUser>: presence, numeric_properties, string_properties
 	#presence props: <UserPresence>: persistence, session_id, status, username, user_id
 	print("System triggered _on_matchmaker_matched")
+	print(p_matched)
 	
 	var new_match : NakamaRTAPI.Match = await socket.join_matched_async(p_matched)
 	
@@ -78,7 +81,15 @@ func _on_matchmaker_matched(p_matched : NakamaRTAPI.MatchmakerMatched):
 		print("Match connected")
 		#print("new_match data: " + str(new_match))
 		online_match = new_match
-		match_connected.emit()
+		
+		var self_user := p_matched.self_user.presence
+		#print("SELF USER" + str(self_user))
+		Data.multiplayer_id = self_user.username
+		
+		var opponent_index = p_matched.users.find_custom(func(user): return user.presence.username != self_user.username)
+		var opponent_presence: NakamaRTAPI.UserPresence = p_matched.users[opponent_index].presence
+		#print("OPPONENT ID: %s vs LOCAL ID: %s" % [opponent_presence.username, Data.multiplayer_id])
+		match_connected.emit(opponent_presence.username)
 
 
 func send_local_input_to_remote(input) -> void:
@@ -105,7 +116,11 @@ func handle_remote_input(match_state : NakamaRTAPI.MatchData):
 		for key in input.vectors:
 			input.vectors[key] = str_to_var(input.vectors[key])
 			if input.vectors[key] == null: continue
-			input.vectors[key].x = 5 - input.vectors[key].x
+			if key == "start_pos":
+				print("Mirroring position vector.")
+				input.vectors[key].x = 6.6 - input.vectors[key].x
+			else:
+				input.vectors[key].x = 5 - input.vectors[key].x
 	
 	if input.has("travel_direction"): input.travel_direction *= -1
 	print("input: " + str(input))

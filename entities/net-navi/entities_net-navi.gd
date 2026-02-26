@@ -9,13 +9,3 @@ func move_to(new_pos: Vector3, pushed := false) -> void:
 	else:
 		var new_tween = get_tree().create_tween()
 		new_tween.tween_property(self, "position", new_pos, tile_move_speed)
-
-
-func use_base_attack(arena: Node3D) -> void:
-	if base_attack:
-		#%CombatArena._attempt_ability(%CombatArena.player_character, Data.ability_deck[card_hand[index]])
-		#base_attack.use_ability(self, arena)
-		arena._attempt_ability(self, base_attack)
-		#$NetNavi.animate_action("shoot")
-	else:
-		push_error("%s's use_base_attack function was called, with no BASE_ATTACK Script assigned." % self.name)

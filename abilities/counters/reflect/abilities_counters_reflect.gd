@@ -20,6 +20,7 @@ func cast(arena: Node3D, final_instructions: Dictionary) -> void:
 	var caster = final_instructions.target
 	var new_shield = REFLECT.instantiate()
 	shield_object = new_shield
+	$AudioStreamPlayer.play()
 	new_shield.get_node("Timer").connect("timeout", _remove_shield)
 	caster.add_child(new_shield)
 	

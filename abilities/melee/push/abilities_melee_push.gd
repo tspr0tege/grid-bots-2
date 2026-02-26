@@ -1,17 +1,20 @@
 extends Ability
 
 
-func validate(caster, arena) -> Dictionary:
-	instructions.target_type = "OCCUPANT"
-	instructions.ability_id = UID
+func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
+	var caster: Character = amx.get_character_by_id(caster_id)
+	var instructions := {
+		"target_type": "OCCUPANT",
+		"ability_id": UID,
+	}
 	#validate tile
 	var target_coords = caster.grid_pos + Vector2i(caster.attack_direction, 0)
-	if !arena.is_valid_tile(target_coords): 
+	if !amx.is_valid_arena_tile(target_coords): 
 		instructions.can_cast = false
 		instructions.reason = "Nowhere to push to."
 		return instructions
 	#validate target
-	var target: Character = arena.get_tile_by_coords(target_coords).occupant
+	var target: Character = amx.get_character_by_arena_coords(target_coords)
 	if target == null: 
 		instructions.can_cast = false
 		instructions.reason = "No one to push."
@@ -28,6 +31,7 @@ func validate(caster, arena) -> Dictionary:
 	return instructions
 
 
-func cast(arena, final_instructions) -> void:
-	arena._execute_move(final_instructions.target, final_instructions.vectors.push_to, true)
+func cast(amx : AbilityMethodsExport, instructions: Dictionary) -> void:
+	#print("BOARD STATE: " + str(arena.arena_tiles))
+	amx.execute_move(instructions.target, instructions.vectors.push_to, true)
 	

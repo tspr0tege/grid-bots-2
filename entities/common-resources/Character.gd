@@ -1,8 +1,9 @@
 class_name Character extends Node3D
 
-
 signal character_death(source)
+signal request_ability(character: Character, ability: Ability)
 
+var id: String
 var grid_pos: Vector2i
 var health_display: Label3D
 var tile_move_speed := .1
@@ -66,7 +67,7 @@ func move_to(new_pos: Vector3, pushed := false) -> void:
 
 func use_base_attack(arena: Node3D) -> void:
 	if base_attack:
-		arena._attempt_ability(self, base_attack)
+		request_ability.emit(self, base_attack)
 	else:
 		push_error("%s's use_base_attack function was called, with no BASE_ATTACK Script assigned." % self.name)
 

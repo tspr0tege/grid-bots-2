@@ -11,6 +11,7 @@ signal attempt_join_room(code)
 # For future multiplayer use
 #var match_id: String = ""
 var online_client = null
+var match_settings := {}
 
 # Paths to your main scenes
 const MENU_SCENE := "res://scenes/main-menu/main_menu.tscn"
@@ -34,51 +35,51 @@ func load_combatants(arena) -> void:
 func start_local_match() -> void:
 	var scene : PackedScene = load(BATTLE_SCENE)
 	online_client = null
-	combatants = []
-	
-	#test player character
-	combatants.push_back(func(arena) -> void:
-		arena.player_character = PLAYER_CHARACTER.instantiate()
-		arena.get_node("%CombatArena").add_child(arena.player_character)
-		arena.place_character_on_board(arena.player_character, Vector2i(1, 1))
-		)
-	
-	#test enemy
-	combatants.push_back(func(arena) -> void:
-		arena.enemy_character = RED_CHARACTER.instantiate()
-		arena.get_node("%CombatArena").add_child(arena.enemy_character)	
-		arena.enemy_character.connect("attempt_move", arena._attempt_move)
-		arena.place_character_on_board(arena.enemy_character, Vector2i(4, 1))
-		)
-	
-	
+	match_settings.characters = [
+		{
+			"model": "res://entities/test-character/player_character.tscn",
+			"role": Data.roles.PLAYER_CHARACTER,
+			"coords": Vector2i(1,1),
+		},
+		{
+			"model": "res://entities/test-character/red_character.tscn",
+			"role": Data.roles.NPCs,
+			"coords": Vector2i(4, 1),
+			"connections": {
+				"attempt_move": "_attempt_move",
+			},
+		}
+	]
 	get_tree().change_scene_to_packed(scene)
 
 
-func start_online_match() -> void:
+func start_online_match(opponent_id) -> void:
 	var scene : PackedScene = load(BATTLE_SCENE)
 	combatants = []
 	
 	combatants.push_back(func(arena) -> void:
-		arena.player_character = PLAYER_CHARACTER.instantiate()
+		var player_character = PLAYER_CHARACTER.instantiate()
+		arena.player_character = player_character
+		arena.characters[Data.multiplayer_id] = player_character
 		arena.get_node("%CombatArena").add_child(arena.player_character)
 		arena.get_node("%CombatArena").connect("player_input", online_client.send_local_input_to_remote)
 		arena.place_character_on_board(arena.player_character, Vector2i(1, 1))
 		)
 	
 	combatants.push_back(func(arena) -> void:
-		arena.enemy_character = PLAYER_CHARACTER.instantiate()
-		arena.enemy_character.rotation.y = deg_to_rad(-90)
-		arena.enemy_character.attack_direction = -1
-		arena.enemy_character.control_group = Data.CGs.RED
-		arena.get_node("%CombatArena").add_child(arena.enemy_character)
+		var new_opponent = PLAYER_CHARACTER.instantiate()
+		arena.characters[opponent_id] = new_opponent
+		new_opponent.rotation.y = deg_to_rad(-90)
+		new_opponent.attack_direction = -1
+		new_opponent.control_group = Data.CGs.RED
+		arena.get_node("%CombatArena").add_child(new_opponent)
 		online_client.connect("opponent_move", func(coords):
-			arena._execute_move.call(arena.enemy_character, coords)
+			arena._execute_move.call(new_opponent, coords)
 			)
 		#online_client.connect("opponent_use_ability", func(uid): 
 			#arena._attempt_ability.call(arena.enemy_character, Data.ability_deck[uid])
 			#)
-		arena.place_character_on_board(arena.enemy_character, Vector2i(4, 1))
+		arena.place_character_on_board(new_opponent, Vector2i(4, 1))
 		)
 	
 	get_tree().change_scene_to_packed(scene)

@@ -1,3 +1,9 @@
-built in Godot 4.4.1
+built in Redot 4.4
 
-Prototype built using Kenny's asset pack
+01/27/2026
+Battle song found here: https://opengameart.org/content/awake-megawall-10
+Menu song found here: https://opengameart.org/content/pynchon
+
+Interface bleeps from: https://bleeoop.itch.io/interface-bleeps
+Sci-fi Guns from https://ad-sounds.itch.io/shooter-2150-a-sci-fi-sfx-pack-for-guns
+Sci-fi vol ii sounds from https://ad-sounds.itch.io/sci-fi-sounds-volume-ii

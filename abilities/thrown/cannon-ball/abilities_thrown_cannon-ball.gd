@@ -6,13 +6,17 @@ const arc_peak := 2.0
 const arc_duration := 1.0
 
 
-func validate(caster, arena) -> Dictionary:
-	instructions.target_type = "TILE"
-	instructions.ability_id = UID
+func validate(caster_id: String, amx: AbilityMethodsExport) -> Dictionary:
+	var instructions := {
+		"target_type": "TILE",
+		"ability_id": UID
+	}
+	
+	var caster = amx.get_character_by_id(caster_id)
 	
 	var target_tile_pos = caster.grid_pos
 	target_tile_pos.x += 3 * caster.attack_direction	
-	var target_tile = arena.get_tile_by_coords(target_tile_pos)
+	var target_tile = amx.get_arena_tile_by_coords(target_tile_pos)
 	if target_tile == null: 
 		instructions.can_cast = false
 		instructions.reason = "Throw is outside the arena bounds."
@@ -27,13 +31,13 @@ func validate(caster, arena) -> Dictionary:
 	return instructions
 
 
-func cast(arena, final_instructions) -> void:
-	var target_tile = final_instructions.target
+func cast(amx : AbilityMethodsExport, instructions: Dictionary) -> void:
+	var target_tile = instructions.target
 	var new_ball = CANNON_BALL.instantiate()
-	arena.add_child(new_ball)
+	amx.add_child_to_arena(new_ball)
 	
 	#create curve
-	var start_pos = final_instructions.vectors.start_pos
+	var start_pos = instructions.vectors.start_pos
 	start_pos.y += .5
 	var end_pos = target_tile.position
 	end_pos.y += .5	
@@ -48,5 +52,6 @@ func cast(arena, final_instructions) -> void:
 	#if it lands on the level, break the tile
 	new_ball.connect("arc_completed", target_tile.add_shot.bind(new_ball))
 	new_ball.connect("hit_floor", target_tile.remove_shot.bind(new_ball.shots_index))
-	new_ball.connect("hit_floor", target_tile.break_tile)	
-	new_ball.connect("attempt_damage", arena._attempt_damage)
+	new_ball.connect("hit_floor", target_tile.break_tile)
+	amx.connect_signal_to_arena(new_ball, "attempt_damage", "_attempt_damage")
+	#new_ball.connect("attempt_damage", arena._attempt_damage)

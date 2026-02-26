@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://6i7c5oga1pog"]
+[gd_scene load_steps=4 format=3 uid="uid://6i7c5oga1pog"]
 
 [ext_resource type="Script" uid="uid://n4rkkuyt1qvm" path="res://abilities/stage-effects/capture-tile/abilities_stage-effects_capture-tile.gd" id="1_edjxw"]
 [ext_resource type="Texture2D" uid="uid://cykqcteuew5s7" path="res://abilities/stage-effects/capture-tile/Capture Tile 01 icon 128 x 128.png" id="2_edjxw"]
+[ext_resource type="AudioStream" uid="uid://b55dxtw7qs71" path="res://abilities/stage-effects/capture-tile/SFX_UIPanelRadio01.wav" id="3_eyqn2"]
 
 [node name="Card-captureTile" type="Node"]
 script = ExtResource("1_edjxw")
@@ -9,3 +10,8 @@ COST = 20
 ICON = ExtResource("2_edjxw")
 UID = "SECT"
 metadata/_custom_type_script = "uid://cn7a5ijxhii6g"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_eyqn2")
+volume_db = -4.0
+pitch_scale = 0.8

@@ -1,9 +1,10 @@
 extends Node
 
 enum CGs { NONE, RED, BLUE, UNIVERSAL } #Control Groups
+enum roles { PLAYER_CHARACTER, OPPOSING_PLAYER, NPCs }
 
 var multiplayer_id = null
-var opponent_id = null
+#var opponent_id = null
 
 var ability_deck = {}
 

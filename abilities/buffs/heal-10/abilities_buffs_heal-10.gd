@@ -9,9 +9,13 @@ const heal_amt = 10
 	#"can_cast": true,
 #}
 
-func validate(caster: Character, _arena: Node3D) -> Dictionary:
+func validate(caster_id: String, amx: AbilityMethodsExport) -> Dictionary:
+	var caster: Character = amx.get_character_by_id(caster_id)
 	var caster_hp = caster.get_node("HpNode")
-	instructions.ability_id = UID	
+	var instructions := {
+		"ability_id": UID,
+		"caster_id": caster_id,
+	}
 	
 	if caster_hp.HP >= caster_hp.MAX_HP:
 		instructions.can_cast = false
@@ -27,9 +31,10 @@ func validate(caster: Character, _arena: Node3D) -> Dictionary:
 	return instructions
 
 
-func cast(_arena: Node3D, final_instructions: Dictionary) -> void:
-	var caster = final_instructions.target
-	caster.get_node("HpNode").take_healing(final_instructions.heal_amt)
+func cast(amx: AbilityMethodsExport, instructions: Dictionary) -> void:
+	var caster: Character = amx.get_character_by_id(instructions.caster_id)
+	caster.get_node("HpNode").take_healing(instructions.heal_amt)
+	$AudioStreamPlayer.play()
 	var heal_animation: CPUParticles3D = HEAL_10.instantiate()
 	caster.add_child(heal_animation)
 	heal_animation.connect("finished", heal_animation.queue_free)

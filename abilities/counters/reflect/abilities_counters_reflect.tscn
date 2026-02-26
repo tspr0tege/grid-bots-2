@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cf8bbj3tmtsu"]
+[gd_scene load_steps=4 format=3 uid="uid://cf8bbj3tmtsu"]
 
 [ext_resource type="Script" uid="uid://c0v3jhhf0wt0i" path="res://abilities/counters/reflect/abilities_counters_reflect.gd" id="1_k6llh"]
 [ext_resource type="Texture2D" uid="uid://7mdvmva5b63t" path="res://abilities/counters/reflect/Reflect icon 128 x 128.png" id="2_fqv6t"]
+[ext_resource type="AudioStream" uid="uid://b224s7cdivs6g" path="res://abilities/counters/reflect/SFX_Shieldv2variation01.wav" id="3_fqv6t"]
 
 [node name="Card-reflect" type="Node"]
 script = ExtResource("1_k6llh")
@@ -9,3 +10,8 @@ COST = 4
 ICON = ExtResource("2_fqv6t")
 UID = "CR00"
 metadata/_custom_type_script = "uid://cn7a5ijxhii6g"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_fqv6t")
+volume_db = 6.0
+pitch_scale = 1.42
