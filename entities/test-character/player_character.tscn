@@ -91,7 +91,6 @@ volume_db = -6.0
 max_polyphony = 3
 
 [node name="HpNode" parent="." node_paths=PackedStringArray("hit_sfx") instance=ExtResource("9_1rgcw")]
-MAX_HP = 500.0
 hit_sfx = NodePath("../Hit")
 
 [connection signal="HP_changed" from="HpNode" to="." method="_on_hp_node_hp_changed"]

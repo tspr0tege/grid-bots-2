@@ -1,5 +1,6 @@
 extends Node3D
 
+#signals are emitted from animation player
 signal attempt_push
 signal attempt_damage
 

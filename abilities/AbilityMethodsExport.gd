@@ -5,9 +5,9 @@ var arena : Node3D
 var match_controller : Node
 
 
-func _init(arena: Node3D, match_controller: Node):
-	self.arena = arena
-	self.match_controller = match_controller
+func _init(new_arena: Node3D, new_match_controller: Node):
+	arena = new_arena
+	match_controller = new_match_controller
 
 
 func get_character_by_id(id: String) -> Character:
@@ -18,16 +18,41 @@ func get_character_by_arena_coords(target_coords: Vector2i):
 	return arena.get_tile_by_coords(target_coords).occupant
 
 
-func get_arena_tile_by_coords(coords: Vector2i):
+func get_all_on_team(team: Data.CGs) -> Array:
+	var target_group := []
+	for character in match_controller.characters.values():
+		if character.control_group == team:
+			target_group.push_back(character.id)
+	return target_group
+
+
+func get_arena_tile_by_coords(coords: Vector2i) -> Node3D:
 	return arena.get_tile_by_coords(coords)
+
+
+func get_all_tiles_in_group(group: Data.CGs) -> Array:
+	return arena.tiles_in_group(group)
 
 
 func add_child_to_arena(object: Node3D) -> void:
 	arena.add_child(object)
 
 
+func add_new_character(character_instructions: Dictionary) -> void:
+	match_controller.add_new_character(character_instructions)
+
+
 func attempt_damage(target_coords: Vector2i, dmg_amt: float) -> bool:
 	return match_controller._attempt_damage(target_coords, dmg_amt)
+
+
+func attempt_ability(caster: Character, ability: Ability):
+	return match_controller._attempt_ability(caster, ability)
+
+
+func bind_projectile_move(projectile: Projectile) -> Callable:
+	return arena._attempt_move_shot.bind(projectile)
+	#_attempt_move_shot(from_coords: Vector2i, to_coords: Vector2i, shot: Projectile)
 
 
 func execute_move(target: Character, to_coords: Vector2i, pushing := false):
@@ -38,6 +63,10 @@ func connect_signal_to_arena(signal_source: Node, signal_name: String, handler_f
 	var callback := Callable(match_controller, handler_function)
 	if not signal_source.is_connected(signal_name, callback):
 		signal_source.connect(signal_name, callback)
+
+
+func handle_character_death(character: Character) -> void:
+	match_controller.handle_character_death(character)
 
 
 func find_character_by_arena_row(start_coords, search_direction):

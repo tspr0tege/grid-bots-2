@@ -7,17 +7,21 @@ var caster_hp_node
 var shield_object: Node3D
 
 
-func validate(caster: Character, _arena: Node3D) -> Dictionary:
-	instructions.ability_id = UID
-	instructions.target_type = "OCCUPANT"
-	instructions.vectors = {"target_coords": caster.grid_pos}
-	instructions.can_cast = true
+func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
+	var caster = amx.get_character_by_id(caster_id)
+	var instructions = {
+		"ability_id": UID,
+		"caster_id": caster_id,
+		"target_type": "OCCUPANT",
+		"vectors": {"target_coords": caster.grid_pos},
+		"can_cast": true,		
+	}
 	
 	return instructions
 
 
-func cast(arena: Node3D, final_instructions: Dictionary) -> void:
-	var caster = final_instructions.target
+func cast(amx: AbilityMethodsExport, instructions: Dictionary) -> void:
+	var caster = amx.get_character_by_id(instructions.caster_id)
 	var new_shield = REFLECT.instantiate()
 	shield_object = new_shield
 	$AudioStreamPlayer.play()
@@ -25,7 +29,7 @@ func cast(arena: Node3D, final_instructions: Dictionary) -> void:
 	caster.add_child(new_shield)
 	
 	caster_hp_node = caster.get_node("HpNode")
-	caster_hp_node.connect_shield(_reflect_damage.bind(caster, arena))
+	caster_hp_node.connect_shield(_reflect_damage.bind(caster, amx.attempt_ability))
 
 
 func _remove_shield() -> void:
@@ -33,10 +37,9 @@ func _remove_shield() -> void:
 	shield_object.queue_free()
 
 
-func _reflect_damage(attempted_dmg: float, caster: Character, arena: Node3D) -> float:
+func _reflect_damage(attempted_dmg: float, caster: Character, callback: Callable) -> float:
 	var new_pew = PEW.instantiate()
 	new_pew.dmg = attempted_dmg	
-	arena._attempt_ability(caster, new_pew)
-	#new_pew.use_ability(caster, arena)
+	callback.call(caster, new_pew)
 	_remove_shield()
 	return 0.0

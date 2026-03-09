@@ -6,28 +6,29 @@ var PUSH = load("res://abilities/melee/push/abilities_melee_push.tscn").instanti
 const dmg := 50.0
 
 
-func validate(caster, _arena) -> Dictionary:
-	var target_pos = caster.grid_pos + Vector2i(caster.attack_direction, 0)
-	instructions.target_type = "OCCUPANT"
-	instructions.vectors = {
-		"target_coords": caster.grid_pos,
-		"target_pos": target_pos,
+func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
+	var caster = amx.get_character_by_id(caster_id)
+	var target_coords = caster.grid_pos + Vector2i(caster.attack_direction, 0)
+	var instructions := {
+		"caster_id": caster_id,
+		"target_type": "OCCUPANT",
+		"vectors": {
+			"target_coords": target_coords,
+		},
+		"ability_id": UID,
+		"can_cast": true,		
 	}
-	instructions.ability_id = UID
-	instructions.can_cast = true
-	
-	#var position_offset = Vector3(.5 * caster.attack_direction, 0.5, 0)
 	
 	return instructions
 
 
-func cast(arena, final_instructions) -> void:
+func cast(amx: AbilityMethodsExport, instructions: Dictionary) -> void:
+	var caster = amx.get_character_by_id(instructions.caster_id)
+	var target_coords = instructions.vectors.target_coords
 	var new_punch = PUNCH.instantiate()
-	var target_pos = final_instructions.vectors.target_pos
-	var caster = final_instructions.target
 	
-	new_punch.connect("attempt_damage", arena._attempt_damage.bind(target_pos, dmg))
-	new_punch.connect("attempt_push", arena._attempt_ability.bind(caster, PUSH))
+	new_punch.connect("attempt_damage", amx.attempt_damage.bind(target_coords, dmg))
+	new_punch.connect("attempt_push", amx.attempt_ability.bind(caster, PUSH))
 	caster.right_hand_anchor.add_child(new_punch)
 	caster.animate_action("punch")
 	new_punch.global_rotation = Vector3.ZERO

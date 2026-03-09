@@ -20,16 +20,16 @@ func _set_control_group(group : Data.CGs, reset_in: float = 0.0) -> void:
 	
 	control_group = group
 	var tile_material = $MeshInstance3D.get_surface_override_material(0)
-	match group:
-		Data.CGs.BLUE:
-			tile_material.albedo_color = Color(0, 0, .9)
-		Data.CGs.RED:
-			tile_material.albedo_color = Color(.9, .2, .2)
+	
+	if group == Data.player_control_group:
+		tile_material.albedo_color = Color(0, 0, .9)
+	else:
+		tile_material.albedo_color = Color(.9, .2, .2)
 
 
 func break_tile() -> void:
 	$MeshInstance3D.visible = false
-	_set_control_group(Data.CGs.NONE, 10.0)
+	_set_control_group(Data.CGs.NEUTRAL, 10.0)
 	get_tree().create_timer(10).timeout.connect(repair_tile)
 
 

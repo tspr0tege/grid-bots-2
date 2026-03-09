@@ -3,16 +3,21 @@ extends Ability
 const ROCK_CUBE = preload("res://abilities/summons/rock-cube/character_rock-cube.tscn")
 
 
-func validate(caster, arena) -> Dictionary:
-	instructions.target_type = "TILE"
-	instructions.ability_id = UID
-	var target_tile = arena.get_tile_by_coords(caster.grid_pos + Vector2i(caster.attack_direction, 0))
+func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
+	var caster: Character = amx.get_character_by_id(caster_id)
+	var instructions := {
+		"target_type": "TILE",
+		"ability_id": UID,
+	}
+	
+	var target_tile = amx.get_arena_tile_by_coords(caster.grid_pos + Vector2i(caster.attack_direction, 0))
+	
 	if target_tile == null: 
 		instructions.can_cast = false
 		instructions.reason = "No valid tile available in front of caster."
 		return instructions
 	
-	if target_tile.occupant: #Replace this with damage behavior
+	if target_tile.occupant: #TODO: Replace this with damage behavior
 		instructions.can_cast = false
 		instructions.reason = "Target tile is occupied."
 		return instructions
@@ -23,8 +28,17 @@ func validate(caster, arena) -> Dictionary:
 	return instructions
 
 
-func cast(arena, final_instructions) -> void:
-	var new_rock_cube = ROCK_CUBE.instantiate()
-	new_rock_cube.connect("character_death", arena._on_character_death)
-	arena.add_child(new_rock_cube)
-	arena.place_character_on_board(new_rock_cube, final_instructions.target.grid_coordinates)
+func cast(amx: AbilityMethodsExport, instructions: Dictionary) -> void:
+	var new_rock_cube_instructions = {
+		"model": "res://abilities/summons/rock-cube/character_rock-cube.tscn",
+		"role": Data.roles.NPCs,
+		"coords": instructions.vectors.target_coords,
+		"connections": {
+			#"attempt_move": "_attempt_move",
+		},
+	}
+	amx.add_new_character(new_rock_cube_instructions)
+	#var new_rock_cube = ROCK_CUBE.instantiate()
+	#new_rock_cube.connect("character_death", amx.handle_character_death.bind(new_rock_cube)) #_on_character_death receives the Node3D of the character
+	#arena.add_child(new_rock_cube)
+	#arena.place_character_on_board(new_rock_cube, final_instructions.target.grid_coordinates)

@@ -266,6 +266,7 @@ class MatchmakerAdd extends NakamaAsyncResult:
 		max_count = p_max_count
 		string_properties = p_string_props
 		numeric_properties = p_numeric_props
+		@warning_ignore("incompatible_ternary")
 		count_multiple = p_count_multiple if p_count_multiple > 0 else null
 
 	func serialize() -> Dictionary:

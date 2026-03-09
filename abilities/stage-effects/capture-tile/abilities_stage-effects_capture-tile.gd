@@ -9,7 +9,7 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 		"ability_id": UID,
 		"target_type": "TILE",
 	}
-	var opponent_cg = Data.opposing_group(caster)
+	var opponent_cg = Data.opposing_group(caster.control_group)
 	var target = amx.find_arena_tile_in_row_by_control_group(caster.grid_pos, caster.attack_direction, opponent_cg)
 	if target == null:
 		instructions.can_cast = false
@@ -22,7 +22,7 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	return instructions
 
 
-func cast(amx : AbilityMethodsExport, instructions: Dictionary) -> void:
+func cast(_amx : AbilityMethodsExport, instructions: Dictionary) -> void:
 	#print(final_instructions)
 	$AudioStreamPlayer.play()
 	instructions.target._set_control_group(instructions.control_group)

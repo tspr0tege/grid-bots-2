@@ -7,6 +7,7 @@ var _level = LOG_LEVEL.ERROR
 var _module = "Nakama"
 
 func _init(p_module : String = "Nakama", p_level : int = LOG_LEVEL.ERROR):
+	@warning_ignore("int_as_enum_without_cast")
 	_level = p_level
 	_module = p_module
 

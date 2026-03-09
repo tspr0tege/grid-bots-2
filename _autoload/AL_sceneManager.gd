@@ -47,6 +47,7 @@ func start_local_match() -> void:
 			"coords": Vector2i(4, 1),
 			"connections": {
 				"attempt_move": "_attempt_move",
+				"search_for_target": "search_for_target",
 			},
 		}
 	]
@@ -71,7 +72,7 @@ func start_online_match(opponent_id) -> void:
 		arena.characters[opponent_id] = new_opponent
 		new_opponent.rotation.y = deg_to_rad(-90)
 		new_opponent.attack_direction = -1
-		new_opponent.control_group = Data.CGs.RED
+		new_opponent.control_group = Data.opposing_group(Data.player_control_group)
 		arena.get_node("%CombatArena").add_child(new_opponent)
 		online_client.connect("opponent_move", func(coords):
 			arena._execute_move.call(new_opponent, coords)

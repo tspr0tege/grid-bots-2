@@ -39,6 +39,7 @@ func close():
 # @param p_timeout - The timeout for the connect attempt on the socket.
 func connect_to_host(p_uri : String, p_timeout : int):
 	_timeout = p_timeout
+	@warning_ignore("narrowing_conversion")
 	_start = Time.get_unix_time_from_system()
 	var err = _ws.connect_to_url(p_uri)
 	if err != OK:
@@ -50,9 +51,11 @@ func connect_to_host(p_uri : String, p_timeout : int):
 # Send data to the server with an asynchronous operation.
 # @param p_buffer - The buffer with the message to send.
 # @param p_reliable - If the message should be sent reliably (will be ignored by some protocols).
+@warning_ignore("unused_parameter")
 func send(p_buffer : PackedByteArray, p_reliable : bool = true) -> int:
 	return _ws.send(p_buffer, WebSocketPeer.WRITE_MODE_TEXT)
 
+@warning_ignore("unused_parameter")
 func _process(delta):
 	if _ws.get_ready_state() != WebSocketPeer.STATE_CLOSED:
 		_ws.poll()

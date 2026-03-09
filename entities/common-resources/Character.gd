@@ -9,7 +9,7 @@ var health_display: Label3D
 var tile_move_speed := .1
 var base_attack: Ability
 
-@export var control_group := Data.CGs.NONE
+@export var control_group := Data.CGs.NEUTRAL
 @export var move_handler: MovementStyle
 @export var teleport_enabled := false
 @export var diagonal_move_enabled := false
@@ -65,7 +65,7 @@ func move_to(new_pos: Vector3, pushed := false) -> void:
 		new_tween.tween_property(self, "position", new_pos, tile_move_speed)
 
 
-func use_base_attack(arena: Node3D) -> void:
+func use_base_attack() -> void:
 	if base_attack:
 		request_ability.emit(self, base_attack)
 	else:

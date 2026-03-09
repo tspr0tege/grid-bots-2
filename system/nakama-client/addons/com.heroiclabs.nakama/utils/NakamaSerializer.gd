@@ -11,6 +11,7 @@ static func serialize(p_obj : Object) -> Dictionary:
 		var val = p_obj.get(prop["name"])
 		if val == null:
 			continue
+		@warning_ignore("unused_variable")
 		var type = prop["type"]
 		var content = prop.get("content", TYPE_NIL)
 		if typeof(content) == TYPE_STRING:
@@ -77,6 +78,7 @@ static func deserialize(p_ns : GDScript, p_cls_name : String, p_dict : Dictionar
 		if type_cmp == TYPE_PACKED_STRING_ARRAY or type_cmp == TYPE_PACKED_INT32_ARRAY: # A specialized array
 			type_cmp = TYPE_ARRAY
 
+		@warning_ignore("unused_variable")
 		var content_cmp = content
 		if typeof(content) == TYPE_STRING: # A dictionary or array of classes
 			content_cmp = TYPE_DICTIONARY

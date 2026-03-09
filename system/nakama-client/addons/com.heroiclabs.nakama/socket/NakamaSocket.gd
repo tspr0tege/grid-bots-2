@@ -175,6 +175,7 @@ func _notification(what):
 		if _free_adapter:
 			_adapter.queue_free()
 
+@warning_ignore("unused_parameter")
 func _closed(p_error = null):
 	emit_signal("closed")
 	_resume_conn(ERR_CANT_CONNECT)
@@ -514,6 +515,7 @@ func accept_party_member_async(p_party_id : String, p_presence : NakamaRTAPI.Use
 # Returns a task to represent the asynchronous operation.
 func add_matchmaker_party_async(p_party_id : String, p_query : String = "*", p_min_count : int = 2,
 	p_max_count : int = 8, p_string_properties = {}, p_numeric_properties = {}, p_count_multiple : int = 0):
+	@warning_ignore("incompatible_ternary")
 	return await _send_async(
 		NakamaRTMessage.PartyMatchmakerAdd.new(p_party_id, p_min_count,
 			p_max_count, p_query, p_string_properties, p_numeric_properties,
@@ -585,6 +587,7 @@ func remove_party_member_async(p_party_id : String, p_presence : NakamaRTAPI.Use
 # @param data - Data payload, if any.
 # Returns a task which represents the asynchronous operation.
 func send_party_data_async(p_party_id : String, p_op_code : int, p_data:String = ""):
+	@warning_ignore("incompatible_ternary")
 	var base64_data = null if p_data.is_empty() else Marshalls.utf8_to_base64(p_data)
 	return await _send_async(NakamaRTMessage.PartyDataSend.new(p_party_id, p_op_code, base64_data)).completed
 
@@ -594,5 +597,6 @@ func send_party_data_async(p_party_id : String, p_op_code : int, p_data:String =
 # @param data - Data payload, if any.
 # Returns a task which represents the asynchronous operation.
 func send_party_data_raw_async(p_party_id : String, p_op_code : int, p_data:PackedByteArray):
+	@warning_ignore("incompatible_ternary")
 	var base64_data = null if p_data.is_empty() else Marshalls.raw_to_base64(p_data)
 	return await _send_async(NakamaRTMessage.PartyDataSend.new(p_party_id, p_op_code, base64_data)).completed

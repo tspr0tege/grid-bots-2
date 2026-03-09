@@ -111,6 +111,7 @@ func _parse_token(p_token):
 		return
 	_valid = true
 	_token = p_token
+	@warning_ignore("narrowing_conversion")
 	_create_time = Time.get_unix_time_from_system()
 	_expire_time = int(decoded.get("exp", 0))
 	_username = str(decoded.get("usn", ""))

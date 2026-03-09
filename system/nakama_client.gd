@@ -132,7 +132,7 @@ func handle_remote_input(match_state : NakamaRTAPI.MatchData):
 			opponent_move.emit(input.vectors.to_coords)
 		op_codes.ABILITY:
 			if input.has("control_group"):
-				input.control_group = Data.CGs.RED if input.control_group == Data.CGs.BLUE else Data.CGs.BLUE
+				input.control_group = Data.opposing_group(input.control_group)
 			ARENA._execute_ability(input)
 		_:
 			print("Unsupported op code.")

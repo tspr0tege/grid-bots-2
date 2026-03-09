@@ -2,8 +2,8 @@ extends Node
 
 @export var ARENA : Node3D
 
-const PLAYER_CHARACTER = preload("res://entities/test-character/player_character.tscn")
-const RED_CHARACTER = preload("res://entities/test-character/red_character.tscn")
+#const PLAYER_CHARACTER = preload("res://entities/test-character/player_character.tscn")
+#const RED_CHARACTER = preload("res://entities/test-character/red_character.tscn")
 
 
 func place_character_on_board(instructions: Dictionary):
@@ -25,6 +25,7 @@ func place_character_on_board(instructions: Dictionary):
 	character.grid_pos = instructions.coords
 	character.position = target_tile.position
 	character.connect("request_ability", $"../MatchController"._attempt_ability)
+	character.connect("character_death", $"../MatchController".handle_character_death)
 	ARENA.add_child(character)
 	target_tile.add_occupant(character)
 	return character

@@ -50,9 +50,9 @@ func init_arena_tiles():
 			#arena_tiles_dict = new_tile
 			new_tile.remove_occupant()
 			if (x < grid_size.x / 2):
-				new_tile._set_control_group(Data.CGs.BLUE)
+				new_tile._set_control_group(Data.player_control_group)
 			else:
-				new_tile._set_control_group(Data.CGs.RED)
+				new_tile._set_control_group(Data.opposing_group(Data.player_control_group))
 			$Floor.add_child(new_tile)
 			row.append(new_tile)
 			

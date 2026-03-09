@@ -13,6 +13,7 @@ var player_energy: float = 20.0
 var player_character: Node = null
 var characters: Dictionary = {}
 
+
 var AMX: AbilityMethodsExport
 
 func _ready():
@@ -26,10 +27,8 @@ func _process(delta):
 
 func _on_combat_arena_ready() -> void:
 	for character in SceneManager.match_settings.characters:
-		var new_character = CHARACTER_FACTORY.place_character_on_board(character)
-		if new_character:
-			new_character.id = str(floor(randf() * 10000)) 
-			characters[new_character.id] = new_character
+		add_new_character(character)
+		
 
 
 func handle_move_by_direction(coords: Vector2i) -> void:
@@ -39,7 +38,6 @@ func handle_move_by_direction(coords: Vector2i) -> void:
 func handle_move_by_coords(coords: Vector2i) -> void:
 	print("Attempting to move to " + str(coords))
 	_attempt_move(player_character, coords)
-
 
 
 func _attempt_move(character: Character, target_pos: Vector2i) -> bool:
@@ -71,6 +69,17 @@ func _attempt_move(character: Character, target_pos: Vector2i) -> bool:
 		return true
 	else:
 		return false #invalid move
+
+
+func search_for_target(source: Character, searching_for: String) -> void:
+	match searching_for:
+		"PLAYER_IN_ROW":
+			if player_character.grid_pos.y == source.grid_pos.y:
+				source.target_result(true)
+			else:
+				source.target_result(false)
+		_:
+			print("No idea what %s is searching for." % source.id)
 
 
 func transmit_move(character: Character, to_pos: Vector2i) -> void:
@@ -197,3 +206,45 @@ func transmit_ability(ability_id) -> void:
 	}
 	
 	SceneManager.online_client.send_local_input_to_remote(move_input)
+
+
+func get_characters_by_group(control_group: Data.CGs) -> Array:
+	var characters_in_group = []
+	for key in characters.keys():
+		if characters[key].control_group == control_group:
+			characters_in_group.push_back(characters[key])
+	return characters_in_group
+
+
+func add_new_character(character_instructions: Dictionary) -> void:
+	var new_character = CHARACTER_FACTORY.place_character_on_board(character_instructions)
+	if new_character:
+		new_character.id = str(floor(randf() * 10000)) 
+		characters[new_character.id] = new_character
+
+
+func handle_character_death(character: Character) -> void:
+	AMX.get_arena_tile_by_coords(character.grid_pos).remove_occupant()
+	if character == player_character:
+		player_lost()
+		return
+	
+	characters.erase(character.id)
+	var characters_remaining_in_group = get_characters_by_group(character.control_group)
+	if character.control_group == Data.player_control_group and characters_remaining_in_group.size() < 1:
+		push_error("The player's control group was completely wiped out without triggering the player_lost function.")
+	elif characters_remaining_in_group.size() < 1:
+		push_warning("Player victory triggered by default of all opponents being destroyed.")
+		opponent_lost()
+
+
+func player_lost() -> void:
+	get_tree().paused = true
+	%MatchResult.text = "You Lost!"
+	$"../CanvasLayer/MatchOver".visible = true
+
+
+func opponent_lost() -> void:
+	get_tree().paused = true
+	%MatchResult.text = "You Win!"
+	$"../CanvasLayer/MatchOver".visible = true
