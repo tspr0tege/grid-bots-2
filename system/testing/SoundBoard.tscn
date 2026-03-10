@@ -1,0 +1,90 @@
+[gd_scene load_steps=13 format=3 uid="uid://l4c7oyqwxftc"]
+
+[ext_resource type="Script" uid="uid://b6snulc4l8hcp" path="res://system/testing/testing_sound-board.gd" id="1_1uw2f"]
+[ext_resource type="Texture2D" uid="uid://befwppd8jt0wm" path="res://abilities/stage-effects/capture-tile/capture_tile_icon.png" id="1_hhjue"]
+[ext_resource type="Texture2D" uid="uid://7mdvmva5b63t" path="res://abilities/counters/reflect/Reflect icon 128 x 128.png" id="2_1uw2f"]
+[ext_resource type="Script" uid="uid://nky65oxq6ybu" path="res://system/SoundResource.gd" id="2_opt1b"]
+[ext_resource type="Texture2D" uid="uid://c5vufphnh5w4c" path="res://abilities/buffs/heal-10/Heal icon 128 x 128.png" id="3_avtcy"]
+[ext_resource type="AudioStream" uid="uid://b224s7cdivs6g" path="res://abilities/counters/reflect/SFX_Shieldv2variation01.wav" id="3_k2ruc"]
+[ext_resource type="AudioStream" uid="uid://b55dxtw7qs71" path="res://abilities/stage-effects/capture-tile/SFX_UIPanelRadio01.wav" id="4_xs1j5"]
+[ext_resource type="AudioStream" uid="uid://dpaqjd6miig8f" path="res://abilities/buffs/heal-10/SFX_Rechargev1variation03.wav" id="5_18kur"]
+
+[sub_resource type="Resource" id="Resource_h74qf"]
+script = ExtResource("2_opt1b")
+sound = ExtResource("3_k2ruc")
+volume = 6.0
+pitch_scale = 1.0
+metadata/_custom_type_script = "uid://nky65oxq6ybu"
+
+[sub_resource type="Resource" id="Resource_xgklx"]
+script = ExtResource("2_opt1b")
+sound = ExtResource("4_xs1j5")
+volume = -4.0
+pitch_scale = 0.8
+metadata/_custom_type_script = "uid://nky65oxq6ybu"
+
+[sub_resource type="Resource" id="Resource_evcef"]
+script = ExtResource("2_opt1b")
+sound = ExtResource("5_18kur")
+volume = -4.0
+pitch_scale = 1.22
+metadata/_custom_type_script = "uid://nky65oxq6ybu"
+
+[sub_resource type="Resource" id="Resource_sn0xx"]
+script = ExtResource("2_opt1b")
+volume = 0.0
+pitch_scale = 1.0
+metadata/_custom_type_script = "uid://nky65oxq6ybu"
+
+[node name="SoundBoard" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1uw2f")
+SOUND_1 = SubResource("Resource_h74qf")
+SOUND_2 = SubResource("Resource_xgklx")
+SOUND_3 = SubResource("Resource_evcef")
+SOUND_4 = SubResource("Resource_sn0xx")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="TextureButton" type="TextureButton" parent="PanelContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+texture_normal = ExtResource("2_1uw2f")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="TextureButton2" type="TextureButton" parent="PanelContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+texture_normal = ExtResource("1_hhjue")
+ignore_texture_size = true
+
+[node name="TextureButton3" type="TextureButton" parent="PanelContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+texture_normal = ExtResource("3_avtcy")
+ignore_texture_size = true
+stretch_mode = 4
+
+[connection signal="pressed" from="PanelContainer/GridContainer/TextureButton" to="." method="handle_soundboard_input" binds= ["SOUND_1"]]
+[connection signal="pressed" from="PanelContainer/GridContainer/TextureButton2" to="." method="handle_soundboard_input" binds= ["SOUND_2"]]
+[connection signal="pressed" from="PanelContainer/GridContainer/TextureButton3" to="." method="handle_soundboard_input" binds= ["SOUND_3"]]

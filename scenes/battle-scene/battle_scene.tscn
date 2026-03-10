@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://b7s8i4yotbhd4"]
+[gd_scene load_steps=24 format=3 uid="uid://b7s8i4yotbhd4"]
 
 [ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battleScene_gameController.gd" id="1_p7nsj"]
 [ext_resource type="Script" uid="uid://d1tg7waqcp1ck" path="res://scenes/battle-scene/scenes_battleScene.gd" id="1_w5c51"]
@@ -7,22 +7,64 @@
 [ext_resource type="Script" uid="uid://0xawuf16blcg" path="res://scenes/battle-scene/scenes_battleScene_playerController.gd" id="3_w5c51"]
 [ext_resource type="Script" uid="uid://cshsvritstewy" path="res://scenes/battle-scene/scenes_battleScene_characterFactory.gd" id="4_rqjoh"]
 [ext_resource type="Texture2D" uid="uid://d3v0aeruwqfx6" path="res://scenes/battle-scene/pause-button.svg" id="7_ftv0g"]
+[ext_resource type="Texture2D" uid="uid://dnk5025m0yksh" path="res://Grid Bots UI background.png" id="7_rqjoh"]
+[ext_resource type="Texture2D" uid="uid://dqodnobj67k22" path="res://digital-trace.svg" id="8_w5c51"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rqjoh"]
+shading_mode = 0
+albedo_color = Color(0.34902, 0.427451, 0.427451, 1)
+albedo_texture = ExtResource("7_rqjoh")
+
+[sub_resource type="QuadMesh" id="QuadMesh_dgigb"]
+material = SubResource("StandardMaterial3D_rqjoh")
+size = Vector2(16, 9)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rqjoh"]
+content_margin_left = 64.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.85098, 0.85098, 0.85098, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dgigb"]
+bg_color = Color(0.85098, 0.85098, 0.85098, 1)
+border_width_left = 64
+border_width_top = 15
+border_width_right = 15
+border_width_bottom = 15
+border_color = Color(0.85098, 0.85098, 0.85098, 1)
+
+[sub_resource type="Gradient" id="Gradient_e5sai"]
+colors = PackedColorArray(0.385493, 0.385492, 0.385492, 1, 0.93408, 0.93408, 0.93408, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_b0dkb"]
+gradient = SubResource("Gradient_e5sai")
+fill_from = Vector2(0.322581, 0)
+fill_to = Vector2(0.494624, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dllb0"]
+texture = SubResource("GradientTexture2D_b0dkb")
+
+[sub_resource type="Gradient" id="Gradient_3k3j3"]
+offsets = PackedFloat32Array(0, 0.229508, 0.688525, 1)
+colors = PackedColorArray(0.00392157, 0.803922, 0, 0.733333, 0.541176, 0.980392, 0, 0.839216, 0.321569, 0.972549, 0, 0.454902, 0, 0.521569, 0, 0.670588)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_pp0o7"]
+gradient = SubResource("Gradient_3k3j3")
+fill_from = Vector2(0.403226, 0.0268817)
+fill_to = Vector2(0.403226, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_daxnq"]
+texture = SubResource("GradientTexture2D_pp0o7")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e5sai"]
+bg_color = Color(0.85098, 0.85098, 0.85098, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2u67o"]
+bg_color = Color(0.370364, 0.370365, 0.370364, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6tpmo"]
-bg_color = Color(0.190762, 0.190762, 0.190762, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n0yl0"]
-bg_color = Color(0.288793, 0.500798, 0.320133, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(0, 0, 0, 1)
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
+bg_color = Color(0.85098, 0.85098, 0.85098, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pp0o7"]
 bg_color = Color(0, 0, 0, 0.627451)
@@ -91,6 +133,10 @@ size = 6.75
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, 0, 0, 0)
 
+[node name="Background" type="MeshInstance3D" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport"]
+transform = Transform3D(0.6, 0, 0, 0, 0.49054, 0.3455, 0, -0.3455, 0.49054, 3.5, -3.5, -6)
+mesh = SubResource("QuadMesh_dgigb")
+
 [node name="TextureButton" type="TextureButton" parent="CanvasLayer/GridContainer/PlaySpace"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 1
@@ -158,9 +204,11 @@ text = "QUIT TO MAIN MENU"
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_rqjoh")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GridContainer/AbilityPanel"]
 layout_mode = 2
+theme_override_constants/separation = 10
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
 layout_mode = 2
@@ -298,24 +346,33 @@ tint_under = Color(1, 1, 1, 0.294118)
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_dgigb")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/GridContainer/EnergyBar"]
 layout_mode = 2
 
 [node name="TextureProgressBar" type="ProgressBar" parent="CanvasLayer/GridContainer/EnergyBar/HBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 1
-theme_override_styles/background = SubResource("StyleBoxFlat_6tpmo")
-theme_override_styles/fill = SubResource("StyleBoxFlat_n0yl0")
+size_flags_vertical = 4
+theme_override_styles/background = SubResource("StyleBoxTexture_dllb0")
+theme_override_styles/fill = SubResource("StyleBoxTexture_daxnq")
+max_value = 20.0
 step = 0.1
-value = 20.0
+value = 10.0
 fill_mode = 1
 show_percentage = false
 
 [node name="Label" type="Label" parent="CanvasLayer/GridContainer/EnergyBar/HBoxContainer"]
 custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.454902)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 6
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 15
 theme_override_font_sizes/font_size = 60
 text = "10"
 horizontal_alignment = 1
@@ -323,8 +380,23 @@ vertical_alignment = 1
 
 [node name="FireButton" type="Button" parent="CanvasLayer/GridContainer"]
 layout_mode = 2
+theme_override_colors/icon_pressed_color = Color(0.533324, 1.09497e-06, 2.88785e-07, 1)
+theme_override_colors/icon_focus_color = Color(1, 0, 0, 1)
+theme_override_colors/icon_normal_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.877616, 0.877616, 0.877616, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.651457, 0, 0.0387282, 1)
+theme_override_constants/outline_size = 15
 theme_override_font_sizes/font_size = 50
-text = "FIRE"
+theme_override_styles/focus = SubResource("StyleBoxFlat_e5sai")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_2u67o")
+theme_override_styles/normal = SubResource("StyleBoxFlat_6tpmo")
+action_mode = 0
+text = "ATK"
+icon = ExtResource("8_w5c51")
+icon_alignment = 1
+expand_icon = true
 
 [node name="MatchOver" type="PanelContainer" parent="CanvasLayer"]
 visible = false

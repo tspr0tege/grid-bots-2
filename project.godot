@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 SceneManager="*res://_autoload/AL_sceneManager.gd"
 Data="*res://_autoload/AL_data.gd"
 Nakama="*res://system/nakama-client/addons/com.heroiclabs.nakama/Nakama.gd"
+SoundManager="*res://_autoload/AL_soundManager.gd"
 
 [display]
 

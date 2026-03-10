@@ -1,5 +1,6 @@
 extends Ability
 
+@export var sound : SoundResource
 
 func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	#search in row for a tile that is NOT matching the character and switch it
@@ -24,5 +25,6 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 
 func cast(_amx : AbilityMethodsExport, instructions: Dictionary) -> void:
 	#print(final_instructions)
-	$AudioStreamPlayer.play()
+	#$AudioStreamPlayer.play()
+	SoundManager.play_audio_stream(sound)
 	instructions.target._set_control_group(instructions.control_group)

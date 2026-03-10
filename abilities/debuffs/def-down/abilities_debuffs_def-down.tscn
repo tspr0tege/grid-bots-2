@@ -5,7 +5,7 @@
 
 [node name="Card-defDown" type="Node"]
 script = ExtResource("1_wdtgq")
-COST = 2
+COST = 1
 ICON = ExtResource("2_phql1")
 UID = "DDDwn25"
 metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

@@ -5,7 +5,7 @@
 
 [node name="Card_Rocket" type="Node"]
 script = ExtResource("1_drf8w")
-COST = 8
+COST = 1
 ICON = ExtResource("2_ypqt2")
 UID = "ISR"
 metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

@@ -9,7 +9,7 @@ signal update_energy_display(energy_level)
 # PLAYER_CONTROLLER
 # UI
 
-var player_energy: float = 20.0
+var player_energy: float = 10.0
 var player_character: Node = null
 var characters: Dictionary = {}
 
@@ -21,7 +21,7 @@ func _ready():
 
 
 func _process(delta):
-	player_energy = clamp(player_energy + delta * 2, 0, 100)
+	player_energy = clamp(player_energy + delta * .5, 0, 20)
 	emit_signal("update_energy_display", player_energy)
 
 

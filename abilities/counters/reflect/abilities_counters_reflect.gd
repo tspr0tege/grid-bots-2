@@ -1,5 +1,7 @@
 extends Ability
 
+@export var sound : SoundResource
+
 const REFLECT = preload("res://abilities/counters/reflect/object_reflect.tscn")
 const PEW = preload("res://abilities/instant-shot/test-shot/abilities_instant-shot_test-shot.tscn")
 
@@ -24,7 +26,8 @@ func cast(amx: AbilityMethodsExport, instructions: Dictionary) -> void:
 	var caster = amx.get_character_by_id(instructions.caster_id)
 	var new_shield = REFLECT.instantiate()
 	shield_object = new_shield
-	$AudioStreamPlayer.play()
+	#$AudioStreamPlayer.play()
+	SoundManager.play_audio_stream(sound)
 	new_shield.get_node("Timer").connect("timeout", _remove_shield)
 	caster.add_child(new_shield)
 	
