@@ -8,12 +8,9 @@ const CANNON = preload("res://abilities/instant-shot/cannon/object_cannon.tscn")
 func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	var caster = amx.get_character_by_id(caster_id)
 	var instructions := {
-		"target_type": "OCCUPANT",
 		"ability_id": UID,
 		"caster_id": caster_id,
-		"vectors": {
-			#"caster_coords": caster.grid_pos
-		}
+		"vectors": {},
 	}
 	
 	var target = amx.find_character_by_arena_row(caster.grid_pos, caster.attack_direction)

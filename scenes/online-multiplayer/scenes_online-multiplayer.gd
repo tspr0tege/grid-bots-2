@@ -6,5 +6,5 @@ func _ready() -> void:
 	SceneManager.online_client.join_matchmaking_queue()
 
 
-func update_tab(tab_content: Dictionary) -> void:
+func update_tab(_tab_content: Dictionary) -> void:
 	$TabContainer.current_tab += 1

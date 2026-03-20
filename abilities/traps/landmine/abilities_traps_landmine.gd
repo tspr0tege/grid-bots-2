@@ -26,6 +26,7 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	}
 	instructions.can_cast = true
 	instructions.ability_id = UID
+	instructions.caster_id = caster_id
 	
 	return instructions
 
@@ -37,8 +38,6 @@ func cast(amx: AbilityMethodsExport, instructions: Dictionary) -> void:
 	target_tile.trap = new_mine
 	target_tile.add_child(new_mine)
 	target_tile.connect("occupant_added", detonate_mine.bind(amx.attempt_damage, new_mine))
-	#connect("trigger_mine", detonate_mine.bind(arena, new_mine))
-	#target_tile.traps.push_back(detonate_mine.bind(arena, new_mine))
 
 
 func detonate_mine(_occupant, attempt_damage: Callable, mine: Trap3D) -> void:

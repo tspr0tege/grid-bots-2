@@ -27,11 +27,11 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 		"target_coords": target_coords,
 		"push_to": target_coords + Vector2i(caster.attack_direction, 0)
 	}
+	
 	return instructions
 
 
 func cast(amx : AbilityMethodsExport, instructions: Dictionary) -> void:
-	#print("BOARD STATE: " + str(arena.arena_tiles))
 	var target = amx.get_character_by_arena_coords(instructions.vectors.target_coords)
 	amx.execute_move(target, instructions.vectors.push_to, true)
 	

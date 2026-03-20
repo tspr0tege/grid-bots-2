@@ -8,7 +8,6 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	var caster = amx.get_character_by_id(caster_id)
 	var instructions := {
 		"ability_id": UID,
-		"target_type": "TILE",
 	}
 	var opponent_cg = Data.opposing_group(caster.control_group)
 	var target = amx.find_arena_tile_in_row_by_control_group(caster.grid_pos, caster.attack_direction, opponent_cg)
@@ -25,7 +24,5 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 
 func cast(amx : AbilityMethodsExport, instructions: Dictionary) -> void:
 	var target_tile = amx.get_arena_tile_by_coords(instructions.vectors.target_coords)
-	#print(final_instructions)
-	#$AudioStreamPlayer.play()
 	SoundManager.play_audio_stream(sound)
 	target_tile._set_control_group(instructions.control_group)

@@ -4,10 +4,6 @@ var player_id: String = ""
 #var match_result: String = "" # "win", "lose", "draw"
 enum match_result {win, lose, draw}
 
-signal request_invite_code
-signal room_code_received(code)
-signal attempt_join_room(code)
-
 var online_client = null
 var match_settings := {}
 

@@ -11,12 +11,11 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	var target_coords = caster.grid_pos + Vector2i(caster.attack_direction, 0)
 	var instructions := {
 		"caster_id": caster_id,
-		"target_type": "OCCUPANT",
+		"ability_id": UID,
+		"can_cast": true,
 		"vectors": {
 			"target_coords": target_coords,
 		},
-		"ability_id": UID,
-		"can_cast": true,		
 	}
 	
 	return instructions

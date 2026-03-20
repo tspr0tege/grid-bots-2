@@ -14,7 +14,6 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	var instructions = {
 		"ability_id": UID,
 		"caster_id": caster_id,
-		"target_type": "OCCUPANT",
 		"vectors": {"target_coords": caster.grid_pos},
 		"can_cast": true,		
 	}

@@ -8,8 +8,8 @@ const ROCK_CUBE = preload("res://abilities/summons/rock-cube/character_rock-cube
 func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	var caster: Character = amx.get_character_by_id(caster_id)
 	var instructions := {
-		"target_type": "TILE",
 		"ability_id": UID,
+		#"control_group": caster.control_group
 	}
 	
 	var target_tile = amx.get_arena_tile_by_coords(caster.grid_pos + Vector2i(caster.attack_direction, 0))
@@ -35,6 +35,7 @@ func cast(amx: AbilityMethodsExport, instructions: Dictionary) -> void:
 		"model": "res://abilities/summons/rock-cube/character_rock-cube.tscn",
 		"role": Data.roles.NPCs,
 		"coords": instructions.vectors.target_coords,
+		#"control_group": instructions.control_group,
 	}
 	var new_rock_cube = amx.add_new_character(new_rock_cube_instructions)
 	SoundManager.play_audio_stream(summon_sound)

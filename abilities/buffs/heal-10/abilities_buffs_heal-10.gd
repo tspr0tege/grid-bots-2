@@ -4,12 +4,7 @@ extends Ability
 
 const HEAL_10 = preload("res://abilities/buffs/heal-10/object_heal-10.tscn")
 const heal_amt = 10
-#var instructions := {
-	#"action": "ABILITY",
-	##"ability_id": UID,
-	#"opponent_id": Data.opponent_id,
-	#"can_cast": true,
-#}
+
 
 func validate(caster_id: String, amx: AbilityMethodsExport) -> Dictionary:
 	var caster: Character = amx.get_character_by_id(caster_id)

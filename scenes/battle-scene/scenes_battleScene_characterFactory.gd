@@ -13,8 +13,6 @@ func place_character_on_board(instructions: Dictionary):
 		Data.roles.OPPOSING_PLAYER:
 			character.rotation.y = deg_to_rad(-90)
 			character.attack_direction = -1
-			
-			
 		Data.roles.NPCs:
 			pass
 		_:
@@ -28,7 +26,8 @@ func place_character_on_board(instructions: Dictionary):
 	
 	character.grid_pos = instructions.coords
 	character.position = target_tile.position
-	character.control_group = instructions.control_group
+	if instructions.has("control_group"):
+		character.control_group = instructions.control_group
 	character.connect("request_ability", $"../MatchController"._attempt_ability)
 	character.connect("character_death", $"../MatchController".handle_character_death)
 	ARENA.add_child(character)

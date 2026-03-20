@@ -17,10 +17,7 @@ signal opponent_use_ability(instructions)
 
 
 func _ready():
-	#print("Nakama client ready. Creating online session")
 	create_online_session()
-	
-	#connect("match_connected", SceneManager.start_online_match)
 
 
 func create_online_session() -> void:
@@ -49,8 +46,6 @@ func create_socket_connection() -> void:
 	
 	socket.received_match_state.connect(handle_remote_input)
 	socket.received_matchmaker_matched.connect(_on_matchmaker_matched)
-	
-	#join_matchmaking_queue()
 
 
 func join_matchmaking_queue() -> void:

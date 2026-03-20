@@ -9,7 +9,6 @@ const arc_duration := 1.0
 func validate(caster_id: String, amx: AbilityMethodsExport) -> Dictionary:
 	var caster = amx.get_character_by_id(caster_id)
 	var instructions := {
-		"target_type": "TILE",
 		"ability_id": UID
 	}
 	
@@ -48,9 +47,8 @@ func cast(amx : AbilityMethodsExport, instructions: Dictionary) -> void:
 	new_ball.get_node("AnimationPlayer").play("launch-arc")
 	#if it hits a player, it does large amounts of damage and cancel floor break
 	#emit signal after arc_duration
-	#if it lands on the level, break the tile
+	#if it lands on the floor, break the tile
 	new_ball.connect("arc_completed", target_tile.add_shot.bind(new_ball))
 	new_ball.connect("hit_floor", target_tile.remove_shot.bind(new_ball.shots_index))
 	new_ball.connect("hit_floor", target_tile.break_tile)
 	amx.connect_signal_to_arena(new_ball, "attempt_damage", "_attempt_damage")
-	#new_ball.connect("attempt_damage", arena._attempt_damage)

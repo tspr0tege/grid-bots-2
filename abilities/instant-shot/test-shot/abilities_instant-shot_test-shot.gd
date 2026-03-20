@@ -7,7 +7,6 @@ extends Ability
 func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	var caster = amx.get_character_by_id(caster_id)
 	var instructions := {
-		"target_type": "OCCUPANT",
 		"can_cast": true,
 		"ability_id": UID,
 		"caster_id": caster_id,
