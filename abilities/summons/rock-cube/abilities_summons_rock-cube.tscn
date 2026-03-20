@@ -1,10 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://cbmn3hrs53ye4"]
+[gd_scene load_steps=6 format=3 uid="uid://cbmn3hrs53ye4"]
 
 [ext_resource type="Script" uid="uid://bqaok71jlkuqi" path="res://abilities/summons/rock-cube/abilities_summons_rock-cube.gd" id="1_48fiv"]
+[ext_resource type="Script" uid="uid://nky65oxq6ybu" path="res://system/SoundResource.gd" id="2_ndd06"]
 [ext_resource type="Texture2D" uid="uid://cxrso4o3y4xjr" path="res://abilities/summons/rock-cube/Rock Cube icon 128 x 128.png" id="2_ralcr"]
+[ext_resource type="AudioStream" uid="uid://dueqkgu231v76" path="res://abilities/summons/rock-cube/rock-cube-summon.wav" id="3_601go"]
+
+[sub_resource type="Resource" id="Resource_4nbxi"]
+script = ExtResource("2_ndd06")
+sound = ExtResource("3_601go")
+volume = 0.0
+pitch_scale = 1.0
+metadata/_custom_type_script = "uid://nky65oxq6ybu"
 
 [node name="Card-rockCube" type="Node"]
 script = ExtResource("1_48fiv")
+summon_sound = SubResource("Resource_4nbxi")
 COST = 1
 ICON = ExtResource("2_ralcr")
 UID = "SRC"

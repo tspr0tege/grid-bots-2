@@ -12,8 +12,26 @@ var arena_tiles : Array = []
 func _ready():
 	init_arena_tiles()
 	#SceneManager.load_combatants(self)
-	if SceneManager.online_client:
-		SceneManager.online_client.ARENA = self
+
+
+func init_arena_tiles():
+	arena_tiles = []
+	for y in range(grid_size.y):
+		var row = []
+		for x in range(grid_size.x):
+			var new_tile = FLOOR_TILE.instantiate()
+			new_tile.position = Vector3((1.1 * x) + .55, 0, (1.1 * y) + .55)
+			new_tile.grid_coordinates = Vector2i(x, y)
+			#arena_tiles_dict = new_tile
+			new_tile.remove_occupant()
+			if (x < grid_size.x / 2):
+				new_tile._set_control_group(Data.player_control_group)
+			else:
+				new_tile._set_control_group(Data.opposing_group(Data.player_control_group))
+			$Floor.add_child(new_tile)
+			row.append(new_tile)
+			
+		arena_tiles.append(row)
 
 
 func move_dir(target_pos: Vector2i, rule: int) -> Vector2i:
@@ -37,26 +55,6 @@ func is_valid_move(character: Character, to_pos: Vector2i) -> bool:
 	
 	#Definitely going to move
 	return true
-
-
-func init_arena_tiles():
-	arena_tiles = []
-	for y in range(grid_size.y):
-		var row = []
-		for x in range(grid_size.x):
-			var new_tile = FLOOR_TILE.instantiate()
-			new_tile.position = Vector3((1.1 * x) + .55, 0, (1.1 * y) + .55)
-			new_tile.grid_coordinates = Vector2i(x, y)
-			#arena_tiles_dict = new_tile
-			new_tile.remove_occupant()
-			if (x < grid_size.x / 2):
-				new_tile._set_control_group(Data.player_control_group)
-			else:
-				new_tile._set_control_group(Data.opposing_group(Data.player_control_group))
-			$Floor.add_child(new_tile)
-			row.append(new_tile)
-			
-		arena_tiles.append(row)
 
 
 func search_row(coords: Vector2i, direction: int, search_for: Callable) -> Node3D:

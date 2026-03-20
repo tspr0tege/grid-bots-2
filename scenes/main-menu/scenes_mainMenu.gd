@@ -1,15 +1,21 @@
 extends Control
 
 
+func _ready() -> void:
+	SoundManager.play_bgm_stream("MENU")
+
 
 func _handle_button_input(button_name: String) -> void:
 	match button_name:
 		"START":
-			#print("Start game")
 			SceneManager.start_local_match()
 		"ONLINE":
-			SceneManager.goto_multiplayer()
+			SceneManager.goto_matchmaker()
+		"SETTINGS":
+			_toggle_settings()
 		"QUIT":
-			#print("Close program")
 			get_tree().quit()
-	
+
+
+func _toggle_settings() -> void:
+	$Settings.visible = !$Settings.visible

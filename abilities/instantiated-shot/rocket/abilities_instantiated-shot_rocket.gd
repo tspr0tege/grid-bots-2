@@ -13,6 +13,7 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 		"vectors": {
 			"start_pos" : caster.global_position + position_offset,
 		},
+		#TODO: remove these details from instructions and reference caster_id in func cast, instead.
 		"control_group" : caster.control_group,
 		"travel_direction" : caster.attack_direction,
 	}
@@ -26,9 +27,6 @@ func cast(amx: AbilityMethodsExport, instructions: Dictionary) -> void:
 	new_rocket.position = instructions.vectors.start_pos
 	new_rocket.travel_direction = instructions.travel_direction
 	
-	#new_rocket.connect("update_tile_position", arena._attempt_move_shot.bind(new_rocket))
 	new_rocket.connect("update_tile_position", amx.bind_projectile_move(new_rocket))
 	amx.connect_signal_to_arena(new_rocket, "attempt_damage", "_attempt_damage")
-	#new_rocket.connect("attempt_damage", arena._attempt_damage)
 	amx.add_child_to_arena(new_rocket)
-	#arena.add_child(new_rocket)

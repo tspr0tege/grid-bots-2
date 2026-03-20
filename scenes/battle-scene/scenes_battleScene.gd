@@ -39,6 +39,7 @@ func _ready() -> void:
 	for n in range(hand_size):
 		draw_card(n)
 	#print_tree_pretty()
+	SoundManager.play_bgm_stream("BATTLE")
 
 
 func draw_card(index: int) -> void:

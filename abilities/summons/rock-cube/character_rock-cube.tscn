@@ -1,7 +1,16 @@
-[gd_scene load_steps=5 format=3 uid="uid://valpt2bifm6t"]
+[gd_scene load_steps=8 format=3 uid="uid://valpt2bifm6t"]
 
 [ext_resource type="Script" uid="uid://dknwrg5frlj37" path="res://abilities/summons/rock-cube/character_rock-cube.gd" id="1_20oar"]
+[ext_resource type="Script" uid="uid://nky65oxq6ybu" path="res://system/SoundResource.gd" id="2_eo1wl"]
 [ext_resource type="PackedScene" uid="uid://ck7yv7nnq5hna" path="res://entities/common-resources/hp_node.tscn" id="2_l4t62"]
+[ext_resource type="AudioStream" uid="uid://h5578khf73gt" path="res://abilities/summons/rock-cube/rock-cube-destroy.wav" id="3_8u0pw"]
+
+[sub_resource type="Resource" id="Resource_7rf8o"]
+script = ExtResource("2_eo1wl")
+sound = ExtResource("3_8u0pw")
+volume = 0.0
+pitch_scale = 0.8
+metadata/_custom_type_script = "uid://nky65oxq6ybu"
 
 [sub_resource type="BoxMesh" id="BoxMesh_sktmq"]
 size = Vector3(0.6, 0.6, 0.6)
@@ -11,8 +20,8 @@ size = Vector3(0.3, 0.3, 0.3)
 
 [node name="RockCube" type="Node3D" groups=["Obstacles"]]
 script = ExtResource("1_20oar")
+death_sound = SubResource("Resource_7rf8o")
 move_damage = 20.0
-control_group = 3
 display_health = true
 metadata/_custom_type_script = "uid://pu2dbh82q1op"
 

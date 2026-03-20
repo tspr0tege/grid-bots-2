@@ -23,8 +23,9 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	return instructions
 
 
-func cast(_amx : AbilityMethodsExport, instructions: Dictionary) -> void:
+func cast(amx : AbilityMethodsExport, instructions: Dictionary) -> void:
+	var target_tile = amx.get_arena_tile_by_coords(instructions.vectors.target_coords)
 	#print(final_instructions)
 	#$AudioStreamPlayer.play()
 	SoundManager.play_audio_stream(sound)
-	instructions.target._set_control_group(instructions.control_group)
+	target_tile._set_control_group(instructions.control_group)

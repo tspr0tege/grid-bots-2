@@ -5,7 +5,7 @@
 
 [node name="Card_CannonBall" type="Node"]
 script = ExtResource("1_t38yb")
-COST = 5
+COST = 1
 ICON = ExtResource("2_yewmh")
 UID = "THCB"
 metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

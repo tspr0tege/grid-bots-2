@@ -28,14 +28,15 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 
 
 func cast(amx : AbilityMethodsExport, instructions: Dictionary) -> void:
-	#var caster: Character = arena.get_tile_by_coords(instructions.vectors.caster_coords).occupant
+	#TODO: Alter cannon to attach to caster's arm - change (remove?) animation
+	var caster = amx.get_character_by_id(instructions.caster_id)
 	
 	var new_cannon = CANNON.instantiate()
-	new_cannon.position = Vector3(0.1, 0.33, 0.2) * instructions.caster.attack_direction
-	#if caster.attack_direction == -1: new_cannon.rotation.y += deg_to_rad(180)
+	new_cannon.position = Vector3(0.1, 0.33, 0.2) * caster.attack_direction
 	new_cannon.get_node("AnimationPlayer").play("shoot")
 	new_cannon.get_node("Blast").connect("finished", new_cannon.queue_free)
-	instructions.caster.add_child(new_cannon)
 	
-	if instructions.target:
+	caster.add_child(new_cannon)
+	
+	if instructions.vectors.target_coords != null:
 		amx.attempt_damage(instructions.vectors.target_coords, dmg)

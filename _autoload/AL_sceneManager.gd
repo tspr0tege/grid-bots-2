@@ -8,43 +8,43 @@ signal request_invite_code
 signal room_code_received(code)
 signal attempt_join_room(code)
 
-# For future multiplayer use
-#var match_id: String = ""
 var online_client = null
 var match_settings := {}
 
 # Paths to your main scenes
 const MENU_SCENE := "res://scenes/main-menu/main_menu.tscn"
 const BATTLE_SCENE := "res://scenes/battle-scene/battle_scene.tscn"
-const ONLINE_SCENE = "res://scenes/online-multiplayer/online_multiplayer.tscn"
+const MATCHMAKER_SCENE = "res://scenes/online-multiplayer/online_multiplayer.tscn"
 
-const WEB_SOCKET_CLIENT := preload("res://system/nakama_client.tscn")
+const NAKAMA_CLIENT := preload("res://system/nakama_client.tscn")
 #const WEB_SOCKET_CLIENT := preload("res://system/web_socket_client.tscn")
-#const NAKAMA_CLIENT := preload()
-#var scene : PackedScene
+
 const PLAYER_CHARACTER = preload("res://entities/test-character/player_character.tscn")
 const RED_CHARACTER = preload("res://entities/test-character/red_character.tscn")
 
-var combatants := []
 
-func load_combatants(arena) -> void:
-	for entry in combatants:
-		entry.call(arena)
+func _ready() -> void:
+	print("SceneManager _ready function triggered")
+	online_client = NAKAMA_CLIENT.instantiate()
+	add_child(online_client)
+	online_client.connect("match_connected", advance_matchmaker_screen)
 
 
 func start_local_match() -> void:
 	var scene : PackedScene = load(BATTLE_SCENE)
-	online_client = null
+	#online_client = null
 	match_settings.characters = [
 		{
 			"model": "res://entities/test-character/player_character.tscn",
 			"role": Data.roles.PLAYER_CHARACTER,
 			"coords": Vector2i(1,1),
+			"control_group": Data.CGs.TEAM_1,
 		},
 		{
 			"model": "res://entities/test-character/red_character.tscn",
 			"role": Data.roles.NPCs,
 			"coords": Vector2i(4, 1),
+			"control_group": Data.CGs.TEAM_2,
 			"connections": {
 				"attempt_move": "_attempt_move",
 				"search_for_target": "search_for_target",
@@ -54,61 +54,20 @@ func start_local_match() -> void:
 	get_tree().change_scene_to_packed(scene)
 
 
-func start_online_match(opponent_id) -> void:
+func start_online_match() -> void:
 	var scene : PackedScene = load(BATTLE_SCENE)
-	combatants = []
-	
-	combatants.push_back(func(arena) -> void:
-		var player_character = PLAYER_CHARACTER.instantiate()
-		arena.player_character = player_character
-		arena.characters[Data.multiplayer_id] = player_character
-		arena.get_node("%CombatArena").add_child(arena.player_character)
-		arena.get_node("%CombatArena").connect("player_input", online_client.send_local_input_to_remote)
-		arena.place_character_on_board(arena.player_character, Vector2i(1, 1))
-		)
-	
-	combatants.push_back(func(arena) -> void:
-		var new_opponent = PLAYER_CHARACTER.instantiate()
-		arena.characters[opponent_id] = new_opponent
-		new_opponent.rotation.y = deg_to_rad(-90)
-		new_opponent.attack_direction = -1
-		new_opponent.control_group = Data.opposing_group(Data.player_control_group)
-		arena.get_node("%CombatArena").add_child(new_opponent)
-		online_client.connect("opponent_move", func(coords):
-			arena._execute_move.call(new_opponent, coords)
-			)
-		#online_client.connect("opponent_use_ability", func(uid): 
-			#arena._attempt_ability.call(arena.enemy_character, Data.ability_deck[uid])
-			#)
-		arena.place_character_on_board(new_opponent, Vector2i(4, 1))
-		)
-	
 	get_tree().change_scene_to_packed(scene)
 
 
-func goto_multiplayer() -> void:
-	var scene : PackedScene = load(ONLINE_SCENE)
+func goto_matchmaker() -> void:
+	var scene : PackedScene = load(MATCHMAKER_SCENE)
 	get_tree().change_scene_to_packed(scene)
-	
-	online_client = WEB_SOCKET_CLIENT.instantiate()
-	get_tree().root.add_child(online_client)
-	online_client.connect("match_connected", start_online_match)
-	#connect("request_invite_code", online_client.generate_invite_code)
-	#connect("attempt_join_room", online_client.claim_invite_code)
+
+
+func advance_matchmaker_screen(content : Dictionary = {}) -> void:
+	get_tree().current_scene.update_tab(content)
 
 
 func load_menu() -> void:
 	var scene : PackedScene = load(MENU_SCENE)
 	get_tree().change_scene_to_packed(scene)
-
-
-func emit_new_room_code(code) -> void:
-	room_code_received.emit(code)
-
-func get_new_room_code() -> void:
-	print("New room code signal recieved in SceneManager. Emitting request_invite_code")
-	request_invite_code.emit()
-
-func handle_join_room_with_code(code) -> void:
-	print("join_room_with_code signal received in SceneManager. Emitting attempt_join_room signal")
-	attempt_join_room.emit(code)

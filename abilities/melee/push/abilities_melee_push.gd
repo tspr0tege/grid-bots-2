@@ -4,7 +4,6 @@ extends Ability
 func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	var caster: Character = amx.get_character_by_id(caster_id)
 	var instructions := {
-		"target_type": "OCCUPANT",
 		"ability_id": UID,
 	}
 	#validate tile
@@ -33,5 +32,6 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 
 func cast(amx : AbilityMethodsExport, instructions: Dictionary) -> void:
 	#print("BOARD STATE: " + str(arena.arena_tiles))
-	amx.execute_move(instructions.target, instructions.vectors.push_to, true)
+	var target = amx.get_character_by_arena_coords(instructions.vectors.target_coords)
+	amx.execute_move(target, instructions.vectors.push_to, true)
 	

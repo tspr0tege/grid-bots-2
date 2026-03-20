@@ -38,8 +38,8 @@ func add_child_to_arena(object: Node3D) -> void:
 	arena.add_child(object)
 
 
-func add_new_character(character_instructions: Dictionary) -> void:
-	match_controller.add_new_character(character_instructions)
+func add_new_character(character_instructions: Dictionary):
+	return match_controller.add_new_character(character_instructions)
 
 
 func attempt_damage(target_coords: Vector2i, dmg_amt: float) -> bool:

@@ -7,16 +7,15 @@ const arc_duration := 1.0
 
 
 func validate(caster_id: String, amx: AbilityMethodsExport) -> Dictionary:
+	var caster = amx.get_character_by_id(caster_id)
 	var instructions := {
 		"target_type": "TILE",
 		"ability_id": UID
 	}
 	
-	var caster = amx.get_character_by_id(caster_id)
-	
-	var target_tile_pos = caster.grid_pos
-	target_tile_pos.x += 3 * caster.attack_direction	
-	var target_tile = amx.get_arena_tile_by_coords(target_tile_pos)
+	var target_tile_coords = caster.grid_pos
+	target_tile_coords.x += 3 * caster.attack_direction	
+	var target_tile = amx.get_arena_tile_by_coords(target_tile_coords)
 	if target_tile == null: 
 		instructions.can_cast = false
 		instructions.reason = "Throw is outside the arena bounds."
@@ -32,7 +31,7 @@ func validate(caster_id: String, amx: AbilityMethodsExport) -> Dictionary:
 
 
 func cast(amx : AbilityMethodsExport, instructions: Dictionary) -> void:
-	var target_tile = instructions.target
+	var target_tile = amx.get_arena_tile_by_coords(instructions.vectors.target_coords)
 	var new_ball = CANNON_BALL.instantiate()
 	amx.add_child_to_arena(new_ball)
 	

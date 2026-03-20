@@ -12,7 +12,7 @@ signal occupant_removed(occupant)
 #state : tbd
 
 
-func _set_control_group(group : Data.CGs, reset_in: float = 0.0) -> void:
+func _set_control_group(group: Data.CGs, reset_in: float = 0.0) -> void:
 	#print("Changing control group to " + str(group))
 	if reset_in > 0:
 		var current_group = control_group

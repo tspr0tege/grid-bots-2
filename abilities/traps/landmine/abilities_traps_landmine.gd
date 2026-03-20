@@ -9,10 +9,10 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	var caster = amx.get_character_by_id(caster_id)
 	var instructions := {}
 	var target_group = Data.opposing_group(caster.control_group)
+	
 	var possible_locations: Array = amx.get_all_tiles_in_group(target_group)
 	var all_clear = func(tile) -> bool:
 		return tile.occupant == null and !tile.trap
-	
 	possible_locations = possible_locations.filter(all_clear)
 	
 	if possible_locations.size() < 1: 
@@ -26,12 +26,12 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	}
 	instructions.can_cast = true
 	instructions.ability_id = UID
-	instructions.target_type = "TILE"
+	
 	return instructions
 
 
 func cast(amx: AbilityMethodsExport, instructions: Dictionary) -> void:
-	var target_tile = instructions.target
+	var target_tile = amx.get_arena_tile_by_coords(instructions.vectors.target_coords)
 	var new_mine: Trap3D = LANDMINE.instantiate()
 	new_mine.grid_coordinates = target_tile.grid_coordinates
 	target_tile.trap = new_mine

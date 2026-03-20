@@ -27,8 +27,6 @@ func validate(caster_id: String, amx: AbilityMethodsExport) -> Dictionary:
 	var hp_lost = caster_hp.MAX_HP - caster_hp.HP
 	instructions.heal_amt = min(hp_lost, heal_amt)
 	instructions.can_cast = true
-	instructions.target_type = "OCCUPANT"
-	instructions.vectors = {"target_coords": caster.grid_pos}
 	
 	return instructions
 
@@ -36,7 +34,6 @@ func validate(caster_id: String, amx: AbilityMethodsExport) -> Dictionary:
 func cast(amx: AbilityMethodsExport, instructions: Dictionary) -> void:
 	var caster: Character = amx.get_character_by_id(instructions.caster_id)
 	caster.get_node("HpNode").take_healing(instructions.heal_amt)
-	#$AudioStreamPlayer.play()
 	SoundManager.play_audio_stream(sound)
 	var heal_animation: CPUParticles3D = HEAL_10.instantiate()
 	caster.add_child(heal_animation)

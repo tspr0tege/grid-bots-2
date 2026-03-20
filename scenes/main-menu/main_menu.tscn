@@ -1,6 +1,29 @@
-[gd_scene load_steps=2 format=3 uid="uid://bf0143pgxvrpv"]
+[gd_scene load_steps=7 format=3 uid="uid://bf0143pgxvrpv"]
 
 [ext_resource type="Script" uid="uid://chbwjy81sbvvp" path="res://scenes/main-menu/scenes_mainMenu.gd" id="1_fusrs"]
+[ext_resource type="Script" uid="uid://bsdlncu0xdov4" path="res://scenes/main-menu/settings_volume-slider.gd" id="2_qhk2d"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fusrs"]
+bg_color = Color(0, 0, 0, 0.756863)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_naxqw"]
+bg_color = Color(0.662745, 0.713726, 0.713726, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hy6po"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.921092, 0.745207, 0.59899, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w2hs4"]
+bg_color = Color(0.972549, 0.929412, 0.411765, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -20,7 +43,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.2, 0.2, 0.2, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="Main" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -35,37 +58,147 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 30
 
-[node name="Title" type="Label" parent="VBoxContainer"]
+[node name="Title" type="Label" parent="Main"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 100
 text = "GRID BOTS"
 horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="VBoxContainer"]
+[node name="Subtitle" type="Label" parent="Main"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-text = "alpha prototype"
+text = "(0.0 prototype)"
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="VBoxContainer"]
+[node name="Spacer" type="Control" parent="Main"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 
-[node name="Start" type="Button" parent="VBoxContainer"]
+[node name="Start" type="Button" parent="Main"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Start"
 
-[node name="Online" type="Button" parent="VBoxContainer"]
+[node name="Online" type="Button" parent="Main"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Play Online"
 
-[node name="Quit" type="Button" parent="VBoxContainer"]
+[node name="Settings" type="Button" parent="Main"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Settings"
+
+[node name="Quit" type="Button" parent="Main"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Quit"
 
-[connection signal="pressed" from="VBoxContainer/Start" to="." method="_handle_button_input" binds= ["START"]]
-[connection signal="pressed" from="VBoxContainer/Online" to="." method="_handle_button_input" binds= ["ONLINE"]]
-[connection signal="pressed" from="VBoxContainer/Quit" to="." method="_handle_button_input" binds= ["QUIT"]]
+[node name="Settings" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fusrs")
+
+[node name="PanelContainer" type="PanelContainer" parent="Settings"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_naxqw")
+
+[node name="MarginContainer" type="MarginContainer" parent="Settings/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Settings/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="Settings/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="Settings/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 32
+columns = 2
+
+[node name="Label2" type="Label" parent="Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "Main"
+horizontal_alignment = 2
+
+[node name="MainVolumeSlider" type="HSlider" parent="Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/slider = SubResource("StyleBoxFlat_hy6po")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_w2hs4")
+max_value = 1.0
+step = 0.001
+value = 0.5
+script = ExtResource("2_qhk2d")
+bus_name = "Master"
+
+[node name="Label3" type="Label" parent="Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "Music"
+horizontal_alignment = 2
+
+[node name="MusicVolumeSlider2" type="HSlider" parent="Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/slider = SubResource("StyleBoxFlat_hy6po")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_w2hs4")
+max_value = 1.0
+step = 0.001
+value = 0.5
+script = ExtResource("2_qhk2d")
+bus_name = "Music"
+
+[node name="Label4" type="Label" parent="Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "Sound FX"
+horizontal_alignment = 2
+
+[node name="SfxVolumeSlider3" type="HSlider" parent="Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/slider = SubResource("StyleBoxFlat_hy6po")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_w2hs4")
+max_value = 1.0
+step = 0.001
+value = 0.5
+script = ExtResource("2_qhk2d")
+bus_name = "SFX"
+
+[node name="CloseSettings" type="Button" parent="Settings/PanelContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 32
+text = "EXIT"
+
+[connection signal="pressed" from="Main/Start" to="." method="_handle_button_input" binds= ["START"]]
+[connection signal="pressed" from="Main/Online" to="." method="_handle_button_input" binds= ["ONLINE"]]
+[connection signal="pressed" from="Main/Settings" to="." method="_handle_button_input" binds= ["SETTINGS"]]
+[connection signal="pressed" from="Main/Quit" to="." method="_handle_button_input" binds= ["QUIT"]]
+[connection signal="pressed" from="Settings/PanelContainer/MarginContainer/VBoxContainer/CloseSettings" to="." method="_toggle_settings"]

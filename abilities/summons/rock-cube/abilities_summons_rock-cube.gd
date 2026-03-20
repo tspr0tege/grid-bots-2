@@ -1,5 +1,7 @@
 extends Ability
 
+@export var summon_sound : SoundResource
+
 const ROCK_CUBE = preload("res://abilities/summons/rock-cube/character_rock-cube.tscn")
 
 
@@ -33,12 +35,7 @@ func cast(amx: AbilityMethodsExport, instructions: Dictionary) -> void:
 		"model": "res://abilities/summons/rock-cube/character_rock-cube.tscn",
 		"role": Data.roles.NPCs,
 		"coords": instructions.vectors.target_coords,
-		"connections": {
-			#"attempt_move": "_attempt_move",
-		},
 	}
-	amx.add_new_character(new_rock_cube_instructions)
-	#var new_rock_cube = ROCK_CUBE.instantiate()
-	#new_rock_cube.connect("character_death", amx.handle_character_death.bind(new_rock_cube)) #_on_character_death receives the Node3D of the character
-	#arena.add_child(new_rock_cube)
-	#arena.place_character_on_board(new_rock_cube, final_instructions.target.grid_coordinates)
+	var new_rock_cube = amx.add_new_character(new_rock_cube_instructions)
+	SoundManager.play_audio_stream(summon_sound)
+	new_rock_cube.connect("character_death", amx.handle_character_death)
