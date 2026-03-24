@@ -12,7 +12,7 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 		#"control_group": caster.control_group
 	}
 	
-	var target_tile = amx.get_arena_tile_by_coords(caster.grid_pos + Vector2i(caster.attack_direction, 0))
+	var target_tile = amx.get_arena_tile_by_coords(caster.grid_coords + Vector2i(caster.attack_direction, 0))
 	
 	if target_tile == null: 
 		instructions.can_cast = false

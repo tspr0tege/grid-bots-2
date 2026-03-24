@@ -13,9 +13,9 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 		"vectors": {},
 	}
 	
-	var target = amx.find_character_by_arena_row(caster.grid_pos, caster.attack_direction)
+	var target = amx.find_character_by_arena_row(caster.grid_coords, caster.attack_direction)
 	if target:
-		instructions.vectors.target_coords = target.grid_pos
+		instructions.vectors.target_coords = target.grid_coords
 	else:
 		instructions.vectors.target_coords = null
 	

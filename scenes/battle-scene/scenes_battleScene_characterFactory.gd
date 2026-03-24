@@ -24,7 +24,7 @@ func place_character_on_board(instructions: Dictionary):
 			var function_name = instructions.connections[signal_name]
 			character.connect(signal_name, $"../MatchController"[function_name])
 	
-	character.grid_pos = instructions.coords
+	character.grid_coords = instructions.coords
 	character.position = target_tile.position
 	if instructions.has("control_group"):
 		character.control_group = instructions.control_group

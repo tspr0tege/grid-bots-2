@@ -12,7 +12,7 @@ func validate(caster_id: String, amx: AbilityMethodsExport) -> Dictionary:
 		"ability_id": UID
 	}
 	
-	var target_tile_coords = caster.grid_pos
+	var target_tile_coords = caster.grid_coords
 	target_tile_coords.x += 3 * caster.attack_direction	
 	var target_tile = amx.get_arena_tile_by_coords(target_tile_coords)
 	if target_tile == null: 

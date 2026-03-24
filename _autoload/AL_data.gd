@@ -21,6 +21,8 @@ func init_match_settings() -> void:
 	player_control_group = CGs.TEAM_1
 	
 	match_settings = {
+		#TODO: Add multiplayer_id, opponent_id, and is_online_match
+		#Requires changes to SceneManager and MatchController
 		"handshake": {
 			"player": {
 				"ready": false,

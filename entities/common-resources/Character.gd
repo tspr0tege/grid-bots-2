@@ -4,7 +4,7 @@ signal character_death(source)
 signal request_ability(character: Character, ability: Ability)
 
 var id: String
-var grid_pos: Vector2i
+var grid_coords: Vector2i
 var health_display: Label3D
 var tile_move_speed := .1
 var base_attack: Ability

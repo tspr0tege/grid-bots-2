@@ -4,7 +4,6 @@ signal transmit_ability(input_data: Dictionary)
 signal transmit_move(from_coords: Vector2i, to_coords: Vector2i)
 signal update_energy_display(energy_level)
 
-@export var NET_CLIENT : Node
 @export var ARENA : Node3D
 @export var CHARACTER_FACTORY : Node
 
@@ -19,12 +18,9 @@ var characters: Dictionary = {}
 var AMX: AbilityMethodsExport
 
 func _ready():
-	#TODO: Local reference of online_client should be removed
-	#TODO: Conditional more specific. online_client will probably persist in offline matches. This needs to check for WS connection, specifically.
-	if SceneManager.online_client:
-		NET_CLIENT = SceneManager.online_client
-		connect("transmit_ability", NET_CLIENT.transmit_ability_input)
-		connect("transmit_move", NET_CLIENT.transmit_move_input)
+	if SceneManager.in_online_match:
+		connect("transmit_ability", SceneManager.online_client.transmit_ability_input)
+		connect("transmit_move", SceneManager.online_client.transmit_move_input)
 	
 	AMX = AbilityMethodsExport.new(ARENA, self)
 
@@ -40,7 +36,7 @@ func _on_combat_arena_ready() -> void:
 
 
 func handle_move_by_direction(coords: Vector2i) -> void:
-	_attempt_move(player_character, player_character.grid_pos + coords)
+	_attempt_move(player_character, player_character.grid_coords + coords)
 
 
 func handle_move_by_coords(coords: Vector2i) -> void:
@@ -51,27 +47,27 @@ func _attempt_move(character: Character, target_coords: Vector2i) -> bool:
 	#Check valid coordinates
 	if not ARENA.is_valid_tile(target_coords): return false
 	
-	var desired_move = target_coords - character.grid_pos
+	var desired_move = target_coords - character.grid_coords
 	# desired_move.length is 1.0 for adjacent tiles, and roughly 1.4 for diagonals
 	if (character.teleport_enabled or desired_move.length() <= 1) and ARENA.is_valid_move(character, target_coords):
-		transmit_move.emit(character.grid_pos, target_coords)
+		transmit_move.emit(character.grid_coords, target_coords)
 		return await _execute_move(character, target_coords)
 		
-	elif character.diagonal_move_enabled and ARENA.is_valid_move(character, character.grid_pos + ARENA.move_dir(desired_move, 0)):
-		var coords = character.grid_pos + ARENA.move_dir(desired_move, 0)
-		transmit_move.emit(character.grid_pos, coords)
+	elif character.diagonal_move_enabled and ARENA.is_valid_move(character, character.grid_coords + ARENA.move_dir(desired_move, 0)):
+		var coords = character.grid_coords + ARENA.move_dir(desired_move, 0)
+		transmit_move.emit(character.grid_coords, coords)
 		_execute_move(character, coords)
 		return true
 		
-	elif abs(desired_move.x) <= abs(desired_move.y) and ARENA.is_valid_move(character, character.grid_pos + ARENA.move_dir(desired_move, 2)):
-		var coords = character.grid_pos + ARENA.move_dir(desired_move, 2)
-		transmit_move.emit(character.grid_pos, coords)
+	elif abs(desired_move.x) <= abs(desired_move.y) and ARENA.is_valid_move(character, character.grid_coords + ARENA.move_dir(desired_move, 2)):
+		var coords = character.grid_coords + ARENA.move_dir(desired_move, 2)
+		transmit_move.emit(character.grid_coords, coords)
 		_execute_move(character, coords)
 		return true
 		
-	elif ARENA.is_valid_move(character, character.grid_pos + ARENA.move_dir(desired_move, 1)):
-		var coords = character.grid_pos + ARENA.move_dir(desired_move, 1)
-		transmit_move.emit(character.grid_pos, coords)
+	elif ARENA.is_valid_move(character, character.grid_coords + ARENA.move_dir(desired_move, 1)):
+		var coords = character.grid_coords + ARENA.move_dir(desired_move, 1)
+		transmit_move.emit(character.grid_coords, coords)
 		_execute_move(character, coords)
 		return true
 	else:
@@ -81,18 +77,18 @@ func _attempt_move(character: Character, target_coords: Vector2i) -> bool:
 func _execute_move(character: Character, to_coords: Vector2i, push := false) -> bool:
 	var target_tile = ARENA.get_tile_by_coords(to_coords)
 	#TODO: Move tile update logic to CombatArena. Maybe.
-	ARENA.get_tile_by_coords(character.grid_pos).remove_occupant()
+	ARENA.get_tile_by_coords(character.grid_coords).remove_occupant()
 	
 	#obstacle moving to an occupied tile
 	#TODO:Remove "push" from move, and separate it's logic into the ability script. This will require revisiting the obstacle movement logic.
 	if is_instance_of(character, Obstacle) and target_tile.occupant: 
 		var obstruction = target_tile.occupant
-		var next_tile = to_coords - character.grid_pos
+		var next_tile = to_coords - character.grid_coords
 		var push_successful = !is_instance_of(obstruction, Obstacle) and await _execute_move(obstruction, to_coords + next_tile, true)
 		if push_successful:
 			obstruction.get_node("HpNode").take_damage(character.move_damage)
 			target_tile.add_occupant(character)
-			character.grid_pos = to_coords
+			character.grid_coords = to_coords
 			character.move_to(target_tile.position, push)
 		else: #obstacle deals death damage
 			var char_hp_node = character.get_node("HpNode")
@@ -104,7 +100,7 @@ func _execute_move(character: Character, to_coords: Vector2i, push := false) -> 
 	else: #moving to unoccupied tile
 		#TODO: occupant updates should happen in move_to function, or by tick count as movement is not instant, and timing could matter.
 		target_tile.add_occupant(character)
-		character.grid_pos = to_coords
+		character.grid_coords = to_coords
 		character.move_to(target_tile.position, push)
 		return true
 
@@ -112,7 +108,7 @@ func _execute_move(character: Character, to_coords: Vector2i, push := false) -> 
 func search_for_target(source: Character, searching_for: String) -> void:
 	match searching_for:
 		"PLAYER_IN_ROW":
-			if player_character.grid_pos.y == source.grid_pos.y:
+			if player_character.grid_coords.y == source.grid_coords.y:
 				source.target_result(true)
 			else:
 				source.target_result(false)
@@ -183,12 +179,12 @@ func add_new_character(character_instructions: Dictionary):
 		characters[new_character.id] = new_character
 	
 	#TODO: Move connection logic into character receipt function in Nakama Client
-	if NET_CLIENT and character_instructions.role == Data.roles.OPPOSING_PLAYER:
-		NET_CLIENT.connect("opponent_move", func(coords):
+	if SceneManager.in_online_match and character_instructions.role == Data.roles.OPPOSING_PLAYER:
+		SceneManager.online_client.connect("opponent_move", func(coords):
 			_execute_move.call(new_character, coords)
 			)
 		
-		NET_CLIENT.connect("opponent_use_ability", func(instructions): 
+		SceneManager.online_client.connect("opponent_use_ability", func(instructions): 
 			instructions.caster_id = new_character.id
 			_execute_ability.call(instructions)
 			)
@@ -197,7 +193,7 @@ func add_new_character(character_instructions: Dictionary):
 
 
 func handle_character_death(character: Character) -> void:
-	AMX.get_arena_tile_by_coords(character.grid_pos).remove_occupant()
+	AMX.get_arena_tile_by_coords(character.grid_coords).remove_occupant()
 	if character == player_character:
 		player_lost()
 		return

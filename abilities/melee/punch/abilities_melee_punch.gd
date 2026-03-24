@@ -8,7 +8,7 @@ const dmg := 50.0
 
 func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	var caster = amx.get_character_by_id(caster_id)
-	var target_coords = caster.grid_pos + Vector2i(caster.attack_direction, 0)
+	var target_coords = caster.grid_coords + Vector2i(caster.attack_direction, 0)
 	var instructions := {
 		"caster_id": caster_id,
 		"ability_id": UID,

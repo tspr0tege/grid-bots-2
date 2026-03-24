@@ -5,31 +5,27 @@ var player_id: String = ""
 enum match_result {win, lose, draw}
 
 var online_client = null
-var match_settings := {}
+var in_online_match := false
 
-# Paths to your main scenes
 const MENU_SCENE := "res://scenes/main-menu/main_menu.tscn"
 const BATTLE_SCENE := "res://scenes/battle-scene/battle_scene.tscn"
 const MATCHMAKER_SCENE = "res://scenes/online-multiplayer/online_multiplayer.tscn"
 
 const NAKAMA_CLIENT := preload("res://system/nakama_client.tscn")
-#const WEB_SOCKET_CLIENT := preload("res://system/web_socket_client.tscn")
 
 const PLAYER_CHARACTER = preload("res://entities/test-character/player_character.tscn")
 const RED_CHARACTER = preload("res://entities/test-character/red_character.tscn")
 
 
 func _ready() -> void:
-	print("SceneManager _ready function triggered")
+	#print("SceneManager _ready function triggered")
 	online_client = NAKAMA_CLIENT.instantiate()
 	add_child(online_client)
 	online_client.connect("match_connected", advance_matchmaker_screen)
 
 
 func start_local_match() -> void:
-	var scene : PackedScene = load(BATTLE_SCENE)
-	#online_client = null
-	match_settings.characters = [
+	Data.match_settings.characters = [
 		{
 			"model": "res://entities/test-character/player_character.tscn",
 			"role": Data.roles.PLAYER_CHARACTER,
@@ -47,10 +43,13 @@ func start_local_match() -> void:
 			},
 		}
 	]
+	in_online_match = false
+	var scene : PackedScene = load(BATTLE_SCENE)
 	get_tree().change_scene_to_packed(scene)
 
 
 func start_online_match() -> void:
+	in_online_match = true
 	var scene : PackedScene = load(BATTLE_SCENE)
 	get_tree().change_scene_to_packed(scene)
 
@@ -65,5 +64,6 @@ func advance_matchmaker_screen(content : Dictionary = {}) -> void:
 
 
 func load_menu() -> void:
+	in_online_match = false
 	var scene : PackedScene = load(MENU_SCENE)
 	get_tree().change_scene_to_packed(scene)

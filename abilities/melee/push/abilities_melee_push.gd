@@ -7,7 +7,7 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 		"ability_id": UID,
 	}
 	#validate tile
-	var target_coords = caster.grid_pos + Vector2i(caster.attack_direction, 0)
+	var target_coords = caster.grid_coords + Vector2i(caster.attack_direction, 0)
 	if !amx.is_valid_arena_tile(target_coords): 
 		instructions.can_cast = false
 		instructions.reason = "Nowhere to push to."

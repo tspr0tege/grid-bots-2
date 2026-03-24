@@ -10,7 +10,7 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 		"ability_id": UID,
 	}
 	var opponent_cg = Data.opposing_group(caster.control_group)
-	var target = amx.find_arena_tile_in_row_by_control_group(caster.grid_pos, caster.attack_direction, opponent_cg)
+	var target = amx.find_arena_tile_in_row_by_control_group(caster.grid_coords, caster.attack_direction, opponent_cg)
 	if target == null:
 		instructions.can_cast = false
 		instructions.reason = "No tile found, for conversion."
