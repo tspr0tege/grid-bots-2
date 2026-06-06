@@ -42,7 +42,7 @@ func add_occupant(new_occupant: Character) -> void:
 	occupant_added.emit(new_occupant)
 	
 	for shot in shots:
-		shot._hit_character(new_occupant)
+		shot._hit_character()
 	shots = []
 
 

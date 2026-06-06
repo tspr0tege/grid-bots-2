@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://blaqmki13qwnm"]
+
+[ext_resource type="PackedScene" uid="uid://c13wyouguu0b0" path="res://scenes/battle-scene/floor_tile.tscn" id="1_7r8ex"]
+[ext_resource type="PackedScene" uid="uid://d2emdno3lst2n" path="res://entities/test-character/player_character.tscn" id="2_gs5gs"]
+[ext_resource type="PackedScene" path="res://entities/gunbot/helmet.gltf" id="3_gs5gs"]
+
+[node name="ScaleCheck" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.843391, -0.465315, 0.26865, 0, 0.5, 0.866025, -0.5373, 0.730398, -0.421696, 0, 0, 0)
+light_energy = 0.18
+light_angular_distance = 90.0
+light_bake_mode = 1
+shadow_enabled = true
+directional_shadow_max_distance = 1.0
+
+[node name="FloorTile" parent="." instance=ExtResource("1_7r8ex")]
+
+[node name="PlayerCharacter" parent="." instance=ExtResource("2_gs5gs")]
+
+[node name="blockbench_export" parent="." instance=ExtResource("3_gs5gs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.20003, -1.19209e-07, 0.894777)

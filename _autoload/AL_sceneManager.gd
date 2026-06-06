@@ -65,5 +65,6 @@ func advance_matchmaker_screen(content : Dictionary = {}) -> void:
 
 func load_menu() -> void:
 	in_online_match = false
+	Data.init_match_settings()
 	var scene : PackedScene = load(MENU_SCENE)
 	get_tree().change_scene_to_packed(scene)

@@ -4,9 +4,23 @@ var active_sounds := []
 var AUDIO_STREAM_LIMIT := 5
 
 var BGM_JUKEBOX := AudioStreamPlayer.new()
-const BATTLE_MEGA_WALL = preload("res://scenes/battle-scene/awake10_megaWall.mp3")
 const COOL_DANCH = preload("res://Cool Danch Network is Spreading.mp3")
+const RHODES = preload("res://scenes/main-menu/rhodes.mp3")
+const GLORYTOTHEMACHINE = preload("res://scenes/main-menu/escape_-_glorytothemachine.mp3")
 
+const BATTLE_MEGA_WALL = preload("res://scenes/battle-scene/music/awake10_megaWall.mp3")
+const DARKER_WAVES = preload("res://scenes/battle-scene/music/Zander Noriega - Darker Waves.mp3")
+const N_DIMENSIONS = preload("res://scenes/battle-scene/music/n-Dimensions (Main Theme).mp3")
+const RED_DOORS = preload("res://scenes/battle-scene/music/Red Doors 2.0 (GameClosure Edition).mp3")
+const THRUST_SEQUENCE = preload("res://scenes/battle-scene/music/Thrust Sequence.mp3")
+
+const BATTLE_TRACKS := [
+	BATTLE_MEGA_WALL,
+	DARKER_WAVES,
+	N_DIMENSIONS,
+	RED_DOORS,
+	THRUST_SEQUENCE
+]
 
 func _ready() -> void:
 	BGM_JUKEBOX.bus = "Music"
@@ -31,10 +45,10 @@ func play_audio_stream(audio_info: SoundResource) -> void:
 func play_bgm_stream(track_name: String) -> void:
 	match track_name:
 		"MENU":
-			BGM_JUKEBOX.stream = COOL_DANCH
-			BGM_JUKEBOX.volume_db = 0.0
+			BGM_JUKEBOX.stream = GLORYTOTHEMACHINE
+			BGM_JUKEBOX.volume_db = -4.0
 		"BATTLE":
-			BGM_JUKEBOX.stream = BATTLE_MEGA_WALL
+			BGM_JUKEBOX.stream = BATTLE_TRACKS[randi_range(0, BATTLE_TRACKS.size() - 1)]
 			BGM_JUKEBOX.volume_db = -8.0
 		_:
 			push_warning("Track name %s is unrecognized" % track_name)

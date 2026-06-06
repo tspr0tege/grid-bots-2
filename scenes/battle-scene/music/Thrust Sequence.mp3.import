@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cv3rlftudxt4h"
+path="res://.godot/imported/Thrust Sequence.mp3-4016b9ae907828a86de1a96eb3fd66ba.mp3str"
+
+[deps]
+
+source_file="res://scenes/battle-scene/music/Thrust Sequence.mp3"
+dest_files=["res://.godot/imported/Thrust Sequence.mp3-4016b9ae907828a86de1a96eb3fd66ba.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4

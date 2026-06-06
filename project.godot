@@ -13,7 +13,7 @@ config_version=5
 config/name="Grid Bots"
 run/main_scene="uid://bf0143pgxvrpv"
 config/features=PackedStringArray("4.4", "Mobile", "Redot")
-config/icon="res://icon.svg"
+config/icon="uid://cbvalvi5tvuao"
 
 [autoload]
 
@@ -24,9 +24,9 @@ SoundManager="*res://_autoload/AL_soundManager.gd"
 
 [display]
 
-window/size/viewport_width=1904
-window/size/viewport_height=1071
-window/stretch/mode="viewport"
+window/size/viewport_width=1600
+window/size/viewport_height=1000
+window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
 [global_group]

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dvoqhd7fexipg"
-path="res://.godot/imported/energy-tank.svg-54dcf4d84c8c761738494aa3b94dec9a.ctex"
+uid="uid://cy4iotoomfify"
+path="res://.godot/imported/light-sabers.svg-a1ed1f9fc9cb5984a4c60340d0e4041f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://energy-tank.svg"
-dest_files=["res://.godot/imported/energy-tank.svg-54dcf4d84c8c761738494aa3b94dec9a.ctex"]
+source_file="res://system/icons/light-sabers.svg"
+dest_files=["res://.godot/imported/light-sabers.svg-a1ed1f9fc9cb5984a4c60340d0e4041f.ctex"]
 
 [params]
 

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://e0ifx4wawyq"
+path="res://.godot/imported/n-Dimensions (Main Theme).mp3-70d02e4732be2b580bf862f2201040b7.mp3str"
+
+[deps]
+
+source_file="res://scenes/battle-scene/music/n-Dimensions (Main Theme).mp3"
+dest_files=["res://.godot/imported/n-Dimensions (Main Theme).mp3-70d02e4732be2b580bf862f2201040b7.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4

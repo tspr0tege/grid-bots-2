@@ -4,10 +4,14 @@ const CAMERA_DEFAULT_SIZE = 6.75
 
 
 func _ready():
-	_on_sub_viewport_container_item_rect_changed()
+	_adjust_viewport()
 
 
-func _on_sub_viewport_container_item_rect_changed():
+func _item_rect_changed() -> void:
+	_adjust_viewport()
+
+
+func _adjust_viewport():
 	var viewportRatio = get_viewport_rect().size / Vector2(1920, 1080)
 	
 	if viewportRatio.y < 1 and viewportRatio.x >= 1.2:

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://byhfqeyke183m"
-path="res://.godot/imported/run.svg-463a754b5fba62d9814d7cd9e423ef33.ctex"
+uid="uid://vfrwpl5irvib"
+path="res://.godot/imported/gamepad-cross.svg-25544574a65e5cf3b79765f4167067b1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://system/run.svg"
-dest_files=["res://.godot/imported/run.svg-463a754b5fba62d9814d7cd9e423ef33.ctex"]
+source_file="res://system/icons/gamepad-cross.svg"
+dest_files=["res://.godot/imported/gamepad-cross.svg-25544574a65e5cf3b79765f4167067b1.ctex"]
 
 [params]
 

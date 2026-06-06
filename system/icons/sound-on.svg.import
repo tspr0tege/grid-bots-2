@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dqodnobj67k22"
-path="res://.godot/imported/digital-trace.svg-40ced95f9c337a6ca3b33abed28b2118.ctex"
+uid="uid://dadpx3h7rddjj"
+path="res://.godot/imported/sound-on.svg-fa0bffc9afbc54330822a26243e299ce.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://digital-trace.svg"
-dest_files=["res://.godot/imported/digital-trace.svg-40ced95f9c337a6ca3b33abed28b2118.ctex"]
+source_file="res://system/icons/sound-on.svg"
+dest_files=["res://.godot/imported/sound-on.svg-fa0bffc9afbc54330822a26243e299ce.ctex"]
 
 [params]
 

@@ -1,29 +1,95 @@
-[gd_scene load_steps=7 format=3 uid="uid://bf0143pgxvrpv"]
+[gd_scene load_steps=36 format=3 uid="uid://bf0143pgxvrpv"]
 
-[ext_resource type="Script" uid="uid://chbwjy81sbvvp" path="res://scenes/main-menu/scenes_mainMenu.gd" id="1_fusrs"]
+[ext_resource type="Script" uid="uid://chbwjy81sbvvp" path="res://scenes/main-menu/scenes_main-menu.gd" id="1_fusrs"]
+[ext_resource type="Theme" uid="uid://d1vw0txyuoy5i" path="res://system/themes/prototype/prototype_theme.tres" id="1_lhle4"]
+[ext_resource type="Script" uid="uid://lxwf1ux0e2op" path="res://scenes/main-menu/scenes_main-menu_combat-tab.gd" id="2_naxqw"]
 [ext_resource type="Script" uid="uid://bsdlncu0xdov4" path="res://scenes/main-menu/settings_volume-slider.gd" id="2_qhk2d"]
+[ext_resource type="Script" uid="uid://nky65oxq6ybu" path="res://system/SoundResource.gd" id="3_2jeaq"]
+[ext_resource type="AudioStream" uid="uid://c4d3o0qkfkmns" path="res://scenes/main-menu/sfx/Confirm_02.wav" id="4_ptqsp"]
+[ext_resource type="Texture2D" uid="uid://dadpx3h7rddjj" path="res://system/icons/sound-on.svg" id="5_eel2y"]
+[ext_resource type="AudioStream" uid="uid://dk3vpbg1do0s6" path="res://scenes/main-menu/sfx/Complete_02.wav" id="6_6f8a5"]
+[ext_resource type="Texture2D" uid="uid://0jeas20wfbxw" path="res://system/icons/speaker.svg" id="6_kgvlk"]
+[ext_resource type="Texture2D" uid="uid://cunoq6hp4812e" path="res://system/icons/settings-knobs.svg" id="7_7m0km"]
+[ext_resource type="AudioStream" uid="uid://cfyochp8txxac" path="res://scenes/main-menu/sfx/Confirm_06.wav" id="7_l2agv"]
+[ext_resource type="Texture2D" uid="uid://bb4b3icj661hr" path="res://system/icons/warehouse.svg" id="8_0n1sh"]
+[ext_resource type="AudioStream" uid="uid://64v10f372yng" path="res://scenes/main-menu/sfx/SFX_UIChangeOption02.wav" id="8_gjm7h"]
+[ext_resource type="Texture2D" uid="uid://d2seiq2scto5x" path="res://system/icons/robot-golem.svg" id="9_hw4jk"]
+[ext_resource type="Texture2D" uid="uid://cy4iotoomfify" path="res://system/icons/light-sabers.svg" id="10_2jeaq"]
+[ext_resource type="Texture2D" uid="uid://dnk5025m0yksh" path="res://Grid Bots UI background.png" id="10_da8my"]
+[ext_resource type="PackedScene" uid="uid://d2emdno3lst2n" path="res://entities/test-character/player_character.tscn" id="10_gjm7h"]
+[ext_resource type="Texture2D" uid="uid://dsppdaagvjk3i" path="res://system/icons/discussion.svg" id="11_ptqsp"]
+[ext_resource type="Texture2D" uid="uid://vfrwpl5irvib" path="res://system/icons/gamepad-cross.svg" id="12_5sbga"]
+
+[sub_resource type="Resource" id="Resource_5sbga"]
+script = ExtResource("3_2jeaq")
+sound = ExtResource("4_ptqsp")
+volume = 0.0
+pitch_scale = 1.0
+metadata/_custom_type_script = "uid://nky65oxq6ybu"
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6f8a5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l2agv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gjm7h"]
+
+[sub_resource type="Resource" id="Resource_da8my"]
+script = ExtResource("3_2jeaq")
+volume = 0.0
+pitch_scale = 1.0
+metadata/_custom_type_script = "uid://nky65oxq6ybu"
+
+[sub_resource type="Resource" id="Resource_aayrq"]
+script = ExtResource("3_2jeaq")
+sound = ExtResource("6_6f8a5")
+volume = 0.0
+pitch_scale = 1.0
+metadata/_custom_type_script = "uid://nky65oxq6ybu"
+
+[sub_resource type="Resource" id="Resource_6f8a5"]
+script = ExtResource("3_2jeaq")
+sound = ExtResource("4_ptqsp")
+volume = 0.0
+pitch_scale = 1.0
+metadata/_custom_type_script = "uid://nky65oxq6ybu"
+
+[sub_resource type="Resource" id="Resource_bt6bj"]
+script = ExtResource("3_2jeaq")
+sound = ExtResource("7_l2agv")
+volume = 0.0
+pitch_scale = 1.0
+metadata/_custom_type_script = "uid://nky65oxq6ybu"
+
+[sub_resource type="Resource" id="Resource_12dux"]
+script = ExtResource("3_2jeaq")
+sound = ExtResource("8_gjm7h")
+volume = 0.0
+pitch_scale = 1.0
+metadata/_custom_type_script = "uid://nky65oxq6ybu"
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_aayrq"]
+panorama = ExtResource("10_da8my")
+energy_multiplier = 0.7
+
+[sub_resource type="Sky" id="Sky_bt6bj"]
+sky_material = SubResource("PanoramaSkyMaterial_aayrq")
+
+[sub_resource type="Environment" id="Environment_12dux"]
+background_mode = 2
+sky = SubResource("Sky_bt6bj")
+sky_rotation = Vector3(0, 1.5708, 0)
+fog_mode = 1
+fog_light_energy = 0.88
+fog_density = 1.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fusrs"]
 bg_color = Color(0, 0, 0, 0.756863)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_naxqw"]
-bg_color = Color(0.662745, 0.713726, 0.713726, 1)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_da8my"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hy6po"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.921092, 0.745207, 0.59899, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aayrq"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w2hs4"]
-bg_color = Color(0.972549, 0.929412, 0.411765, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hy6po"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -32,173 +98,492 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_lhle4")
 script = ExtResource("1_fusrs")
+sfx_confirm_02 = SubResource("Resource_5sbga")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="TabsContainer" type="TabContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+tab_alignment = 1
+current_tab = 2
+tabs_visible = false
+
+[node name="ShopTab" type="PanelContainer" parent="TabsContainer"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_6f8a5")
+metadata/_tab_index = 0
+
+[node name="ColorRect" type="ColorRect" parent="TabsContainer/ShopTab"]
+layout_mode = 2
+color = Color(0.379525, 2.64719e-07, 0.212611, 1)
+
+[node name="Title" type="Label" parent="TabsContainer/ShopTab"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "SHOP
+(COMING LAST)"
+horizontal_alignment = 1
+
+[node name="CharacterTab" type="PanelContainer" parent="TabsContainer"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_l2agv")
+metadata/_tab_index = 1
+
+[node name="ColorRect" type="ColorRect" parent="TabsContainer/CharacterTab"]
+layout_mode = 2
+color = Color(0.262301, 0.000782799, 0.462914, 1)
+
+[node name="Title" type="Label" parent="TabsContainer/CharacterTab"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "CHARACTER SELECT"
+horizontal_alignment = 1
+
+[node name="CombatTab" type="PanelContainer" parent="TabsContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_gjm7h")
+script = ExtResource("2_naxqw")
+sfx_click_03 = SubResource("Resource_da8my")
+sfx_complete_02 = SubResource("Resource_aayrq")
+sfx_confirm_02 = SubResource("Resource_6f8a5")
+sfx_confirm_06 = SubResource("Resource_bt6bj")
+sfx_ui_change_option_02 = SubResource("Resource_12dux")
+metadata/_tab_index = 2
+
+[node name="Background" type="ColorRect" parent="TabsContainer/CombatTab"]
+layout_mode = 2
 color = Color(0.2, 0.2, 0.2, 1)
 
-[node name="Main" type="VBoxContainer" parent="."]
+[node name="CyberSpaceBackground" type="SubViewportContainer" parent="TabsContainer/CombatTab"]
+layout_mode = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="TabsContainer/CombatTab/CyberSpaceBackground"]
+handle_input_locally = false
+size = Vector2i(1600, 1000)
+render_target_update_mode = 4
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="TabsContainer/CombatTab/CyberSpaceBackground/SubViewport"]
+environment = SubResource("Environment_12dux")
+
+[node name="PlayerCharacter" parent="TabsContainer/CombatTab/CyberSpaceBackground/SubViewport" instance=ExtResource("10_gjm7h")]
+
+[node name="right arm" parent="TabsContainer/CombatTab/CyberSpaceBackground/SubViewport/PlayerCharacter/blockbench_export/base/chest2" index="3"]
+transform = Transform3D(0.90699, 0.42007, 0.0301537, -0.418746, 0.891856, 0.17101, 0.0449434, -0.167731, 0.984808, -0.196875, 0.134375, 0)
+
+[node name="right upper leg2" parent="TabsContainer/CombatTab/CyberSpaceBackground/SubViewport/PlayerCharacter/blockbench_export/base/lower body" index="2"]
+transform = Transform3D(0.858108, 0.498604, -0.122654, -0.279671, 0.654188, 0.702724, 0.43062, -0.568711, 0.70081, -0.0375, -0.096875, 0)
+
+[node name="right lower leg2" parent="TabsContainer/CombatTab/CyberSpaceBackground/SubViewport/PlayerCharacter/blockbench_export/base/lower body/right upper leg2" index="1"]
+transform = Transform3D(1, 0, 0, 0, 0.382684, -0.92388, 0, 0.92388, 0.382684, -0.03125, -0.28125, 0)
+
+[node name="Camera3D" type="Camera3D" parent="TabsContainer/CombatTab/CyberSpaceBackground/SubViewport/PlayerCharacter"]
+transform = Transform3D(-4.37114e-08, -0.0697565, -0.997564, 0, 0.997564, -0.0697565, 1, -3.04915e-09, -4.36049e-08, -1.115, 1.04, 0.565)
+
+[node name="Control2" type="Control" parent="TabsContainer/CombatTab"]
+layout_mode = 2
+
+[node name="Main" type="VBoxContainer" parent="TabsContainer/CombatTab/Control2"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
+anchors_preset = 6
+anchor_left = 1.0
 anchor_top = 0.5
-anchor_right = 0.5
+anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
+offset_left = -804.0
+offset_top = -385.5
+offset_right = -282.0
+offset_bottom = 370.5
+grow_horizontal = 0
 grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_constants/separation = 30
 
-[node name="Title" type="Label" parent="Main"]
+[node name="Title" type="Label" parent="TabsContainer/CombatTab/Control2/Main"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 100
 text = "GRID BOTS"
 horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="Main"]
+[node name="Version" type="Label" parent="TabsContainer/CombatTab/Control2/Main"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "(0.0 prototype)"
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="Main"]
+[node name="Spacer" type="Control" parent="TabsContainer/CombatTab/Control2/Main"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 
-[node name="Start" type="Button" parent="Main"]
+[node name="Start" type="Button" parent="TabsContainer/CombatTab/Control2/Main"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Start"
 
-[node name="Online" type="Button" parent="Main"]
+[node name="Online" type="Button" parent="TabsContainer/CombatTab/Control2/Main"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Play Online"
 
-[node name="Settings" type="Button" parent="Main"]
+[node name="Settings" type="Button" parent="TabsContainer/CombatTab/Control2/Main"]
+visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Settings"
 
-[node name="Quit" type="Button" parent="Main"]
+[node name="Quit" type="Button" parent="TabsContainer/CombatTab/Control2/Main"]
 layout_mode = 2
+theme_type_variation = &"RedButton"
 theme_override_font_sizes/font_size = 50
 text = "Quit"
 
-[node name="Settings" type="PanelContainer" parent="."]
+[node name="Settings" type="PanelContainer" parent="TabsContainer/CombatTab"]
 visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_fusrs")
 
-[node name="PanelContainer" type="PanelContainer" parent="Settings"]
+[node name="PanelContainer" type="PanelContainer" parent="TabsContainer/CombatTab/Settings"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_naxqw")
 
-[node name="MarginContainer" type="MarginContainer" parent="Settings/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="TabsContainer/CombatTab/Settings/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 32
 theme_override_constants/margin_top = 32
 theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 32
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Settings/PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabsContainer/CombatTab/Settings/PanelContainer/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Label" type="Label" parent="Settings/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="TabsContainer/CombatTab/Settings/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 40
-text = "Settings"
+text = "Volume"
 horizontal_alignment = 1
 
-[node name="GridContainer" type="GridContainer" parent="Settings/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="TabsContainer/CombatTab/Settings/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/h_separation = 32
 columns = 2
 
-[node name="Label2" type="Label" parent="Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+[node name="Label2" type="Label" parent="TabsContainer/CombatTab/Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 40
 text = "Main"
 horizontal_alignment = 2
 
-[node name="MainVolumeSlider" type="HSlider" parent="Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+[node name="MainVolumeSlider" type="HSlider" parent="TabsContainer/CombatTab/Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_styles/slider = SubResource("StyleBoxFlat_hy6po")
-theme_override_styles/grabber_area = SubResource("StyleBoxFlat_w2hs4")
 max_value = 1.0
 step = 0.001
 value = 0.5
 script = ExtResource("2_qhk2d")
 bus_name = "Master"
 
-[node name="Label3" type="Label" parent="Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+[node name="Label3" type="Label" parent="TabsContainer/CombatTab/Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+visible = false
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 40
 text = "Music"
 horizontal_alignment = 2
 
-[node name="MusicVolumeSlider2" type="HSlider" parent="Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+[node name="MusicIcon" type="TextureRect" parent="TabsContainer/CombatTab/Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 8
+tooltip_text = "Music Level"
+texture = ExtResource("5_eel2y")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="MusicVolumeSlider2" type="HSlider" parent="TabsContainer/CombatTab/Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_styles/slider = SubResource("StyleBoxFlat_hy6po")
-theme_override_styles/grabber_area = SubResource("StyleBoxFlat_w2hs4")
 max_value = 1.0
 step = 0.001
 value = 0.5
 script = ExtResource("2_qhk2d")
 bus_name = "Music"
 
-[node name="Label4" type="Label" parent="Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+[node name="Label4" type="Label" parent="TabsContainer/CombatTab/Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+visible = false
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 40
 text = "Sound FX"
 horizontal_alignment = 2
 
-[node name="SfxVolumeSlider3" type="HSlider" parent="Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+[node name="SoundIcon" type="TextureRect" parent="TabsContainer/CombatTab/Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 8
+texture = ExtResource("6_kgvlk")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="SfxVolumeSlider3" type="HSlider" parent="TabsContainer/CombatTab/Settings/PanelContainer/MarginContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_styles/slider = SubResource("StyleBoxFlat_hy6po")
-theme_override_styles/grabber_area = SubResource("StyleBoxFlat_w2hs4")
 max_value = 1.0
 step = 0.001
 value = 0.5
 script = ExtResource("2_qhk2d")
 bus_name = "SFX"
 
-[node name="CloseSettings" type="Button" parent="Settings/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="CloseSettings" type="Button" parent="TabsContainer/CombatTab/Settings/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
-text = "EXIT"
+text = "SAVE & RETURN"
 
-[connection signal="pressed" from="Main/Start" to="." method="_handle_button_input" binds= ["START"]]
-[connection signal="pressed" from="Main/Online" to="." method="_handle_button_input" binds= ["ONLINE"]]
-[connection signal="pressed" from="Main/Settings" to="." method="_handle_button_input" binds= ["SETTINGS"]]
-[connection signal="pressed" from="Main/Quit" to="." method="_handle_button_input" binds= ["QUIT"]]
-[connection signal="pressed" from="Settings/PanelContainer/MarginContainer/VBoxContainer/CloseSettings" to="." method="_toggle_settings"]
+[node name="Control" type="Control" parent="TabsContainer/CombatTab"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TextureButton" type="TextureButton" parent="TabsContainer/CombatTab/Control"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -118.0
+offset_top = 37.0
+offset_right = -38.0
+offset_bottom = 117.0
+grow_horizontal = 0
+size_flags_horizontal = 8
+size_flags_vertical = 0
+tooltip_text = "Volume Settings"
+texture_normal = ExtResource("7_7m0km")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="ChatTab" type="PanelContainer" parent="TabsContainer"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_da8my")
+metadata/_tab_index = 3
+
+[node name="ColorRect" type="ColorRect" parent="TabsContainer/ChatTab"]
+layout_mode = 2
+color = Color(0, 0.384314, 0.792157, 1)
+
+[node name="Title" type="Label" parent="TabsContainer/ChatTab"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "CHAT TAB
+(COMING SOON)"
+horizontal_alignment = 1
+
+[node name="EventsTab" type="PanelContainer" parent="TabsContainer"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_aayrq")
+metadata/_tab_index = 4
+
+[node name="ColorRect" type="ColorRect" parent="TabsContainer/EventsTab"]
+layout_mode = 2
+color = Color(0, 0.431373, 0.32549, 1)
+
+[node name="Title" type="Label" parent="TabsContainer/EventsTab"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "EVENTS TAB"
+horizontal_alignment = 1
+
+[node name="TabsNavigation" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="TabButton1" type="Button" parent="TabsNavigation"]
+custom_minimum_size = Vector2(160, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+theme_override_styles/focus = SubResource("StyleBoxEmpty_hy6po")
+
+[node name="ColorRect" type="ColorRect" parent="TabsNavigation/TabButton1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0.379525, 2.64719e-07, 0.212611, 1)
+
+[node name="TextureRect" type="TextureRect" parent="TabsNavigation/TabButton1"]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_0n1sh")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TabButton2" type="Button" parent="TabsNavigation"]
+custom_minimum_size = Vector2(160, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+theme_override_styles/focus = SubResource("StyleBoxEmpty_hy6po")
+
+[node name="ColorRect" type="ColorRect" parent="TabsNavigation/TabButton2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0.262301, 0.000782799, 0.462914, 1)
+
+[node name="TextureRect" type="TextureRect" parent="TabsNavigation/TabButton2"]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -60.0
+offset_top = -60.0
+offset_right = 60.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_hw4jk")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TabButton3" type="Button" parent="TabsNavigation"]
+custom_minimum_size = Vector2(160, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+theme_override_styles/focus = SubResource("StyleBoxEmpty_hy6po")
+
+[node name="ColorRect" type="ColorRect" parent="TabsNavigation/TabButton3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0.2, 0.2, 0.2, 1)
+
+[node name="TextureRect" type="TextureRect" parent="TabsNavigation/TabButton3"]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("10_2jeaq")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TabButton4" type="Button" parent="TabsNavigation"]
+custom_minimum_size = Vector2(160, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+theme_override_styles/focus = SubResource("StyleBoxEmpty_hy6po")
+
+[node name="ColorRect" type="ColorRect" parent="TabsNavigation/TabButton4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0, 0.384314, 0.792157, 1)
+
+[node name="TextureRect" type="TextureRect" parent="TabsNavigation/TabButton4"]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("11_ptqsp")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TabButton5" type="Button" parent="TabsNavigation"]
+custom_minimum_size = Vector2(160, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+theme_override_styles/focus = SubResource("StyleBoxEmpty_hy6po")
+
+[node name="ColorRect" type="ColorRect" parent="TabsNavigation/TabButton5"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0, 0.431373, 0.32549, 1)
+
+[node name="TextureRect" type="TextureRect" parent="TabsNavigation/TabButton5"]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("12_5sbga")
+expand_mode = 1
+stretch_mode = 4
+
+[connection signal="pressed" from="TabsContainer/CombatTab/Control2/Main/Start" to="TabsContainer/CombatTab" method="_handle_button_input" binds= ["START"]]
+[connection signal="pressed" from="TabsContainer/CombatTab/Control2/Main/Online" to="TabsContainer/CombatTab" method="_handle_button_input" binds= ["ONLINE"]]
+[connection signal="pressed" from="TabsContainer/CombatTab/Control2/Main/Settings" to="TabsContainer/CombatTab" method="_handle_button_input" binds= ["SETTINGS"]]
+[connection signal="pressed" from="TabsContainer/CombatTab/Control2/Main/Quit" to="TabsContainer/CombatTab" method="_handle_button_input" binds= ["QUIT"]]
+[connection signal="pressed" from="TabsContainer/CombatTab/Settings/PanelContainer/MarginContainer/VBoxContainer/CloseSettings" to="TabsContainer/CombatTab" method="_toggle_settings"]
+[connection signal="pressed" from="TabsContainer/CombatTab/Control/TextureButton" to="TabsContainer/CombatTab" method="_handle_button_input" binds= ["SETTINGS"]]
+[connection signal="button_down" from="TabsNavigation/TabButton1" to="." method="goto_tab" binds= [0]]
+[connection signal="button_down" from="TabsNavigation/TabButton2" to="." method="goto_tab" binds= [1]]
+[connection signal="button_down" from="TabsNavigation/TabButton3" to="." method="goto_tab" binds= [2]]
+[connection signal="button_down" from="TabsNavigation/TabButton4" to="." method="goto_tab" binds= [3]]
+[connection signal="button_down" from="TabsNavigation/TabButton5" to="." method="goto_tab" binds= [4]]
+
+[editable path="TabsContainer/CombatTab/CyberSpaceBackground/SubViewport/PlayerCharacter"]
+[editable path="TabsContainer/CombatTab/CyberSpaceBackground/SubViewport/PlayerCharacter/blockbench_export"]

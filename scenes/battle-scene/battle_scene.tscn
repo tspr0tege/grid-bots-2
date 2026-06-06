@@ -7,17 +7,16 @@
 [ext_resource type="Script" uid="uid://0xawuf16blcg" path="res://scenes/battle-scene/scenes_battleScene_playerController.gd" id="3_w5c51"]
 [ext_resource type="Script" uid="uid://cshsvritstewy" path="res://scenes/battle-scene/scenes_battleScene_characterFactory.gd" id="4_rqjoh"]
 [ext_resource type="Texture2D" uid="uid://d3v0aeruwqfx6" path="res://scenes/battle-scene/pause-button.svg" id="7_ftv0g"]
-[ext_resource type="Texture2D" uid="uid://dnk5025m0yksh" path="res://Grid Bots UI background.png" id="7_rqjoh"]
-[ext_resource type="Texture2D" uid="uid://dqodnobj67k22" path="res://digital-trace.svg" id="8_w5c51"]
+[ext_resource type="Texture2D" uid="uid://dqodnobj67k22" path="res://system/icons/digital-trace.svg" id="8_w5c51"]
+[ext_resource type="Theme" uid="uid://d1vw0txyuoy5i" path="res://system/themes/prototype/prototype_theme.tres" id="9_dgigb"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rqjoh"]
-shading_mode = 0
-albedo_color = Color(0.34902, 0.427451, 0.427451, 1)
-albedo_texture = ExtResource("7_rqjoh")
+[sub_resource type="Sky" id="Sky_rqjoh"]
 
-[sub_resource type="QuadMesh" id="QuadMesh_dgigb"]
-material = SubResource("StandardMaterial3D_rqjoh")
-size = Vector2(16, 9)
+[sub_resource type="Environment" id="Environment_dgigb"]
+background_mode = 1
+background_color = Color(0.0823529, 0.152941, 0.258824, 1)
+background_canvas_max_layer = 1
+sky = SubResource("Sky_rqjoh")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rqjoh"]
 content_margin_left = 64.0
@@ -99,9 +98,12 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="BattleContainer" type="SubViewportContainer" parent="CanvasLayer/GridContainer/PlaySpace"]
-layout_mode = 2
-offset_right = 1700.0
-offset_bottom = 867.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 stretch = true
@@ -110,7 +112,7 @@ script = ExtResource("2_dgigb")
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer"]
 process_mode = 1
 handle_input_locally = false
-size = Vector2i(1700, 867)
+size = Vector2i(1396, 796)
 render_target_update_mode = 4
 
 [node name="InputHandler" type="Node" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport" node_paths=PackedStringArray("cam")]
@@ -126,16 +128,13 @@ script = ExtResource("1_p7nsj")
 [node name="Camera3D" type="Camera3D" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 0.829038, 0.559193, 0, -0.559193, 0.829038, 3.3, 2.9, 4.7)
 keep_aspect = 0
+environment = SubResource("Environment_dgigb")
 projection = 1
 fov = 7.0
 size = 6.75
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, 0, 0, 0)
-
-[node name="Background" type="MeshInstance3D" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport"]
-transform = Transform3D(0.6, 0, 0, 0, 0.49054, 0.3455, 0, -0.3455, 0.49054, 3.5, -3.5, -6)
-mesh = SubResource("QuadMesh_dgigb")
 
 [node name="TextureButton" type="TextureButton" parent="CanvasLayer/GridContainer/PlaySpace"]
 custom_minimum_size = Vector2(100, 100)
@@ -168,10 +167,7 @@ offset_right = 306.5
 offset_bottom = 268.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer/GridContainer/PlaySpace/PauseMenu"]
-layout_mode = 2
-color = Color(0.629675, 0.629675, 0.629675, 0.784314)
+theme = ExtResource("9_dgigb")
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/GridContainer/PlaySpace/PauseMenu"]
 layout_mode = 2
@@ -429,6 +425,7 @@ layout_mode = 2
 theme_override_constants/separation = 25
 
 [node name="Button" type="Button" parent="CanvasLayer/MatchOver/VBoxContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 50
@@ -438,10 +435,9 @@ text = "Play Again"
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 50
-text = "Quit"
+text = "Done"
 
 [connection signal="update_energy_display" from="MatchController" to="." method="_update_energy"]
-[connection signal="item_rect_changed" from="CanvasLayer/GridContainer/PlaySpace/BattleContainer" to="CanvasLayer/GridContainer/PlaySpace/BattleContainer" method="_on_sub_viewport_container_item_rect_changed"]
 [connection signal="move_by_coords" from="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/InputHandler" to="MatchController" method="handle_move_by_coords"]
 [connection signal="move_by_direction" from="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/InputHandler" to="MatchController" method="handle_move_by_direction"]
 [connection signal="ready" from="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/CombatArena" to="MatchController" method="_on_combat_arena_ready"]
