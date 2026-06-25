@@ -34,12 +34,13 @@ func _ready() -> void:
 		player_deck.push_back(ability.UID)
 	Data.ability_deck[PUSH.UID] = PUSH
 	
-	var hand_size = clamp(ability_list.size(), 0, 6)
+	var hand_size = clamp(ability_list.size(), 0, 5)
 	card_hand.resize(hand_size)
 	for n in range(hand_size):
 		draw_card(n)
 	#print_tree_pretty()
 	SoundManager.play_bgm_stream("BATTLE")
+
 
 
 func draw_card(index: int) -> void:

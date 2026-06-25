@@ -227,12 +227,12 @@ layout_mode = 2
 [node name="Start" type="Button" parent="TabsContainer/CombatTab/Control2/Main"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
-text = "Start"
+text = "Practice"
 
 [node name="Online" type="Button" parent="TabsContainer/CombatTab/Control2/Main"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
-text = "Play Online"
+text = "Versus"
 
 [node name="Settings" type="Button" parent="TabsContainer/CombatTab/Control2/Main"]
 visible = false

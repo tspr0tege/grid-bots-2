@@ -19,7 +19,7 @@ background_canvas_max_layer = 1
 sky = SubResource("Sky_rqjoh")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rqjoh"]
-content_margin_left = 64.0
+content_margin_left = 10.0
 content_margin_top = 10.0
 content_margin_right = 10.0
 content_margin_bottom = 10.0
@@ -112,7 +112,7 @@ script = ExtResource("2_dgigb")
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer"]
 process_mode = 1
 handle_input_locally = false
-size = Vector2i(1396, 796)
+size = Vector2i(2, 2)
 render_target_update_mode = 4
 
 [node name="InputHandler" type="Node" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport" node_paths=PackedStringArray("cam")]
@@ -197,13 +197,14 @@ theme_override_font_sizes/font_size = 20
 text = "QUIT TO MAIN MENU"
 
 [node name="AbilityPanel" type="PanelContainer" parent="CanvasLayer/GridContainer"]
-custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_rqjoh")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GridContainer/AbilityPanel"]
+custom_minimum_size = Vector2(147, 0)
 layout_mode = 2
+size_flags_horizontal = 8
 theme_override_constants/separation = 10
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
@@ -222,10 +223,10 @@ stretch_mode = 4
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 8
 mouse_filter = 2
 step = 0.1
 fill_mode = 3
+nine_patch_stretch = true
 tint_under = Color(1, 1, 1, 0.294118)
 
 [node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
@@ -244,10 +245,10 @@ stretch_mode = 4
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer2"]
 layout_mode = 2
-size_flags_horizontal = 8
 mouse_filter = 2
 step = 0.1
 fill_mode = 3
+nine_patch_stretch = true
 tint_under = Color(1, 1, 1, 0.294118)
 
 [node name="MarginContainer3" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
@@ -266,10 +267,10 @@ stretch_mode = 4
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer3"]
 layout_mode = 2
-size_flags_horizontal = 8
 mouse_filter = 2
 step = 0.1
 fill_mode = 3
+nine_patch_stretch = true
 tint_under = Color(1, 1, 1, 0.294118)
 
 [node name="MarginContainer4" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
@@ -288,10 +289,10 @@ stretch_mode = 4
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer4"]
 layout_mode = 2
-size_flags_horizontal = 8
 mouse_filter = 2
 step = 0.1
 fill_mode = 3
+nine_patch_stretch = true
 tint_under = Color(1, 1, 1, 0.294118)
 
 [node name="MarginContainer5" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
@@ -310,13 +311,14 @@ stretch_mode = 4
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer5"]
 layout_mode = 2
-size_flags_horizontal = 8
 mouse_filter = 2
 step = 0.1
 fill_mode = 3
+nine_patch_stretch = true
 tint_under = Color(1, 1, 1, 0.294118)
 
 [node name="MarginContainer6" type="MarginContainer" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -332,20 +334,20 @@ stretch_mode = 4
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer6"]
 layout_mode = 2
-size_flags_horizontal = 8
 mouse_filter = 2
 step = 0.1
 fill_mode = 3
+nine_patch_stretch = true
 tint_under = Color(1, 1, 1, 0.294118)
 
 [node name="EnergyBar" type="PanelContainer" parent="CanvasLayer/GridContainer"]
-custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_dgigb")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/GridContainer/EnergyBar"]
 layout_mode = 2
+size_flags_vertical = 4
 
 [node name="TextureProgressBar" type="ProgressBar" parent="CanvasLayer/GridContainer/EnergyBar/HBoxContainer"]
 custom_minimum_size = Vector2(0, 64)
@@ -361,7 +363,7 @@ fill_mode = 1
 show_percentage = false
 
 [node name="Label" type="Label" parent="CanvasLayer/GridContainer/EnergyBar/HBoxContainer"]
-custom_minimum_size = Vector2(150, 150)
+custom_minimum_size = Vector2(150, 120)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.454902)
