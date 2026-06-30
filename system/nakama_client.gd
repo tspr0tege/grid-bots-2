@@ -8,6 +8,7 @@ var socket : NakamaSocket
 var online_match : NakamaRTAPI.Match
 
 signal match_connected
+signal matchmaker_update(step: Data.matchmaking_steps, data: Dictionary)
 
 signal opponent_move(to_pos)
 signal opponent_use_ability(instructions)
@@ -40,6 +41,7 @@ func create_socket_connection() -> void:
 	socket = Nakama.create_socket_from(client)
 	
 	var connected : NakamaAsyncResult = await socket.connect_async(session)
+	
 	if connected.is_exception():
 		print("An error occurred while attempting to open ws connection:/n %s" % connected)
 		return
@@ -63,6 +65,8 @@ func join_matchmaking_queue() -> void:
 
 
 func _on_matchmaker_matched(p_matched : NakamaRTAPI.MatchmakerMatched):
+	#opponent found, agreeing on teams
+	
 	#p_matched props: match_id, ticket, token, users[], self
 	#users[n]<MatchmakerUser> props: presence, numeric_properties, string_properties
 	#presence<UserPresence> props: persistence, session_id, status, username, user_id
@@ -78,7 +82,15 @@ func _on_matchmaker_matched(p_matched : NakamaRTAPI.MatchmakerMatched):
 		var self_user := p_matched.self_user.presence
 		Data.multiplayer_id = self_user.username
 		
-		match_connected.emit()
+		#match_connected.emit()
+		matchmaker_update.emit(
+			Data.matchmaking_steps.HANDSHAKE, 
+			{
+				"new_match": new_match,
+				"p_matched": p_matched,
+				"note": "Matched to new match. Received p_matched object and used that to create new_match."
+				}
+			)
 		
 		var coin_toss = randf()
 		Data.match_settings.handshake.player.coin_toss = coin_toss
@@ -90,7 +102,22 @@ func _on_matchmaker_matched(p_matched : NakamaRTAPI.MatchmakerMatched):
 		Data.match_settings.handshake.player.ready = true
 		_send_local_input_to_remote(handshake_package, op_codes.MATCH_SETUP)
 		
-		if Data.ready_check("handshake"): _prepare_combat_data()
+		var ready_check_result
+		if Data.ready_check("handshake"): 
+			ready_check_result = true
+			_prepare_combat_data()
+		else:
+			ready_check_result = false
+			push_warning("ready_check failed in handshake package send.")
+		
+		matchmaker_update.emit(Data.matchmaking_steps.HANDSHAKE,
+			{
+				"handshake_package": handshake_package,
+				"ready_check_result": ready_check_result,
+				"note": "Handshake package sent to opponent, and player ready state set to true."
+			}
+		)
+			
 
 
 func _prepare_combat_data() -> void: 
@@ -115,8 +142,20 @@ func _prepare_combat_data() -> void:
 	
 	Data.match_settings.combat_data.player.ready = true
 	_send_local_input_to_remote(combat_package, op_codes.MATCH_SETUP)
-		
-	if Data.ready_check("combat_data"): SceneManager.start_online_match()
+	
+	var matchmaker_update_data = {
+		"combat_package": combat_package,
+		"note": "Combat package sent to remote."
+	}
+	
+	if Data.ready_check("combat_data"):
+		matchmaker_update_data.combat_ready_check = true
+		matchmaker_update.emit(Data.matchmaking_steps.COMBAT_DATA, matchmaker_update_data)
+		SceneManager.start_online_match()
+	else:
+		matchmaker_update_data.combat_ready_check = false
+		matchmaker_update.emit(Data.matchmaking_steps.COMBAT_DATA, matchmaker_update_data)
+		push_warning("Combat ready check failed after sending local combat data")
 
 
 func transmit_move_input(from_coords: Vector2i, to_coords: Vector2i) -> void:
@@ -187,7 +226,19 @@ func _handle_ready_step(remote_input : Dictionary) -> void:
 		Data.matchmaking_steps.HANDSHAKE:
 			Data.match_settings.handshake.opponent.coin_toss = remote_input.coin_toss
 			Data.match_settings.handshake.opponent.ready = true
-			if Data.ready_check("handshake"): _prepare_combat_data()
+			#var ready_check_result
+			var matchmaker_update_data := {
+				"handshake_package": remote_input,
+				"note": "Handshake package received from remote opponent."
+			}
+			if Data.ready_check("handshake"):
+				matchmaker_update_data.ready_check_result = true
+				matchmaker_update.emit(Data.matchmaking_steps.HANDSHAKE, matchmaker_update_data)
+				_prepare_combat_data()
+			else:
+				matchmaker_update_data.ready_check_result = false
+				matchmaker_update.emit(Data.matchmaking_steps.HANDSHAKE, matchmaker_update_data)
+				push_warning("ready_check failed in remote receipt")
 		
 		Data.matchmaking_steps.COMBAT_DATA:
 			var character_settings = {
@@ -198,7 +249,18 @@ func _handle_ready_step(remote_input : Dictionary) -> void:
 			}
 			Data.match_settings.characters.push_back(character_settings)
 			Data.match_settings.combat_data.opponent.ready = true
-			if Data.ready_check("combat_data"): SceneManager.start_online_match()
+			var matchmaker_update_data = {
+				"character_settings": character_settings,
+				"note": "Combat package received from remote remote."
+			}
+			if Data.ready_check("combat_data"): 
+				matchmaker_update_data.combat_ready_result = true
+				matchmaker_update.emit(Data.matchmaking_steps.COMBAT_DATA, matchmaker_update_data)
+				SceneManager.start_online_match()
+			else:
+				matchmaker_update_data.combat_ready_result = false
+				matchmaker_update.emit(Data.matchmaking_steps.COMBAT_DATA, matchmaker_update_data)
+				push_warning("Combat ready check failed after receiving remote combat package.")
 			
 		_:
 			push_warning("_handle_ready_step received an unknown or non-existent ready_step value.")

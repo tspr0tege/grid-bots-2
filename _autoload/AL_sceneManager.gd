@@ -21,7 +21,8 @@ func _ready() -> void:
 	#print("SceneManager _ready function triggered")
 	online_client = NAKAMA_CLIENT.instantiate()
 	add_child(online_client)
-	online_client.connect("match_connected", advance_matchmaker_screen)
+	#online_client.connect("match_connected", advance_matchmaker_screen)
+	online_client.connect("matchmaker_update", pass_matchmaker_update)
 
 
 func start_local_match() -> void:
@@ -50,6 +51,7 @@ func start_local_match() -> void:
 
 func start_online_match() -> void:
 	in_online_match = true
+	print("Starting online match. Scene should change to BATTLE_SCENE")
 	var scene : PackedScene = load(BATTLE_SCENE)
 	get_tree().change_scene_to_packed(scene)
 
@@ -61,6 +63,10 @@ func goto_matchmaker() -> void:
 
 func advance_matchmaker_screen(content : Dictionary = {}) -> void:
 	get_tree().current_scene.update_tab(content)
+
+
+func pass_matchmaker_update(step: int, data: Dictionary = {}) -> void:
+	get_tree().current_scene.handle_matchmaker_update(step, data)
 
 
 func load_menu() -> void:

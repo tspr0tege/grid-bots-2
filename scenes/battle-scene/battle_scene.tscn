@@ -112,7 +112,7 @@ script = ExtResource("2_dgigb")
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer"]
 process_mode = 1
 handle_input_locally = false
-size = Vector2i(2, 2)
+size = Vector2i(1429, 846)
 render_target_update_mode = 4
 
 [node name="InputHandler" type="Node" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport" node_paths=PackedStringArray("cam")]
