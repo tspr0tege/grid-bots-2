@@ -11,6 +11,7 @@ signal match_connected
 
 signal opponent_move(to_pos)
 signal opponent_use_ability(instructions)
+signal temp_text_901(data)
 #Future update:
 #signal remote_move_input
 #signal remote_ability_input
@@ -21,8 +22,11 @@ func _ready():
 
 
 func create_online_session() -> void:
-	#client = Nakama.create_client("temporary_key", "127.0.0.1", 7350, "http")
-	client = Nakama.create_client("temporary_key", "tactical-chess.xyz", 443, "https")
+	#LOCAL TARGET
+	client = Nakama.create_client("temporary_key", "127.0.0.1", 7350, "http")
+	
+	#AWS TARGET
+	#client = Nakama.create_client("temporary_key", "tactical-chess.xyz", 443, "https")
 	client.timeout = 10
 	
 	var device_id = OS.get_unique_id()
@@ -152,6 +156,10 @@ func handle_remote_input(match_state : NakamaRTAPI.MatchData):
 	var data = JSON.parse_string(match_state.data)
 	var input = data.input
 	
+	if match_state.op_code == Opcodes.CONFIRMED_TEXT:
+		temp_text_901.emit(data)
+		return
+	
 	#Mirror Vector values
 	#0,0 is upper left grid pos, 5,2 is lower right (from player perspective)
 	#y positioning will not change. But x position is reversed.
@@ -202,3 +210,27 @@ func _handle_ready_step(remote_input : Dictionary) -> void:
 			
 		_:
 			push_warning("_handle_ready_step received an unknown or non-existent ready_step value.")
+
+
+func invoke_gridbots_runtime_hello():
+	if client == null or session == null:
+		push_error("Cannot call GridBots hello RPC without an authenticated session.")
+		return
+
+	var response: NakamaAPI.ApiRpc = await client.rpc_async(
+		session,
+		"gridbots_runtime_hello",
+		"{}"
+	)
+
+	if response.is_exception():
+		push_error("GridBots hello RPC failed: %s" % response)
+		return
+
+	var payload = JSON.parse_string(response.payload)
+
+	if typeof(payload) != TYPE_DICTIONARY:
+		push_error("GridBots hello RPC returned invalid JSON: %s" % response.payload)
+		return
+
+	return payload

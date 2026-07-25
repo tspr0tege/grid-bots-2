@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://b7s8i4yotbhd4"]
+[gd_scene load_steps=25 format=3 uid="uid://b7s8i4yotbhd4"]
 
 [ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battleScene_gameController.gd" id="1_p7nsj"]
 [ext_resource type="Script" uid="uid://d1tg7waqcp1ck" path="res://scenes/battle-scene/scenes_battleScene.gd" id="1_w5c51"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://d3v0aeruwqfx6" path="res://scenes/battle-scene/pause-button.svg" id="7_ftv0g"]
 [ext_resource type="Texture2D" uid="uid://dqodnobj67k22" path="res://system/icons/digital-trace.svg" id="8_w5c51"]
 [ext_resource type="Theme" uid="uid://d1vw0txyuoy5i" path="res://system/themes/prototype/prototype_theme.tres" id="9_dgigb"]
+[ext_resource type="Script" uid="uid://dq275gr6rpfup" path="res://scenes/battle-scene/text_debug.gd" id="9_e5sai"]
 
 [sub_resource type="Sky" id="Sky_rqjoh"]
 
@@ -112,7 +113,7 @@ script = ExtResource("2_dgigb")
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer"]
 process_mode = 1
 handle_input_locally = false
-size = Vector2i(2, 2)
+size = Vector2i(1429, 846)
 render_target_update_mode = 4
 
 [node name="InputHandler" type="Node" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport" node_paths=PackedStringArray("cam")]
@@ -155,7 +156,6 @@ stretch_mode = 4
 
 [node name="PauseMenu" type="PanelContainer" parent="CanvasLayer/GridContainer/PlaySpace"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 anchor_left = 0.5
 anchor_top = 0.5
@@ -181,7 +181,7 @@ theme_override_constants/margin_bottom = 200
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GridContainer/PlaySpace/PauseMenu/MarginContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CanvasLayer/GridContainer/PlaySpace/PauseMenu/MarginContainer/VBoxContainer"]
+[node name="Title" type="Label" parent="CanvasLayer/GridContainer/PlaySpace/PauseMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "PAUSED"
@@ -191,7 +191,24 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 
-[node name="Button" type="Button" parent="CanvasLayer/GridContainer/PlaySpace/PauseMenu/MarginContainer/VBoxContainer"]
+[node name="TextDebug" type="PanelContainer" parent="CanvasLayer/GridContainer/PlaySpace/PauseMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+script = ExtResource("9_e5sai")
+
+[node name="TextEdit" type="TextEdit" parent="CanvasLayer/GridContainer/PlaySpace/PauseMenu/MarginContainer/VBoxContainer/TextDebug"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/GridContainer/PlaySpace/PauseMenu/MarginContainer/VBoxContainer/TextDebug"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="CanvasLayer/GridContainer/PlaySpace/PauseMenu/MarginContainer/VBoxContainer/TextDebug"]
+layout_mode = 2
+
+[node name="Spacer2" type="Control" parent="CanvasLayer/GridContainer/PlaySpace/PauseMenu/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="QuitButton" type="Button" parent="CanvasLayer/GridContainer/PlaySpace/PauseMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "QUIT TO MAIN MENU"
@@ -444,7 +461,8 @@ text = "Done"
 [connection signal="move_by_direction" from="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/InputHandler" to="MatchController" method="handle_move_by_direction"]
 [connection signal="ready" from="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/CombatArena" to="MatchController" method="_on_combat_arena_ready"]
 [connection signal="pressed" from="CanvasLayer/GridContainer/PlaySpace/TextureButton" to="." method="_handle_pause_button"]
-[connection signal="pressed" from="CanvasLayer/GridContainer/PlaySpace/PauseMenu/MarginContainer/VBoxContainer/Button" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/GridContainer/PlaySpace/PauseMenu/MarginContainer/VBoxContainer/TextDebug/Button" to="CanvasLayer/GridContainer/PlaySpace/PauseMenu/MarginContainer/VBoxContainer/TextDebug" method="_on_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/GridContainer/PlaySpace/PauseMenu/MarginContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer/Button" to="." method="_UI_input_use_ability" binds= [0]]
 [connection signal="pressed" from="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer2/Button" to="." method="_UI_input_use_ability" binds= [1]]
 [connection signal="pressed" from="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer3/Button" to="." method="_UI_input_use_ability" binds= [2]]

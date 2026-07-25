@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://bf0143pgxvrpv"]
+[gd_scene load_steps=38 format=3 uid="uid://bf0143pgxvrpv"]
 
 [ext_resource type="Script" uid="uid://chbwjy81sbvvp" path="res://scenes/main-menu/scenes_main-menu.gd" id="1_fusrs"]
 [ext_resource type="Theme" uid="uid://d1vw0txyuoy5i" path="res://system/themes/prototype/prototype_theme.tres" id="1_lhle4"]
@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://d2emdno3lst2n" path="res://entities/test-character/player_character.tscn" id="10_gjm7h"]
 [ext_resource type="Texture2D" uid="uid://dsppdaagvjk3i" path="res://system/icons/discussion.svg" id="11_ptqsp"]
 [ext_resource type="Texture2D" uid="uid://vfrwpl5irvib" path="res://system/icons/gamepad-cross.svg" id="12_5sbga"]
+[ext_resource type="Script" uid="uid://t2n4wupcci5v" path="res://scenes/main-menu/debug_tab.gd" id="15_da8my"]
 
 [sub_resource type="Resource" id="Resource_5sbga"]
 script = ExtResource("3_2jeaq")
@@ -88,6 +89,8 @@ bg_color = Color(0, 0, 0, 0.756863)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_da8my"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aayrq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bt6bj"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hy6po"]
 
@@ -391,16 +394,44 @@ horizontal_alignment = 1
 visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_aayrq")
+script = ExtResource("15_da8my")
 metadata/_tab_index = 4
 
 [node name="ColorRect" type="ColorRect" parent="TabsContainer/EventsTab"]
 layout_mode = 2
 color = Color(0, 0.431373, 0.32549, 1)
 
-[node name="Title" type="Label" parent="TabsContainer/EventsTab"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabsContainer/EventsTab"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="TabsContainer/EventsTab/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 100
 text = "EVENTS TAB"
+horizontal_alignment = 1
+
+[node name="Title2" type="Label" parent="TabsContainer/EventsTab/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Temporarily Debug"
+horizontal_alignment = 1
+
+[node name="HBox" type="HBoxContainer" parent="TabsContainer/EventsTab/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Button" type="Button" parent="TabsContainer/EventsTab/VBoxContainer/HBox"]
+layout_mode = 2
+text = "SEND HELLO"
+
+[node name="PanelContainer" type="PanelContainer" parent="TabsContainer/EventsTab/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_bt6bj")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabsContainer/EventsTab/VBoxContainer/PanelContainer"]
+layout_mode = 2
 horizontal_alignment = 1
 
 [node name="TabsNavigation" type="VBoxContainer" parent="."]
@@ -579,6 +610,7 @@ stretch_mode = 4
 [connection signal="pressed" from="TabsContainer/CombatTab/Control2/Main/Quit" to="TabsContainer/CombatTab" method="_handle_button_input" binds= ["QUIT"]]
 [connection signal="pressed" from="TabsContainer/CombatTab/Settings/PanelContainer/MarginContainer/VBoxContainer/CloseSettings" to="TabsContainer/CombatTab" method="_toggle_settings"]
 [connection signal="pressed" from="TabsContainer/CombatTab/Control/TextureButton" to="TabsContainer/CombatTab" method="_handle_button_input" binds= ["SETTINGS"]]
+[connection signal="pressed" from="TabsContainer/EventsTab/VBoxContainer/HBox/Button" to="TabsContainer/EventsTab" method="_on_button_pressed"]
 [connection signal="button_down" from="TabsNavigation/TabButton1" to="." method="goto_tab" binds= [0]]
 [connection signal="button_down" from="TabsNavigation/TabButton2" to="." method="goto_tab" binds= [1]]
 [connection signal="button_down" from="TabsNavigation/TabButton3" to="." method="goto_tab" binds= [2]]
