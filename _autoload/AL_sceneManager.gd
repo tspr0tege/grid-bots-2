@@ -50,6 +50,7 @@ func start_local_match() -> void:
 
 func start_online_match() -> void:
 	in_online_match = true
+	print("Starting online match. Scene should change to BATTLE_SCENE")
 	var scene : PackedScene = load(BATTLE_SCENE)
 	get_tree().change_scene_to_packed(scene)
 
