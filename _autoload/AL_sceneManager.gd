@@ -10,6 +10,7 @@ var in_online_match := false
 const MENU_SCENE := "res://scenes/main-menu/main_menu.tscn"
 const BATTLE_SCENE := "res://scenes/battle-scene/battle_scene.tscn"
 const MATCHMAKER_SCENE = "res://scenes/online-multiplayer/online_multiplayer.tscn"
+const CONNECTING_TO_MATCH = "res://scenes/connecting-to-match/connecting_to_match.tscn"
 
 const NAKAMA_CLIENT := preload("res://system/nakama_client.tscn")
 
@@ -21,8 +22,6 @@ func _ready() -> void:
 	#print("SceneManager _ready function triggered")
 	online_client = NAKAMA_CLIENT.instantiate()
 	add_child(online_client)
-	#online_client.connect("match_connected", advance_matchmaker_screen)
-	online_client.connect("matchmaker_update", pass_matchmaker_update)
 
 
 func start_local_match() -> void:
@@ -57,16 +56,8 @@ func start_online_match() -> void:
 
 
 func goto_matchmaker() -> void:
-	var scene : PackedScene = load(MATCHMAKER_SCENE)
+	var scene : PackedScene = load(CONNECTING_TO_MATCH)
 	get_tree().change_scene_to_packed(scene)
-
-
-func advance_matchmaker_screen(content : Dictionary = {}) -> void:
-	get_tree().current_scene.update_tab(content)
-
-
-func pass_matchmaker_update(step: int, data: Dictionary = {}) -> void:
-	get_tree().current_scene.handle_matchmaker_update(step, data)
 
 
 func load_menu() -> void:
