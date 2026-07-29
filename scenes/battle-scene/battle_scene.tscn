@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://b7s8i4yotbhd4"]
+[gd_scene load_steps=25 format=3 uid="uid://b7s8i4yotbhd4"]
 
 [ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battleScene_gameController.gd" id="1_p7nsj"]
 [ext_resource type="Script" uid="uid://d1tg7waqcp1ck" path="res://scenes/battle-scene/scenes_battleScene.gd" id="1_w5c51"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://d3v0aeruwqfx6" path="res://scenes/battle-scene/pause-button.svg" id="7_ftv0g"]
 [ext_resource type="Texture2D" uid="uid://dqodnobj67k22" path="res://system/icons/digital-trace.svg" id="8_w5c51"]
 [ext_resource type="Theme" uid="uid://d1vw0txyuoy5i" path="res://system/themes/prototype/prototype_theme.tres" id="9_dgigb"]
+[ext_resource type="Script" uid="uid://ruky83pv1w1a" path="res://scenes/battle-scene/debug_panel.gd" id="9_e5sai"]
 
 [sub_resource type="Sky" id="Sky_rqjoh"]
 
@@ -199,6 +200,27 @@ layout_mode = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "QUIT TO MAIN MENU"
+
+[node name="DebugPanel" type="PanelContainer" parent="CanvasLayer/GridContainer/PlaySpace"]
+layout_mode = 1
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 45.0
+offset_bottom = 45.0
+script = ExtResource("9_e5sai")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GridContainer/PlaySpace/DebugPanel"]
+layout_mode = 2
+
+[node name="ClockOffset" type="Label" parent="CanvasLayer/GridContainer/PlaySpace/DebugPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Clock Offset"
+
+[node name="Ping" type="Label" parent="CanvasLayer/GridContainer/PlaySpace/DebugPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "PING"
 
 [node name="AbilityPanel" type="PanelContainer" parent="CanvasLayer/GridContainer"]
 layout_mode = 2

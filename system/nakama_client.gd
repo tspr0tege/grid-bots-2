@@ -5,6 +5,10 @@ var session : NakamaSession
 var socket : NakamaSocket
 var online_match : NakamaRTAPI.Match
 
+var ping_id := 0
+var latest_ping_avg : int
+var estimated_server_clock_difference : int
+
 signal opponent_move(to_pos)
 signal opponent_use_ability(instructions)
 signal match_making_phase(phase)
@@ -55,6 +59,17 @@ func create_socket_connection() -> void:
 	
 	socket.received_match_state.connect(handle_remote_input)
 	socket.received_matchmaker_matched.connect(_on_matchmaker_matched)
+	
+	while socket.is_connected_to_host():
+		_check_server_comms()
+		await get_tree().create_timer(20).timeout
+
+
+func _check_server_comms() -> void:
+	var ping_results = await _test_ping(5, .2)
+	ping_results.sort_custom(func(a, b): return a.round_trip_time < b.round_trip_time)
+	estimated_server_clock_difference = _calculate_clock_offset(ping_results[0])
+	latest_ping_avg = ping_results.reduce(func (acc, n): return acc + n.round_trip_time, 0) / ping_results.size()
 
 
 func join_matchmaking_queue() -> void:
@@ -72,8 +87,6 @@ func join_matchmaking_queue() -> void:
 
 
 func _on_matchmaker_matched(p_matched : NakamaRTAPI.MatchmakerMatched):
-	#opponent found, agreeing on teams
-	
 	#p_matched props: match_id, ticket, token, users[], self
 	#users[n]<MatchmakerUser> props: presence, numeric_properties, string_properties
 	#presence<UserPresence> props: persistence, session_id, status, username, user_id
@@ -92,6 +105,7 @@ func _on_matchmaker_matched(p_matched : NakamaRTAPI.MatchmakerMatched):
 			"p_matched": p_matched,
 			"new_match": new_match,
 		})
+		
 
 
 func _send_local_input_to_remote(input, op_code) -> void:
@@ -297,3 +311,69 @@ func _receive_temporary_ability(payload: Dictionary) -> void:
 			instructions.vectors[key] = vector_value
 
 	opponent_use_ability.emit(instructions)
+
+
+func _send_clock_ping() -> Dictionary:
+	ping_id += 1
+	var client_send_time := int(Time.get_unix_time_from_system() * 1000.0)
+	var rpc_result: NakamaAPI.ApiRpc = await socket.rpc_async(
+		"gridbots_clock_ping",
+		{
+			"ping_id": ping_id,
+			"client_ping_send_time": client_send_time,
+		}
+	)
+	var client_pong_received_time := int(Time.get_unix_time_from_system() * 1000.0)
+
+	if rpc_result.is_exception():
+		push_warning("Clock ping failed: %s" % rpc_result.get_exception().message)
+		return {}
+
+	var response = JSON.parse_string(rpc_result.payload)
+
+	if typeof(response) != TYPE_DICTIONARY:
+		push_warning("Clock ping returned unreadable data.")
+		return {}
+
+	if int(response.get("ping_id", -1)) != ping_id:
+		push_warning("Clock ping returned the wrong ping ID.")
+		return {}
+	
+	return {
+		"ping_id": int(response.ping_id),
+		"client_ping_send_time": int(response.client_ping_send_time),
+		"server_ping_received_time": int(response.server_ping_received_time),
+		"server_pong_send_time": int(response.server_pong_send_time),
+		"client_pong_received_time": client_pong_received_time,
+		#NOTE: round trip MUST be calculated this way, due to possible clock offsets
+		"round_trip_time": ( 
+			(client_pong_received_time
+			- int(response.client_ping_send_time))
+			- (int(response.server_pong_send_time)
+			- int(response.server_ping_received_time))
+		),
+	}
+
+
+func _test_ping(count: int, delay: float) -> Array:
+	var ping_results = []
+	
+	for n in range(count):
+		var single_ping = await _send_clock_ping()
+		ping_results.append(single_ping)
+		
+		await get_tree().create_timer(delay).timeout
+	
+	return ping_results
+
+
+func _calculate_clock_offset(ping_result: Dictionary) -> int:
+	#"ping_id", "client_ping_send_time", "server_ping_received_time", "server_pong_send_time", "client_pong_received_time", "round_trip_time"
+	var server_clock_difference := int(
+		ping_result.server_ping_received_time
+		- ping_result.client_ping_send_time
+		+ ping_result.server_pong_send_time
+		- ping_result.client_pong_received_time
+	) / 2
+	
+	return server_clock_difference
