@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://b7s8i4yotbhd4"]
+[gd_scene load_steps=27 format=3 uid="uid://b7s8i4yotbhd4"]
 
 [ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battleScene_gameController.gd" id="1_p7nsj"]
 [ext_resource type="Script" uid="uid://d1tg7waqcp1ck" path="res://scenes/battle-scene/scenes_battleScene.gd" id="1_w5c51"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://dqodnobj67k22" path="res://system/icons/digital-trace.svg" id="8_w5c51"]
 [ext_resource type="Theme" uid="uid://d1vw0txyuoy5i" path="res://system/themes/prototype/prototype_theme.tres" id="9_dgigb"]
 [ext_resource type="Script" uid="uid://ruky83pv1w1a" path="res://scenes/battle-scene/debug_panel.gd" id="9_e5sai"]
+[ext_resource type="Script" uid="uid://biayfvh30sguu" path="res://scenes/battle-scene/scenes_battle-scene_match-start-countdown.gd" id="11_e5sai"]
 
 [sub_resource type="Sky" id="Sky_rqjoh"]
 
@@ -69,12 +70,16 @@ bg_color = Color(0.85098, 0.85098, 0.85098, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pp0o7"]
 bg_color = Color(0, 0, 0, 0.627451)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b0dkb"]
+bg_color = Color(0, 0, 0, 0.827451)
+
 [node name="BattleScene" type="Node" node_paths=PackedStringArray("ARENA")]
 process_mode = 3
 script = ExtResource("1_w5c51")
 ARENA = NodePath("CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/CombatArena")
 
 [node name="MatchController" type="Node" parent="." node_paths=PackedStringArray("ARENA", "CHARACTER_FACTORY")]
+process_mode = 1
 script = ExtResource("2_ftv0g")
 ARENA = NodePath("../CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/CombatArena")
 CHARACTER_FACTORY = NodePath("../CharacterFactory")
@@ -86,6 +91,7 @@ ARENA = NodePath("../CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubView
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="GridContainer" type="GridContainer" parent="CanvasLayer"]
+process_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -138,6 +144,7 @@ size = 6.75
 transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, 0, 0, 0)
 
 [node name="TextureButton" type="TextureButton" parent="CanvasLayer/GridContainer/PlaySpace"]
+process_mode = 3
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 1
 anchors_preset = 1
@@ -156,6 +163,7 @@ stretch_mode = 4
 
 [node name="PauseMenu" type="PanelContainer" parent="CanvasLayer/GridContainer/PlaySpace"]
 unique_name_in_owner = true
+process_mode = 2
 visible = false
 layout_mode = 2
 anchor_left = 0.5
@@ -465,6 +473,22 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 50
 text = "Done"
 
+[node name="MatchStartCountdown" type="PanelContainer" parent="CanvasLayer"]
+process_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_b0dkb")
+script = ExtResource("11_e5sai")
+
+[node name="Label" type="Label" parent="CanvasLayer/MatchStartCountdown"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 100
+text = "5"
+
 [connection signal="update_energy_display" from="MatchController" to="." method="_update_energy"]
 [connection signal="move_by_coords" from="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/InputHandler" to="MatchController" method="handle_move_by_coords"]
 [connection signal="move_by_direction" from="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/InputHandler" to="MatchController" method="handle_move_by_direction"]
@@ -480,3 +504,4 @@ text = "Done"
 [connection signal="pressed" from="CanvasLayer/GridContainer/FireButton" to="." method="_UI_input_fire_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MatchOver/VBoxContainer/HBoxContainer/Button" to="." method="_on_reset_pressed"]
 [connection signal="pressed" from="CanvasLayer/MatchOver/VBoxContainer/HBoxContainer/Button2" to="." method="_on_quit_button_pressed"]
+[connection signal="match_start_time_reached" from="CanvasLayer/MatchStartCountdown" to="." method="_on_match_start_countdown_finished"]

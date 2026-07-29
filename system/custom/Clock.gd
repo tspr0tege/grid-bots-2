@@ -1,11 +1,11 @@
 class_name Clock extends Resource
 
-@export var ping_id := 0
-@export var latest_ping_avg : int
-@export var estimated_server_clock_difference : int
-@export var last_successful_ping_ticks_ms := 0
+var ping_id := 0
+var latest_ping_avg : int
+var estimated_server_clock_difference : int
+var last_successful_ping_ticks_ms := 0
 
-@export var ping_results := []
+var ping_results := []
 
 
 func is_clock_sync_ready(socket: NakamaSocket) -> bool:
@@ -42,7 +42,7 @@ func send_clock_ping(socket: NakamaSocket) -> Dictionary:
 		push_warning("Clock ping returned unreadable data.")
 		return {}
 
-	if int(response.get("ping_id", -1)) != ping_id:
+	if int(response.get("ping_id", -1)) != current_ping_id:
 		push_warning("Clock ping returned the wrong ping ID.")
 		return {}
 	
@@ -105,3 +105,9 @@ func _update_clock_measures() -> void:
 	estimated_server_clock_difference = _calculate_clock_offset(sorted_array[0])
 	
 	latest_ping_avg = ping_results.reduce(func (acc, n): return acc + n.round_trip_time, 0) / ping_results.size()
+
+
+# FUTURE HELPERS
+#func get_estimated_server_time_utc_ms() -> int
+#func create_local_deadline_ms(server_start_time_utc_ms: int) -> int
+#func get_deadline_remaining_ms(local_deadline_ms: int) -> int

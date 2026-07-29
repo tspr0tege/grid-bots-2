@@ -27,7 +27,11 @@ var player_deck = []
 var card_hand := []
 
 func _ready() -> void:
-	get_tree().paused = false
+	get_tree().paused = true
+	if SceneManager.in_online_match:
+		$CanvasLayer/MatchStartCountdown.match_start_time = SceneManager.online_client.match_start_time_ms
+	else:
+		$CanvasLayer/MatchStartCountdown.match_start_time = Time.get_ticks_msec() + 2000
 	
 	for ability in ability_list:
 		Data.ability_deck[ability.UID] = ability
@@ -40,7 +44,6 @@ func _ready() -> void:
 		draw_card(n)
 	#print_tree_pretty()
 	SoundManager.play_bgm_stream("BATTLE")
-
 
 
 func draw_card(index: int) -> void:
@@ -105,3 +108,8 @@ func _handle_pause_button() -> void:
 func _on_quit_button_pressed() -> void:
 	get_tree().paused = false
 	SceneManager.load_menu()
+
+
+func _on_match_start_countdown_finished() -> void:
+	get_tree().paused = false
+	

@@ -16,6 +16,8 @@ signal match_connect_msg(msg)
 #signal remote_move_input
 #signal remote_ability_input
 
+var match_start_time_ms : int
+
 const STARTER_CHARACTER_ID := "starter_character"
 
 var current_match_phase := "waiting_for_players"
@@ -64,8 +66,7 @@ func create_socket_connection() -> void:
 	while socket.is_connected_to_host():
 		#TODO: make upkeep ping a single check instead of 5
 		await get_tree().create_timer(20).timeout
-		clock.test_ping(socket)
-
+		await clock.test_ping(socket)
 
 
 func join_matchmaking_queue() -> void:
@@ -111,7 +112,6 @@ func _on_matchmaker_matched(p_matched : NakamaRTAPI.MatchmakerMatched):
 			"p_matched": p_matched,
 			"new_match": new_match,
 		})
-		
 
 
 func _send_local_input_to_remote(input, op_code) -> void:
@@ -147,8 +147,23 @@ func handle_remote_input(match_state: NakamaRTAPI.MatchData) -> void:
 		Opcodes.SERVER_MATCH_SETUP:
 			await _handle_match_setup(payload)
 		
+		Opcodes.SERVER_START_SCHEDULED:
+			_handle_start_scheduled(payload)
+			
 		_:
-			pass
+			push_warning("op code received in handle_remote_input with no matching handler. Received op_code: %s" % match_state.op_code)
+
+
+func _handle_start_scheduled(payload: Dictionary) -> void:
+	var estimated_server_now := (
+		int(Time.get_unix_time_from_system() * 1000.0)
+		+ clock.estimated_server_clock_difference
+	)
+	var remaining_ms := int(payload.start_time_utc_ms) - estimated_server_now
+
+	match_start_time_ms = int(Time.get_ticks_msec() + max(remaining_ms, 0))
+	
+	SceneManager.start_online_match()
 
 
 func _update_match_phase(payload: Dictionary) -> void:
@@ -165,7 +180,7 @@ func _update_match_phase(payload: Dictionary) -> void:
 			pass
 		
 		"running":
-			SceneManager.start_online_match()
+			pass
 
 
 func _handle_match_setup(payload: Dictionary) -> void:
