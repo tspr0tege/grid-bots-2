@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://bmahnr6r04vhg"]
 
 [ext_resource type="Script" uid="uid://dm5igcymljj6x" path="res://abilities/buffs/heal-10/abilities_buffs_heal-10.gd" id="1_fs4sg"]
-[ext_resource type="Script" uid="uid://nky65oxq6ybu" path="res://system/SoundResource.gd" id="2_2f7rk"]
+[ext_resource type="Script" uid="uid://nky65oxq6ybu" path="res://system/custom/SoundResource.gd" id="2_2f7rk"]
 [ext_resource type="Texture2D" uid="uid://c5vufphnh5w4c" path="res://abilities/buffs/heal-10/Heal icon 128 x 128.png" id="2_3m8lj"]
 [ext_resource type="AudioStream" uid="uid://dpaqjd6miig8f" path="res://abilities/buffs/heal-10/SFX_Rechargev1variation03.wav" id="3_3m8lj"]
 

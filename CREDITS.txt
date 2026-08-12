@@ -1,22 +1,50 @@
 built in Redot 4.4
 
-01/27/2026
-Battle song found here: https://opengameart.org/content/awake-megawall-10
-Menu song found here: https://opengameart.org/content/pynchon
 
 Interface bleeps from: https://bleeoop.itch.io/interface-bleeps
 Sci-fi Guns from https://ad-sounds.itch.io/shooter-2150-a-sci-fi-sfx-pack-for-guns
 Sci-fi vol ii sounds from https://ad-sounds.itch.io/sci-fi-sounds-volume-ii
 
 
-04/16/2026
-More music
+Music
+
+Cool Danch - Network is Spreading recorded from YouTube and used without permission.
+TO BE DELETED
+
 MENU
 rhodes https://opengameart.org/content/happy-lofi-day
 escape_-_glorytothemachine https://opengameart.org/content/escape-gl0ryt0th3m4ch1n3
+
 BATTLE
-n-Dimensions (Main Theme - Retro Ver https://opengameart.org/content/space-dimensions-8bitretro-version
 n-Dimensions (Main Theme) https://opengameart.org/content/space-dimensions-techno-version
 Thrust Sequence https://opengameart.org/content/thrust-sequence
 Red Doors 2.0 (GameClosure Edition) https://opengameart.org/content/red-doors-v20
 Zander Noriega - Darker Waves https://opengameart.org/content/darker-waves
+awake10_megaWall https://opengameart.org/content/awake-megawall-10
+
+
+
+Sound Effects
+
+freesound.org
+Rock Cube = 512243_neospica_rock-smash
+Cannon = 515801_matrixxx_retro-pirate-cannon-shot
+
+Sci-fi sound packs from AD sounds
+capture-tile = /SciFiVolumeIISFX/UI/SFX_UIPanelRadio01
+punch = /PackSciFiGunsSFX/PACKBonusSFX/SFX_FuturisticPunch2
+reflect = /PackSciFiGunsSFX/PACKFuturisticCombatSFX/Shieldv2/SFX_Shieldv2variation01
+heal-10 = /PackSciFiGunsSFX/PACKFuturisticCombatSFX/Rechargev1/SFX_Rechargev1variation03
+main-menu button = PackSciFiGunsSFX/PACKSciFiVolumeIISFX/UI/SFX_UIChangeOption02
+
+Interface Bleeps from bleeoop
+main-menu sounds: Click_03, Complete_02, Confirm_02, Confirm_06
+
+custom
+test-shot = pew
+
+
+
+Not in use:
+n-Dimensions (Main Theme - Retro Ver https://opengameart.org/content/space-dimensions-8bitretro-version
+Menu song found here: https://opengameart.org/content/pynchon

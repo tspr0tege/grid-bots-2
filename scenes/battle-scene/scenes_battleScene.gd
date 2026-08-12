@@ -22,6 +22,7 @@ var ability_list := [
 	load("res://abilities/buffs/heal-10/abilities_buffs_heal-10.tscn").instantiate(),
 	load("res://abilities/traps/landmine/abilities_traps_landmine.tscn").instantiate(),
 ]
+
 var player_deck = []
 
 var card_hand := []
@@ -31,7 +32,7 @@ func _ready() -> void:
 	if SceneManager.in_online_match:
 		$CanvasLayer/MatchStartCountdown.match_start_time = SceneManager.online_client.match_start_time_ms
 	else:
-		$CanvasLayer/MatchStartCountdown.match_start_time = Time.get_ticks_msec() + 2000
+		$CanvasLayer/MatchStartCountdown.match_start_time = Time.get_ticks_msec() + 3000
 	
 	for ability in ability_list:
 		Data.ability_deck[ability.UID] = ability

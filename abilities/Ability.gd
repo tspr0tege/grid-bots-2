@@ -1,15 +1,16 @@
-class_name Ability extends Node
+class_name Ability
+extends RefCounted
 
-@export var COST: int
+@export var ABILITY_DATA : AbilityDatabaseEntry
 @export var ICON: CompressedTexture2D
-@export var UID := "BLANK"
 
-
-func validate(_caster_id : String, _amx : AbilityMethodsExport) -> Dictionary:
-	print("Ability %s does not yet have a custom validate_ability function.")
+func can_cast(_caster_id : String, _amx : AbilityMethodsExport) -> bool:
+	push_error("Ability %s does not have a can_cast validation function." % ABILITY_DATA.ability_name)
 	
-	return {}
+	return false
 
 
 func cast(_amx : AbilityMethodsExport, _instructions: Dictionary) -> void:
+	push_error("Ability %s does not have a valid cast function." % ABILITY_DATA.ability_name)
+	
 	pass

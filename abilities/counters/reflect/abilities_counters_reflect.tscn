@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c0v3jhhf0wt0i" path="res://abilities/counters/reflect/abilities_counters_reflect.gd" id="1_k6llh"]
 [ext_resource type="Texture2D" uid="uid://7mdvmva5b63t" path="res://abilities/counters/reflect/Reflect icon 128 x 128.png" id="2_fqv6t"]
-[ext_resource type="Script" uid="uid://nky65oxq6ybu" path="res://system/SoundResource.gd" id="2_rcoyf"]
+[ext_resource type="Script" uid="uid://nky65oxq6ybu" path="res://system/custom/SoundResource.gd" id="2_rcoyf"]
 [ext_resource type="AudioStream" uid="uid://b224s7cdivs6g" path="res://abilities/counters/reflect/SFX_Shieldv2variation01.wav" id="3_fqv6t"]
 
 [sub_resource type="Resource" id="Resource_aek77"]

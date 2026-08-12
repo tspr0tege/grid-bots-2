@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dnk5025m0yksh"
-path.s3tc="res://.godot/imported/Grid Bots UI background.png-a0037dd6fa8fae535d4b3458ee69fa38.s3tc.ctex"
-path.etc2="res://.godot/imported/Grid Bots UI background.png-a0037dd6fa8fae535d4b3458ee69fa38.etc2.ctex"
+uid="uid://cc6iwqfiy6euu"
+path.s3tc="res://.godot/imported/background_white-ready-room.png-605b3e480c01a7e92ec001e813f5bc17.s3tc.ctex"
+path.etc2="res://.godot/imported/background_white-ready-room.png-605b3e480c01a7e92ec001e813f5bc17.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://Grid Bots UI background.png"
-dest_files=["res://.godot/imported/Grid Bots UI background.png-a0037dd6fa8fae535d4b3458ee69fa38.s3tc.ctex", "res://.godot/imported/Grid Bots UI background.png-a0037dd6fa8fae535d4b3458ee69fa38.etc2.ctex"]
+source_file="res://scenes/main-menu/background_white-ready-room.png"
+dest_files=["res://.godot/imported/background_white-ready-room.png-605b3e480c01a7e92ec001e813f5bc17.s3tc.ctex", "res://.godot/imported/background_white-ready-room.png-605b3e480c01a7e92ec001e813f5bc17.etc2.ctex"]
 
 [params]
 

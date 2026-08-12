@@ -31,10 +31,9 @@ func _ready():
 
 func create_online_session() -> void:
 	#LOCAL TARGET
-	client = Nakama.create_client("temporary_key", "127.0.0.1", 7350, "http")
-	
+	#client = Nakama.create_client("temporary_key", "127.0.0.1", 7350, "http")	
 	#AWS TARGET
-	#client = Nakama.create_client("temporary_key", "tactical-chess.xyz", 443, "https")
+	client = Nakama.create_client("temporary_key", "tactical-chess.xyz", 443, "https")
 	client.timeout = 10
 	
 	var device_id = OS.get_unique_id()
@@ -102,7 +101,7 @@ func _on_matchmaker_matched(p_matched : NakamaRTAPI.MatchmakerMatched):
 		online_match = new_match
 		await socket.send_match_state_async(
 			new_match.match_id,
-			Opcodes.CLIENT_CLOCK_REPORT,
+			Opcode.CLIENT_CLOCK_REPORT,
 			JSON.stringify({})
 		)
 		
@@ -135,19 +134,19 @@ func handle_remote_input(match_state: NakamaRTAPI.MatchData) -> void:
 
 	match int(match_state.op_code):
 		
-		Opcodes.CLIENT_ATTEMPT_MOVE:
+		Opcode.CLIENT_ATTEMPT_MOVE:
 			_receive_temporary_move(payload)
 		
-		Opcodes.CLIENT_ATTEMPT_USE_ABILITY:
+		Opcode.CLIENT_ATTEMPT_USE_ABILITY:
 			_receive_temporary_ability(payload)
 		
-		Opcodes.SERVER_MATCH_PHASE_CHANGED:
+		Opcode.SERVER_MATCH_PHASE_CHANGED:
 			_update_match_phase(payload)
 		
-		Opcodes.SERVER_MATCH_SETUP:
+		Opcode.SERVER_MATCH_SETUP:
 			await _handle_match_setup(payload)
 		
-		Opcodes.SERVER_START_SCHEDULED:
+		Opcode.SERVER_START_SCHEDULED:
 			_handle_start_scheduled(payload)
 			
 		_:
@@ -249,7 +248,7 @@ func _build_character_list(match_players: Array) -> void:
 func _send_setup_received() -> void:
 	await socket.send_match_state_async(
 		online_match.match_id,
-		Opcodes.CLIENT_SETUP_RECEIVED,
+		Opcode.CLIENT_SETUP_RECEIVED,
 		JSON.stringify({})
 	)
 
@@ -261,7 +260,7 @@ func _send_player_setup() -> void:
 
 	await socket.send_match_state_async(
 		online_match.match_id,
-		Opcodes.CLIENT_PLAYER_SETUP,
+		Opcode.CLIENT_PLAYER_SETUP,
 		JSON.stringify(payload)
 	)
 
@@ -276,7 +275,7 @@ func transmit_move_input(from_coords: Vector2i,	to_coords: Vector2i) -> void:
 
 	await socket.send_match_state_async(
 		online_match.match_id,
-		Opcodes.CLIENT_ATTEMPT_MOVE,
+		Opcode.CLIENT_ATTEMPT_MOVE,
 		JSON.stringify(payload)
 	)
 
@@ -308,7 +307,7 @@ func transmit_ability_input(instructions: Dictionary) -> void:
 
 	await socket.send_match_state_async(
 		online_match.match_id,
-		Opcodes.CLIENT_ATTEMPT_USE_ABILITY,
+		Opcode.CLIENT_ATTEMPT_USE_ABILITY,
 		JSON.stringify(outgoing)
 	)
 

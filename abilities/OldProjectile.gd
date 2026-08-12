@@ -1,4 +1,4 @@
-class_name Projectile extends Node3D
+class_name OldProjectile extends Node3D
 
 signal update_tile_position(new_coords: Vector2i)
 signal attempt_damage(coords: Vector2i, damage: float)

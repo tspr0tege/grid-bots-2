@@ -6,6 +6,7 @@ signal update_energy_display(energy_level)
 
 @export var ARENA : Node3D
 @export var CHARACTER_FACTORY : Node
+var RESOLVER : Node
 
 var player_character: Node = null
 #player values should come from DB or other source. Values will ultimately be dynamic.
@@ -18,9 +19,12 @@ var characters: Dictionary = {}
 var AMX: AbilityMethodsExport
 
 func _ready():
-	if SceneManager.in_online_match:
-		connect("transmit_ability", SceneManager.online_client.transmit_ability_input)
-		connect("transmit_move", SceneManager.online_client.transmit_move_input)
+	if MatchData.settings.is_online:
+		RESOLVER = $OnlineAuthority	
+		process_mode = Node.PROCESS_MODE_ALWAYS
+	else:
+		RESOLVER = $LocalAuthority
+		process_mode = Node.PROCESS_MODE_PAUSABLE
 	
 	AMX = AbilityMethodsExport.new(ARENA, self)
 

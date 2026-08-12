@@ -1,10 +1,12 @@
-[gd_scene load_steps=27 format=3 uid="uid://b7s8i4yotbhd4"]
+[gd_scene load_steps=29 format=3 uid="uid://b7s8i4yotbhd4"]
 
 [ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battleScene_gameController.gd" id="1_p7nsj"]
 [ext_resource type="Script" uid="uid://d1tg7waqcp1ck" path="res://scenes/battle-scene/scenes_battleScene.gd" id="1_w5c51"]
 [ext_resource type="Script" uid="uid://gaj7wrf8fx8r" path="res://scenes/battle-scene/sub_viewport_container.gd" id="2_dgigb"]
 [ext_resource type="Script" uid="uid://cfv3qtdlvrcaw" path="res://scenes/battle-scene/scenes_battleScene_matchController.gd" id="2_ftv0g"]
+[ext_resource type="Script" uid="uid://bixagejecsbj8" path="res://scenes/battle-scene/scenes_ battle-scene_local-authority.gd" id="3_dllb0"]
 [ext_resource type="Script" uid="uid://0xawuf16blcg" path="res://scenes/battle-scene/scenes_battleScene_playerController.gd" id="3_w5c51"]
+[ext_resource type="Script" uid="uid://d4gan7ulcw6cb" path="res://scenes/battle-scene/scenes_battle-scene_online-authority.gd" id="4_3k3j3"]
 [ext_resource type="Script" uid="uid://cshsvritstewy" path="res://scenes/battle-scene/scenes_battleScene_characterFactory.gd" id="4_rqjoh"]
 [ext_resource type="Texture2D" uid="uid://d3v0aeruwqfx6" path="res://scenes/battle-scene/pause-button.svg" id="7_ftv0g"]
 [ext_resource type="Texture2D" uid="uid://dqodnobj67k22" path="res://system/icons/digital-trace.svg" id="8_w5c51"]
@@ -83,6 +85,12 @@ process_mode = 1
 script = ExtResource("2_ftv0g")
 ARENA = NodePath("../CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/CombatArena")
 CHARACTER_FACTORY = NodePath("../CharacterFactory")
+
+[node name="LocalAuthority" type="Node" parent="MatchController"]
+script = ExtResource("3_dllb0")
+
+[node name="OnlineAuthority" type="Node" parent="MatchController"]
+script = ExtResource("4_3k3j3")
 
 [node name="CharacterFactory" type="Node" parent="." node_paths=PackedStringArray("ARENA")]
 script = ExtResource("4_rqjoh")

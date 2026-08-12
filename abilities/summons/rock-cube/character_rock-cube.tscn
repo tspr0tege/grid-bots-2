@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://valpt2bifm6t"]
 
 [ext_resource type="Script" uid="uid://dknwrg5frlj37" path="res://abilities/summons/rock-cube/character_rock-cube.gd" id="1_20oar"]
-[ext_resource type="Script" uid="uid://nky65oxq6ybu" path="res://system/SoundResource.gd" id="2_eo1wl"]
+[ext_resource type="Script" uid="uid://nky65oxq6ybu" path="res://system/custom/SoundResource.gd" id="2_eo1wl"]
 [ext_resource type="PackedScene" uid="uid://ck7yv7nnq5hna" path="res://entities/common-resources/hp_node.tscn" id="2_l4t62"]
 [ext_resource type="AudioStream" uid="uid://h5578khf73gt" path="res://abilities/summons/rock-cube/rock-cube-destroy.wav" id="3_8u0pw"]
 

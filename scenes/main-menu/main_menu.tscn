@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://d1vw0txyuoy5i" path="res://system/themes/prototype/prototype_theme.tres" id="1_lhle4"]
 [ext_resource type="Script" uid="uid://lxwf1ux0e2op" path="res://scenes/main-menu/scenes_main-menu_combat-tab.gd" id="2_naxqw"]
 [ext_resource type="Script" uid="uid://bsdlncu0xdov4" path="res://scenes/main-menu/settings_volume-slider.gd" id="2_qhk2d"]
-[ext_resource type="Script" uid="uid://nky65oxq6ybu" path="res://system/SoundResource.gd" id="3_2jeaq"]
+[ext_resource type="Script" uid="uid://nky65oxq6ybu" path="res://system/custom/SoundResource.gd" id="3_2jeaq"]
 [ext_resource type="AudioStream" uid="uid://c4d3o0qkfkmns" path="res://scenes/main-menu/sfx/Confirm_02.wav" id="4_ptqsp"]
 [ext_resource type="Texture2D" uid="uid://dadpx3h7rddjj" path="res://system/icons/sound-on.svg" id="5_eel2y"]
 [ext_resource type="AudioStream" uid="uid://dk3vpbg1do0s6" path="res://scenes/main-menu/sfx/Complete_02.wav" id="6_6f8a5"]
@@ -15,7 +15,7 @@
 [ext_resource type="AudioStream" uid="uid://64v10f372yng" path="res://scenes/main-menu/sfx/SFX_UIChangeOption02.wav" id="8_gjm7h"]
 [ext_resource type="Texture2D" uid="uid://d2seiq2scto5x" path="res://system/icons/robot-golem.svg" id="9_hw4jk"]
 [ext_resource type="Texture2D" uid="uid://cy4iotoomfify" path="res://system/icons/light-sabers.svg" id="10_2jeaq"]
-[ext_resource type="Texture2D" uid="uid://dnk5025m0yksh" path="res://Grid Bots UI background.png" id="10_da8my"]
+[ext_resource type="Texture2D" uid="uid://cc6iwqfiy6euu" path="res://scenes/main-menu/background_white-ready-room.png" id="10_da8my"]
 [ext_resource type="PackedScene" uid="uid://d2emdno3lst2n" path="res://entities/test-character/player_character.tscn" id="10_gjm7h"]
 [ext_resource type="Texture2D" uid="uid://dsppdaagvjk3i" path="res://system/icons/discussion.svg" id="11_ptqsp"]
 [ext_resource type="Texture2D" uid="uid://vfrwpl5irvib" path="res://system/icons/gamepad-cross.svg" id="12_5sbga"]
@@ -171,7 +171,7 @@ stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="TabsContainer/CombatTab/CyberSpaceBackground"]
 handle_input_locally = false
-size = Vector2i(2, 2)
+size = Vector2i(1600, 1000)
 render_target_update_mode = 4
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="TabsContainer/CombatTab/CyberSpaceBackground/SubViewport"]
