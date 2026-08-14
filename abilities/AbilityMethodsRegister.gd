@@ -1,26 +1,15 @@
-class_name AbilityDatabaseEntry
+class_name AbilityMethodsRegister
 extends Resource
 
-enum AbilityCategory {
-	BUFF,
-	COUNTER,
-	DEBUFF,
-	INSTANT_SHOT,
-	MELEE,
-	PROJECTILE,
-	STAGE_EFFECT,
-	SUMMON,
-	THROWN,
-	TRAP
-}
 
-@export var ability_id : String
-@export var ability_name : String
-@export var ability_category : AbilityCategory
-@export var energy_cost : int = 1
-@export var upgrade_to_id : String
-@export var ability_behavior : Dictionary
-#Properties: Elemental, etc
+
+func request_cast() -> void:
+	pass
+
+
+func cast(_amx : AbilityMethodsExport, _instructions: Dictionary) -> void:
+
+	pass
 
 #Possible behavior JSON entries:
 	#{

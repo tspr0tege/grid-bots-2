@@ -18,10 +18,11 @@ config/icon="uid://cbvalvi5tvuao"
 [autoload]
 
 SceneManager="*res://_autoload/AL_sceneManager.gd"
-Data="*res://_autoload/AL_data.gd"
+Data="res://_autoload/AL_data.gd"
 Nakama="*res://system/nakama-client/addons/com.heroiclabs.nakama/Nakama.gd"
 SoundManager="*res://_autoload/AL_soundManager.gd"
 MatchData="*res://_autoload/AL_matchData.gd"
+AbilityLibrary="*res://_autoload/AL_abilityLibrary.gd"
 
 [display]
 
@@ -41,7 +42,7 @@ pointing/emulate_touch_from_mouse=true
 
 [physics]
 
-common/physics_ticks_per_second=50
+common/physics_ticks_per_second=40
 
 [rendering]
 

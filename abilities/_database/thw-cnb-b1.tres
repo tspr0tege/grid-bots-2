@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Ability" load_steps=3 format=3 uid="uid://dei16r5aaxqjl"]
+
+[ext_resource type="Texture2D" uid="uid://bwwl4vmrib7od" path="res://abilities/thrown/cannon-ball/Cannonball icon 128 x 128.png" id="1_q60qo"]
+[ext_resource type="Script" uid="uid://byhl1uog8jt4r" path="res://abilities/Ability.gd" id="2_1xl7o"]
+
+[resource]
+script = ExtResource("2_1xl7o")
+ability_id = "thw-cnb-b1"
+ability_name = "Cannon Ball"
+ability_category = 8
+ability_icon = ExtResource("1_q60qo")
+energy_cost = 1
+upgrade_to_id = ""
+ability_behavior = {}
+metadata/_custom_type_script = "uid://byhl1uog8jt4r"

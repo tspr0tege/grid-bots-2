@@ -7,25 +7,26 @@ var id: String
 var grid_coords: Vector2i
 var health_display: Label3D
 var tile_move_speed := .1
-var base_attack: Ability
 
-@export var control_group := Data.CGs.NEUTRAL
+@export var base_attack: Ability
+@export var control_group := MatchData.teams.NEUTRAL
 @export var move_handler: MovementStyle
 @export var teleport_enabled := false
 @export var diagonal_move_enabled := false
 @export var display_health: bool = false
-@export var BASE_ATTACK: PackedScene
 @export var animation_player: AnimationPlayer
 #const available_animations = ["shoot", "move", "run", "ready", "punch"]
 @export_range(-1, 1, 2) var attack_direction = 1
 
 
 func _ready() -> void:
-	if BASE_ATTACK:
-		base_attack = BASE_ATTACK.instantiate()
-		base_attack.COST = 0
-		Data.ability_deck[base_attack.UID] = base_attack
-		add_child(base_attack)
+	base_attack = base_attack.duplicate()
+	base_attack.ABILITY_DATA.energy_cost = 0
+	
+	#if BASE_ATTACK:
+		#base_attack = BASE_ATTACK.instantiate()
+		#Data.ability_deck[base_attack.UID] = base_attack
+		#add_child(base_attack)
 	
 	if display_health:
 		health_display = Label3D.new()

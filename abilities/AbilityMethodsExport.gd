@@ -10,6 +10,10 @@ func _init(new_arena: Node3D, new_match_controller: Node):
 	match_controller = new_match_controller
 
 
+func get_current_energy_level() -> float:
+	return match_controller.player_energy
+
+
 func get_character_by_id(id: String) -> Character:
 	return match_controller.characters[id]
 

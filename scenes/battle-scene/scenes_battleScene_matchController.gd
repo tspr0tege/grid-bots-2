@@ -2,24 +2,23 @@ extends Node
 
 signal transmit_ability(input_data: Dictionary)
 signal transmit_move(from_coords: Vector2i, to_coords: Vector2i)
-signal update_energy_display(energy_level)
+signal update_energy_display()
+signal ability_executed(index: int)
 
 @export var ARENA : Node3D
 @export var CHARACTER_FACTORY : Node
+
 var RESOLVER : Node
+#STATE
 
 var player_character: Node = null
-#player values should come from DB or other source. Values will ultimately be dynamic.
-var player_energy := 1.0
-var player_energy_accum_rate := 0.5
-var player_max_energy := 20.0
-
 var characters: Dictionary = {}
+
 
 var AMX: AbilityMethodsExport
 
 func _ready():
-	if MatchData.settings.is_online:
+	if MatchData.is_online_match:
 		RESOLVER = $OnlineAuthority	
 		process_mode = Node.PROCESS_MODE_ALWAYS
 	else:
@@ -27,15 +26,19 @@ func _ready():
 		process_mode = Node.PROCESS_MODE_PAUSABLE
 	
 	AMX = AbilityMethodsExport.new(ARENA, self)
+	
+	SoundManager.play_bgm_stream("BATTLE")
 
 
 func _process(delta):
-	player_energy = clamp(player_energy + delta * player_energy_accum_rate, 0, player_max_energy)
-	emit_signal("update_energy_display", player_energy)
+	var energy_inc = delta * MatchData.player_energy_accum_rate
+	var new_energy_level = MatchData.player_energy + energy_inc
+	MatchData.player_energy = clamp(new_energy_level , 0, MatchData.player_max_energy)
+	update_energy_display.emit()
 
 
 func _on_combat_arena_ready() -> void:
-	for character in Data.match_settings.characters:
+	for character in MatchData.character_lineup:
 		add_new_character(character)
 
 
@@ -152,23 +155,41 @@ func _attempt_healing(character: Character, amt: float, overheal := false) -> bo
 	return false
 
 
-func _attempt_ability(caster: Character, ability: Ability) -> bool:
-	var instructions = ability.validate(caster.id, AMX)
-	if instructions.can_cast == false:
-		print(instructions.reason)
-		return false
-	else:
-		transmit_ability.emit(instructions.duplicate(true))
-		_execute_ability(instructions)
-		return true
+func attempt_ability(caster_id, ability_id) -> void:
+	#Run can_cast - if false, nothing else happens
+	#if true - 
+	#run wind-up animation
+	#TODO: wind-up function in character base class - plays wind-up portion of ability's target animation (if available)
+	#signal transmit_ability
+	pass
 
 
-func _execute_ability(instructions: Dictionary) -> void:
-	var ability = Data.ability_deck[instructions.ability_id]
-	ability.cast(AMX, instructions)
+func execute_ability(caster_id, ability_id, hand_index: int = -1) -> void:
+	#called by authority resolver
+	#hand_index passed in on specific ability opcode
+	var ability: Ability = MatchData.player_hand[hand_index]
+	
+	if hand_index >= 0:
+	#TODO: attempt_ability will no longer resolve locally, like this. 
+	#New flow: 
+		#attempt_ability -> initiates wind-up animation, sends resolver request
+		#await resolver response
+		#resolver will call execute directly on remote client and local client, with ability_index on local
+		#signal emits from execute to update hand, UI, and energy
+		MatchData.player_energy -= ability.energy_cost
+		MatchData.discard(hand_index)
+		MatchData.draw_card(hand_index)
+		ability_executed.emit(hand_index)
+		#update_ability_UI_button(index)
+		#TODO: resume player animation from wind-up
+	pass
 
 
-func get_characters_by_group(control_group: Data.CGs) -> Array:
+func cancel_ability() -> void:
+	pass
+
+
+func get_characters_by_group(control_group: MatchData.teams) -> Array:
 	var characters_in_group = []
 	for key in characters.keys():
 		if characters[key].control_group == control_group:
@@ -183,14 +204,14 @@ func add_new_character(character_instructions: Dictionary):
 		characters[new_character.id] = new_character
 	
 	#TODO: Move connection logic into character receipt function in Nakama Client
-	if SceneManager.in_online_match and character_instructions.role == Data.roles.OPPOSING_PLAYER:
+	if MatchData.is_online_match and character_instructions.role == MatchData.roles.OPPOSING_PLAYER:
 		SceneManager.online_client.connect("opponent_move", func(coords):
 			_execute_move.call(new_character, coords)
 			)
 		
 		SceneManager.online_client.connect("opponent_use_ability", func(instructions): 
 			instructions.caster_id = new_character.id
-			_execute_ability.call(instructions)
+			execute_ability.call(instructions)
 			)
 	
 	return new_character
@@ -204,9 +225,9 @@ func handle_character_death(character: Character) -> void:
 	
 	characters.erase(character.id)
 	var characters_remaining_in_group = get_characters_by_group(character.control_group)
-	if character.control_group == Data.player_control_group and characters_remaining_in_group.size() < 1:
+	if character.control_group == MatchData.player_team and characters_remaining_in_group.size() < 1:
 		push_error("The player's control group was completely wiped out without triggering the player_lost function.")
-	elif character.control_group == Data.opposing_group(Data.player_control_group) and characters_remaining_in_group.size() < 1:
+	elif character.control_group == MatchData.opposing_team(MatchData.player_team) and characters_remaining_in_group.size() < 1:
 		push_warning("Player victory triggered by default of all opponents being destroyed.")
 		opponent_lost()
 

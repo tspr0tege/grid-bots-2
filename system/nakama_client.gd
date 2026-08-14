@@ -59,7 +59,6 @@ func create_socket_connection() -> void:
 	socket.received_match_state.connect(handle_remote_input)
 	socket.received_matchmaker_matched.connect(_on_matchmaker_matched)
 	
-	
 	await clock.test_ping(socket, 5, .2)
 	
 	while socket.is_connected_to_host():
@@ -119,7 +118,7 @@ func _send_local_input_to_remote(input, op_code) -> void:
 			input.vectors[key] = var_to_str(input.vectors[key])
 	
 	var state = JSON.stringify({
-		"origin": Data.multiplayer_id,
+		"origin": MatchData.multiplayer_id,
 		"input": input
 	})
 	
@@ -195,8 +194,8 @@ func _handle_match_setup(payload: Dictionary) -> void:
 	if received_local_player_id.is_empty():
 		push_error("local_player_id is missing from _handle_match_setup payload.")
 		return
-	if received_local_team_id not in [Data.CGs.TEAM_1, Data.CGs.TEAM_2]:
-		push_error("received_local_team_id is missing from _handle_match_setup payload, or an invalid team number was assigned.\n Expected %s or %s. Received: %s." % [Data.CGs.TEAM_1, Data.CGs.TEAM_2, received_local_team_id])
+	if received_local_team_id not in [MatchData.teams.TEAM_1, MatchData.teams.TEAM_2]:
+		push_error("received_local_team_id is missing from _handle_match_setup payload, or an invalid team number was assigned.\n Expected TEAM_1 or TEAM_2. Received: %s." % received_local_team_id)
 		return
 	if typeof(received_players) != TYPE_ARRAY:
 		push_error("Wrong variable type received by _handle_match_setup, for received_players. Expected an array, but received %s." % typeof(received_players))
@@ -207,8 +206,8 @@ func _handle_match_setup(payload: Dictionary) -> void:
 
 	local_player_id = received_local_player_id
 	local_team_id = received_local_team_id
-	Data.multiplayer_id = local_player_id
-	Data.player_control_group = local_team_id
+	MatchData.multiplayer_id = local_player_id
+	MatchData.player_team = local_team_id
 	_build_character_list(received_players)
 	await _send_setup_received()
 
@@ -223,17 +222,19 @@ func _build_character_list(match_players: Array) -> void:
 
 		if character_id != STARTER_CHARACTER_ID:
 			return
-
+		
+		#TODO: Find a cleaner way to handle setup.
 		characters.append({
 			"player_id": str(player.player_id),
 			"character_id": character_id,
-			#TODO: remove model and process character_id in the character factory
 			"model": "res://entities/test-character/player_character.tscn",
+			#TODO: replace role with some other method of id. Maybe.
 			"role": (
-				Data.roles.PLAYER_CHARACTER
+				MatchData.roles.PLAYER_CHARACTER
 				if is_local
-				else Data.roles.OPPOSING_PLAYER
+				else MatchData.roles.OPPOSING_PLAYER
 			),
+			#TODO: allow character settings to dictate starting coords
 			"coords": (
 				Vector2i(1, 1)
 				if is_local
@@ -242,7 +243,7 @@ func _build_character_list(match_players: Array) -> void:
 			"control_group": team_id,
 		})
 
-	Data.match_settings.characters = characters
+	MatchData.character_lineup = characters
 
 
 func _send_setup_received() -> void:

@@ -1,15 +1,11 @@
 extends Node
 
-var player_id: String = ""
-#var match_result: String = "" # "win", "lose", "draw"
 enum match_result {win, lose, draw}
 
 var online_client = null
-var in_online_match := false
 
 const MENU_SCENE := "res://scenes/main-menu/main_menu.tscn"
 const BATTLE_SCENE := "res://scenes/battle-scene/battle_scene.tscn"
-const MATCHMAKER_SCENE = "res://scenes/online-multiplayer/online_multiplayer.tscn"
 const CONNECTING_TO_MATCH = "res://scenes/connecting-to-match/connecting_to_match.tscn"
 
 const NAKAMA_CLIENT := preload("res://system/nakama_client.tscn")
@@ -25,31 +21,31 @@ func _ready() -> void:
 
 
 func start_local_match() -> void:
-	Data.match_settings.characters = [
+	MatchData.character_lineup = [
 		{
 			"model": "res://entities/test-character/player_character.tscn",
-			"role": Data.roles.PLAYER_CHARACTER,
+			#"role": Data.roles.PLAYER_CHARACTER,
 			"coords": Vector2i(1,1),
-			"control_group": Data.CGs.TEAM_1,
+			"control_group": MatchData.teams.TEAM_1,
 		},
 		{
 			"model": "res://entities/test-character/red_character.tscn",
-			"role": Data.roles.NPCs,
+			#"role": Data.roles.NPCs,
 			"coords": Vector2i(4, 1),
-			"control_group": Data.CGs.TEAM_2,
+			"control_group": MatchData.teams.TEAM_2,
 			"connections": {
 				"attempt_move": "_attempt_move",
 				"search_for_target": "search_for_target",
 			},
 		}
 	]
-	in_online_match = false
+	MatchData.is_online_match = false
 	var scene : PackedScene = load(BATTLE_SCENE)
 	get_tree().change_scene_to_packed(scene)
 
 
 func start_online_match() -> void:
-	in_online_match = true
+	MatchData.is_online_match = true
 	print("Starting online match. Scene should change to BATTLE_SCENE")
 	var scene : PackedScene = load(BATTLE_SCENE)
 	get_tree().change_scene_to_packed(scene)
@@ -61,7 +57,7 @@ func goto_matchmaker() -> void:
 
 
 func load_menu() -> void:
-	in_online_match = false
-	Data.init_match_settings()
+	MatchData.is_online_match = false
+	MatchData.init_match_settings()
 	var scene : PackedScene = load(MENU_SCENE)
 	get_tree().change_scene_to_packed(scene)
