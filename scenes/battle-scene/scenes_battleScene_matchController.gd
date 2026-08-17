@@ -167,7 +167,7 @@ func attempt_ability(caster_id, ability_id) -> void:
 func execute_ability(caster_id, ability_id, hand_index: int = -1) -> void:
 	#called by authority resolver
 	#hand_index passed in on specific ability opcode
-	var ability: Ability = MatchData.player_hand[hand_index]
+	var ability: Ability = MatchData.ability_list[ability_id]
 	
 	if hand_index >= 0:
 	#TODO: attempt_ability will no longer resolve locally, like this. 
@@ -186,6 +186,7 @@ func execute_ability(caster_id, ability_id, hand_index: int = -1) -> void:
 
 
 func cancel_ability() -> void:
+	#reset player_animation
 	pass
 
 

@@ -18,6 +18,7 @@ var player_bot_config := {
 
 
 ## PER MATCH
+var opponent_deck := []
 var character_lineup := []
 var is_online_match := false
 var multiplayer_id = null
@@ -29,14 +30,19 @@ var player_hand := []
 var player_energy := 1.0
 
 
-func _propagate_ability_list() -> void:
-	#iterate through player deck - including cascade effects (like push)
-	#do the same for opposing player deck
-	#each ability is keyed by id and needs to be called with load()
-	pass
+func propagate_ability_list(id_list: Array) -> void:
+	for ability_id in id_list:
+		if ability_list.has(ability_id): continue
+		
+		var ability_resource: Ability = load(AbilityLibrary.ABILITY[ability_id])
+		ability_list[ability_id] = ability_resource
+		
+		if ability_resource.chain_abilities.size() > 0:
+			propagate_ability_list(ability_resource.chain_abilities)
 
 
 func init_match_settings() -> void:
+	opponent_deck = []
 	character_lineup = []
 	is_online_match = false
 	multiplayer_id = null

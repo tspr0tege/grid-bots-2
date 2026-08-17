@@ -1,7 +1,7 @@
 extends Area3D
 
 @export var grid_coordinates : Vector2i
-@export var control_group : Data.CGs
+@export var control_group : MatchData.teams
 var occupant : Character
 var trap : Trap3D
 #var traps := []
@@ -12,7 +12,7 @@ signal occupant_removed(occupant)
 #state : tbd
 
 
-func _set_control_group(group: Data.CGs, reset_in: float = 0.0) -> void:
+func _set_control_group(group: MatchData.teams, reset_in: float = 0.0) -> void:
 	#print("Changing control group to " + str(group))
 	if reset_in > 0:
 		var current_group = control_group
@@ -21,7 +21,7 @@ func _set_control_group(group: Data.CGs, reset_in: float = 0.0) -> void:
 	control_group = group
 	var tile_material = $MeshInstance3D.get_surface_override_material(0)
 	
-	if group == Data.player_control_group:
+	if group == MatchData.player_team:
 		tile_material.albedo_color = Color(0, 0, .9)
 	else:
 		tile_material.albedo_color = Color(.9, .2, .2)
@@ -29,7 +29,7 @@ func _set_control_group(group: Data.CGs, reset_in: float = 0.0) -> void:
 
 func break_tile() -> void:
 	$MeshInstance3D.visible = false
-	_set_control_group(Data.CGs.NEUTRAL, 10.0)
+	_set_control_group(MatchData.teams.NEUTRAL, 10.0)
 	get_tree().create_timer(10).timeout.connect(repair_tile)
 
 
