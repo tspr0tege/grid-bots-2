@@ -5,14 +5,14 @@ extends Ability
 const ROCK_CUBE = preload("res://abilities/summons/rock-cube/character_rock-cube.tscn")
 
 
-func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
-	var caster: Character = amx.get_character_by_id(caster_id)
+func validate(caster_id : String) -> Dictionary:
+	var caster: Character = MatchSettings.BRIDGE.get_character_by_id(caster_id)
 	var instructions := {
-		"ability_id": UID,
-		#"control_group": caster.control_group
+		"ability_id": ability_id,
+		#"team": caster.team
 	}
 	
-	var target_tile = amx.get_arena_tile_by_coords(caster.grid_coords + Vector2i(caster.attack_direction, 0))
+	var target_tile = MatchSettings.BRIDGE.get_arena_tile_by_coords(caster.grid_coords + Vector2i(caster.attack_direction, 0))
 	
 	if target_tile == null: 
 		instructions.can_cast = false
@@ -30,13 +30,13 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	return instructions
 
 
-func cast(amx: AbilityMethodsExport, instructions: Dictionary) -> void:
+func cast(instructions: Dictionary) -> void:
 	var new_rock_cube_instructions = {
 		"model": "res://abilities/summons/rock-cube/character_rock-cube.tscn",
-		"role": Data.roles.NPCs,
+		"role": MatchSettings.roles.NPCs,
 		"coords": instructions.vectors.target_coords,
-		#"control_group": instructions.control_group,
+		#"team": instructions.team,
 	}
-	var new_rock_cube = amx.add_new_character(new_rock_cube_instructions)
+	var new_rock_cube = MatchSettings.BRIDGE.add_new_character(new_rock_cube_instructions)
 	SoundManager.play_audio_stream(summon_sound)
-	new_rock_cube.connect("character_death", amx.handle_character_death)
+	#new_rock_cube.connect("character_death", MatchSettings.BRIDGE.handle_character_death)

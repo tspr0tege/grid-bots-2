@@ -25,13 +25,3 @@ enum AbilityCategory {
 @export var methods : AbilityMethodsRegister
 @export var chain_abilities : Array = []
 #Properties: Elemental, etc
-
-
-
-func can_cast(caster_id : String, amx : AbilityMethodsExport) -> bool:
-	#push_error("Ability %s does not have a can_cast validation function." % ABILITY_DATA.ability_name)
-	if (caster_id == MatchData.player_character_id and 
-	amx.get_current_energy_level() < energy_cost):
-		return false 
-	
-	return true

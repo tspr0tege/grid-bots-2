@@ -6,7 +6,7 @@ enum matchmaking_steps { HANDSHAKE, COMBAT_DATA }
 
 var multiplayer_id = null
 #var opponent_id = null
-var player_control_group : CGs
+var player_team : CGs
 var match_settings := {}
 
 var ability_deck = {}
@@ -18,7 +18,7 @@ func _ready() -> void:
 
 func init_match_settings() -> void:
 	multiplayer_id = null
-	player_control_group = CGs.TEAM_1
+	player_team = CGs.TEAM_1
 	
 	match_settings = {
 		#TODO: Add multiplayer_id, opponent_id, and is_online_match
@@ -44,7 +44,7 @@ func init_match_settings() -> void:
 				"model": "res://entities/test-character/player_character.tscn",
 				"role": roles.PLAYER_CHARACTER,
 				"coords": Vector2i(1,1),
-				"control_group": player_control_group,
+				"team": player_team,
 			},
 		],
 	}
@@ -54,6 +54,6 @@ func ready_check(ready_step: String) -> bool:
 	return match_settings[ready_step].player.ready && match_settings[ready_step].opponent.ready
 
 
-func opposing_group(control_group) -> CGs:
-	if control_group == CGs.TEAM_1: return CGs.TEAM_2
+func opposing_group(team) -> CGs:
+	if team == CGs.TEAM_1: return CGs.TEAM_2
 	else: return CGs.TEAM_1

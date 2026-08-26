@@ -21,31 +21,35 @@ func _ready() -> void:
 
 
 func start_local_match() -> void:
-	MatchData.character_lineup = [
+	#MatchSettings.character_lineup = [
+		#{
+			#"model": "res://entities/test-character/player_character.tscn",
+			##"role": Data.roles.PLAYER_CHARACTER,
+			#"coords": Vector2i(1,1),
+			#"team": MatchSettings.teams.TEAM_1,
+		#},
+	#]
+	#NOTE: Should player_bot_config just be assumed on startup? How to pair with server assigned IDs?
+	MatchSettings.character_lineup.push_back(MatchSettings.player_bot_config)
+	MatchSettings.character_lineup.push_back(
 		{
-			"model": "res://entities/test-character/player_character.tscn",
-			#"role": Data.roles.PLAYER_CHARACTER,
-			"coords": Vector2i(1,1),
-			"control_group": MatchData.teams.TEAM_1,
-		},
-		{
-			"model": "res://entities/test-character/red_character.tscn",
-			#"role": Data.roles.NPCs,
-			"coords": Vector2i(4, 1),
-			"control_group": MatchData.teams.TEAM_2,
+			"bot_type": "red_test_bot",
+			"role": MatchSettings.roles.NPCs,
+			"start_coords": Vector2i(4, 1),
+			"team": MatchSettings.teams.TEAM_2,
 			"connections": {
-				"attempt_move": "_attempt_move",
+				"attempt_move": "request_move",
 				"search_for_target": "search_for_target",
 			},
 		}
-	]
-	MatchData.is_online_match = false
+	)
+	MatchSettings.is_online_match = false
 	var scene : PackedScene = load(BATTLE_SCENE)
 	get_tree().change_scene_to_packed(scene)
 
 
 func start_online_match() -> void:
-	MatchData.is_online_match = true
+	MatchSettings.is_online_match = true
 	print("Starting online match. Scene should change to BATTLE_SCENE")
 	var scene : PackedScene = load(BATTLE_SCENE)
 	get_tree().change_scene_to_packed(scene)
@@ -57,7 +61,7 @@ func goto_matchmaker() -> void:
 
 
 func load_menu() -> void:
-	MatchData.is_online_match = false
-	MatchData.init_match_settings()
+	MatchSettings.is_online_match = false
+	MatchSettings.init_match_settings()
 	var scene : PackedScene = load(MENU_SCENE)
 	get_tree().change_scene_to_packed(scene)

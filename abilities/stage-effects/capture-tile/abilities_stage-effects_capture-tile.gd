@@ -2,15 +2,15 @@ extends Ability
 
 @export var sound : SoundResource
 
-func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
+func validate(caster_id : String) -> Dictionary:
 	#search in row for a tile that is NOT matching the character and switch it
 	#var target = arena.linear_search(caster, "TILE")
-	var caster = amx.get_character_by_id(caster_id)
+	var caster = MatchSettings.BRIDGE.get_character_by_id(caster_id)
 	var instructions := {
-		"ability_id": UID,
+		"ability_id": ability_id,
 	}
-	var opponent_cg = Data.opposing_group(caster.control_group)
-	var target = amx.find_arena_tile_in_row_by_control_group(caster.grid_coords, caster.attack_direction, opponent_cg)
+	var opponent_cg = MatchSettings.opposing_team(caster.team)
+	var target = MatchSettings.BRIDGE.find_arena_tile_in_row_by_team(caster.grid_coords, caster.attack_direction, opponent_cg)
 	if target == null:
 		instructions.can_cast = false
 		instructions.reason = "No tile found, for conversion."
@@ -18,11 +18,11 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	
 	instructions.can_cast = true
 	instructions.vectors = {"target_coords": target.grid_coordinates}
-	instructions.control_group = caster.control_group
+	instructions.team = caster.team
 	return instructions
 
 
-func cast(amx : AbilityMethodsExport, instructions: Dictionary) -> void:
-	var target_tile = amx.get_arena_tile_by_coords(instructions.vectors.target_coords)
+func cast(instructions: Dictionary) -> void:
+	var target_tile = MatchSettings.BRIDGE.get_arena_tile_by_coords(instructions.vectors.target_coords)
 	SoundManager.play_audio_stream(sound)
-	target_tile._set_control_group(instructions.control_group)
+	target_tile._set_team(instructions.team)

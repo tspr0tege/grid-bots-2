@@ -6,15 +6,15 @@ const arc_peak := 2.0
 const arc_duration := 1.0
 
 
-func validate(caster_id: String, amx: AbilityMethodsExport) -> Dictionary:
-	var caster = amx.get_character_by_id(caster_id)
+func validate(caster_id: String) -> Dictionary:
+	var caster = MatchSettings.BRIDGE.get_character_by_id(caster_id)
 	var instructions := {
-		"ability_id": UID
+		"ability_id": ability_id
 	}
 	
 	var target_tile_coords = caster.grid_coords
 	target_tile_coords.x += 3 * caster.attack_direction	
-	var target_tile = amx.get_arena_tile_by_coords(target_tile_coords)
+	var target_tile = MatchSettings.BRIDGE.get_arena_tile_by_coords(target_tile_coords)
 	if target_tile == null: 
 		instructions.can_cast = false
 		instructions.reason = "Throw is outside the arena bounds."
@@ -29,10 +29,10 @@ func validate(caster_id: String, amx: AbilityMethodsExport) -> Dictionary:
 	return instructions
 
 
-func cast(amx : AbilityMethodsExport, instructions: Dictionary) -> void:
-	var target_tile = amx.get_arena_tile_by_coords(instructions.vectors.target_coords)
+func cast(instructions: Dictionary) -> void:
+	var target_tile = MatchSettings.BRIDGE.get_arena_tile_by_coords(instructions.vectors.target_coords)
 	var new_ball = CANNON_BALL.instantiate()
-	amx.add_child_to_arena(new_ball)
+	MatchSettings.BRIDGE.add_child_to_arena(new_ball)
 	
 	#create curve
 	var start_pos = instructions.vectors.start_pos
@@ -51,4 +51,4 @@ func cast(amx : AbilityMethodsExport, instructions: Dictionary) -> void:
 	new_ball.connect("arc_completed", target_tile.add_shot.bind(new_ball))
 	new_ball.connect("hit_floor", target_tile.remove_shot.bind(new_ball.shots_index))
 	new_ball.connect("hit_floor", target_tile.break_tile)
-	amx.connect_signal_to_arena(new_ball, "attempt_damage", "_attempt_damage")
+	MatchSettings.BRIDGE.connect_signal_to_arena(new_ball, "attempt_damage", "_attempt_damage")

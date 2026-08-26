@@ -6,7 +6,7 @@ signal attempt_damage(coords: Vector2i, damage: float)
 var grid_coords: Vector2i
 var shots_index: int
 @export var travel_direction: int = 1
-@export var control_group: Data.CGs = Data.CGs.NEUTRAL
+@export var team: Data.CGs = Data.CGs.NEUTRAL
 @export var move_speed: float = 4
 @export var dmg: float = 1.0
 

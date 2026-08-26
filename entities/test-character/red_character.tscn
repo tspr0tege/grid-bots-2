@@ -1,7 +1,7 @@
 [gd_scene load_steps=15 format=3 uid="uid://c02qnwmp31l8y"]
 
 [ext_resource type="Script" uid="uid://bhngbrs7oyjqy" path="res://entities/test-character/red_character.gd" id="1_p2mnf"]
-[ext_resource type="PackedScene" uid="uid://dgbmwfed8cfja" path="res://abilities/instant-shot/test-shot/abilities_instant-shot_test-shot.tscn" id="2_2cqou"]
+[ext_resource type="Resource" uid="uid://bvqvnngavh452" path="res://abilities/_database/pro-rkt-l1.tres" id="2_p2mnf"]
 [ext_resource type="ArrayMesh" uid="uid://crr2al4gl0ad4" path="res://entities/test-character/figurine.obj" id="3_ijiqy"]
 [ext_resource type="Material" uid="uid://c6s1klglreml7" path="res://entities/test-character/red_albedo.tres" id="4_025e1"]
 [ext_resource type="Script" uid="uid://ryh2edxq3u5e" path="res://entities/common-resources/hp_node.gd" id="5_uxay1"]
@@ -79,9 +79,8 @@ _data = {
 transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0, 0)
 script = ExtResource("1_p2mnf")
 attacking = false
-control_group = 3
+base_attack = ExtResource("2_p2mnf")
 display_health = true
-BASE_ATTACK = ExtResource("2_2cqou")
 attack_direction = -1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

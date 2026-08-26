@@ -18,11 +18,9 @@ signal match_connect_msg(msg)
 
 var match_start_time_ms : int
 
-const STARTER_CHARACTER_ID := "starter_character"
-
 var current_match_phase := "waiting_for_players"
-var local_player_id := ""
-var local_team_id := 0
+#var local_player_id := ""
+#var local_team_id := 0
 
 
 func _ready():
@@ -118,7 +116,7 @@ func _send_local_input_to_remote(input, op_code) -> void:
 			input.vectors[key] = var_to_str(input.vectors[key])
 	
 	var state = JSON.stringify({
-		"origin": MatchData.multiplayer_id,
+		"origin": MatchSettings.multiplayer_id,
 		"input": input
 	})
 	
@@ -194,7 +192,7 @@ func _handle_match_setup(payload: Dictionary) -> void:
 	if received_local_player_id.is_empty():
 		push_error("local_player_id is missing from _handle_match_setup payload.")
 		return
-	if received_local_team_id not in [MatchData.teams.TEAM_1, MatchData.teams.TEAM_2]:
+	if received_local_team_id not in [MatchSettings.teams.TEAM_1, MatchSettings.teams.TEAM_2]:
 		push_error("received_local_team_id is missing from _handle_match_setup payload, or an invalid team number was assigned.\n Expected TEAM_1 or TEAM_2. Received: %s." % received_local_team_id)
 		return
 	if typeof(received_players) != TYPE_ARRAY:
@@ -204,10 +202,8 @@ func _handle_match_setup(payload: Dictionary) -> void:
 		push_error("Expected 2 players in _handle_match_setup, but received an array of size %s in received_players." % received_players.size())
 		return
 
-	local_player_id = received_local_player_id
-	local_team_id = received_local_team_id
-	MatchData.multiplayer_id = local_player_id
-	MatchData.player_team = local_team_id
+	MatchSettings.multiplayer_id = received_local_player_id
+	MatchSettings.player_team = received_local_team_id
 	_build_character_list(received_players)
 	await _send_setup_received()
 
@@ -216,12 +212,9 @@ func _build_character_list(match_players: Array) -> void:
 	var characters: Array = []
 
 	for player in match_players:
-		var is_local := str(player.player_id) == local_player_id
+		var is_local: bool = str(player.player_id) == MatchSettings.multiplayer_id
 		var team_id := int(player.team_id)
 		var character_id := str(player.character_id)
-
-		if character_id != STARTER_CHARACTER_ID:
-			return
 		
 		#TODO: Find a cleaner way to handle setup.
 		characters.append({
@@ -230,20 +223,18 @@ func _build_character_list(match_players: Array) -> void:
 			"model": "res://entities/test-character/player_character.tscn",
 			#TODO: replace role with some other method of id. Maybe.
 			"role": (
-				MatchData.roles.PLAYER_CHARACTER
-				if is_local
-				else MatchData.roles.OPPOSING_PLAYER
+				MatchSettings.roles.PLAYER_CHARACTER if is_local
+				else MatchSettings.roles.OPPOSING_PLAYER
 			),
 			#TODO: allow character settings to dictate starting coords
 			"coords": (
-				Vector2i(1, 1)
-				if is_local
+				Vector2i(1, 1) if is_local
 				else Vector2i(4, 1)
 			),
-			"control_group": team_id,
+			"team": team_id,
 		})
 
-	MatchData.character_lineup = characters
+	MatchSettings.character_lineup = characters
 
 
 func _send_setup_received() -> void:
@@ -255,9 +246,7 @@ func _send_setup_received() -> void:
 
 
 func _send_player_setup() -> void:
-	var payload := {
-		"character_id": STARTER_CHARACTER_ID,
-	}
+	var payload := MatchSettings.player_bot_config
 
 	await socket.send_match_state_async(
 		online_match.match_id,
@@ -266,7 +255,7 @@ func _send_player_setup() -> void:
 	)
 
 
-func transmit_move_input(from_coords: Vector2i,	to_coords: Vector2i) -> void:
+func transmit_move_input(from_coords: Vector2i, to_coords: Vector2i) -> void:
 	var payload := {
 		"vectors": {
 			"from_coords": var_to_str(from_coords),
@@ -289,6 +278,7 @@ func _receive_temporary_move(payload: Dictionary) -> void:
 	var to_coords = str_to_var(
 		str(vectors.get("to_coords", ""))
 	)
+	
 	if typeof(to_coords) != TYPE_VECTOR2I:
 		return
 

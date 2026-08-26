@@ -1,4 +1,4 @@
-class_name AbilityMethodsExport
+
 extends RefCounted
 
 var arena : Node3D
@@ -22,11 +22,11 @@ func get_character_by_arena_coords(target_coords: Vector2i):
 	return arena.get_tile_by_coords(target_coords).occupant
 
 
-func get_all_on_team(team: Data.CGs) -> Array:
+func get_all_on_team(team: MatchSettings.teams) -> Array:
 	var target_group := []
 	for character in match_controller.characters.values():
-		if character.control_group == team:
-			target_group.push_back(character.id)
+		if character.team == team:
+			target_group.push_back(character.character_id)
 	return target_group
 
 
@@ -34,7 +34,7 @@ func get_arena_tile_by_coords(coords: Vector2i) -> Node3D:
 	return arena.get_tile_by_coords(coords)
 
 
-func get_all_tiles_in_group(group: Data.CGs) -> Array:
+func get_all_tiles_in_group(group: MatchSettings.teams) -> Array:
 	return arena.tiles_in_group(group)
 
 
@@ -54,9 +54,9 @@ func attempt_ability(caster: Character, ability: Ability):
 	return match_controller._attempt_ability(caster, ability)
 
 
-func bind_projectile_move(projectile: Projectile) -> Callable:
-	return arena._attempt_move_shot.bind(projectile)
-	#_attempt_move_shot(from_coords: Vector2i, to_coords: Vector2i, shot: Projectile)
+#func bind_projectile_move(projectile: Projectile) -> Callable:
+	#return arena._attempt_move_shot.bind(projectile)
+	##_attempt_move_shot(from_coords: Vector2i, to_coords: Vector2i, shot: Projectile)
 
 
 func execute_move(target: Character, to_coords: Vector2i, pushing := false):
@@ -77,8 +77,8 @@ func find_character_by_arena_row(start_coords, search_direction):
 	return arena.search_row(start_coords, search_direction, arena.for_character)
 
 
-func find_arena_tile_in_row_by_control_group(start_coords: Vector2i, search_direction: int, control_group: int) -> Node3D:
-	return arena.search_row(start_coords, search_direction, arena.for_tile.bind(control_group))
+func find_arena_tile_in_row_by_team(start_coords: Vector2i, search_direction: int, team: int) -> Node3D:
+	return arena.search_row(start_coords, search_direction, arena.for_tile.bind(team))
 
 
 func is_valid_arena_tile(target_coords) -> bool:

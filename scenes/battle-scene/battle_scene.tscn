@@ -1,13 +1,13 @@
 [gd_scene load_steps=29 format=3 uid="uid://b7s8i4yotbhd4"]
 
-[ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battleScene_gameController.gd" id="1_p7nsj"]
-[ext_resource type="Script" uid="uid://d1tg7waqcp1ck" path="res://scenes/battle-scene/scenes_battleScene.gd" id="1_w5c51"]
+[ext_resource type="Script" uid="uid://dx8uq4p6jyxvw" path="res://scenes/battle-scene/scenes_battle-scene_arena.gd" id="1_p7nsj"]
+[ext_resource type="Script" uid="uid://d1tg7waqcp1ck" path="res://scenes/battle-scene/scenes_battle-scene.gd" id="1_w5c51"]
 [ext_resource type="Script" uid="uid://gaj7wrf8fx8r" path="res://scenes/battle-scene/sub_viewport_container.gd" id="2_dgigb"]
-[ext_resource type="Script" uid="uid://cfv3qtdlvrcaw" path="res://scenes/battle-scene/scenes_battleScene_matchController.gd" id="2_ftv0g"]
-[ext_resource type="Script" uid="uid://bixagejecsbj8" path="res://scenes/battle-scene/scenes_ battle-scene_local-authority.gd" id="3_dllb0"]
-[ext_resource type="Script" uid="uid://0xawuf16blcg" path="res://scenes/battle-scene/scenes_battleScene_playerController.gd" id="3_w5c51"]
+[ext_resource type="Script" uid="uid://cfv3qtdlvrcaw" path="res://scenes/battle-scene/scenes_battle-scene_match-controller.gd" id="2_ftv0g"]
+[ext_resource type="Script" uid="uid://bixagejecsbj8" path="res://scenes/battle-scene/scenes_battle-scene_local-authority.gd" id="3_dllb0"]
+[ext_resource type="Script" uid="uid://0xawuf16blcg" path="res://scenes/battle-scene/scenes_battle-scene_player-controller.gd" id="3_w5c51"]
 [ext_resource type="Script" uid="uid://d4gan7ulcw6cb" path="res://scenes/battle-scene/scenes_battle-scene_online-authority.gd" id="4_3k3j3"]
-[ext_resource type="Script" uid="uid://cshsvritstewy" path="res://scenes/battle-scene/scenes_battleScene_characterFactory.gd" id="4_rqjoh"]
+[ext_resource type="Script" uid="uid://cshsvritstewy" path="res://scenes/battle-scene/scenes_battle-scene_actor-factory.gd" id="4_rqjoh"]
 [ext_resource type="Texture2D" uid="uid://d3v0aeruwqfx6" path="res://scenes/battle-scene/pause-button.svg" id="7_ftv0g"]
 [ext_resource type="Texture2D" uid="uid://dqodnobj67k22" path="res://system/icons/digital-trace.svg" id="8_w5c51"]
 [ext_resource type="Theme" uid="uid://d1vw0txyuoy5i" path="res://system/themes/prototype/prototype_theme.tres" id="9_dgigb"]
@@ -78,23 +78,29 @@ bg_color = Color(0, 0, 0, 0.827451)
 [node name="BattleScene" type="Node" node_paths=PackedStringArray("ARENA")]
 process_mode = 3
 script = ExtResource("1_w5c51")
-ARENA = NodePath("CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/CombatArena")
+ARENA = NodePath("CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/Arena")
 
-[node name="MatchController" type="Node" parent="." node_paths=PackedStringArray("ARENA", "CHARACTER_FACTORY")]
+[node name="MatchController" type="Node" parent="." node_paths=PackedStringArray("ARENA", "ACTOR_FACTORY")]
 process_mode = 1
 script = ExtResource("2_ftv0g")
-ARENA = NodePath("../CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/CombatArena")
-CHARACTER_FACTORY = NodePath("../CharacterFactory")
+ARENA = NodePath("../CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/Arena")
+ACTOR_FACTORY = NodePath("../ActorFactory")
 
-[node name="LocalAuthority" type="Node" parent="MatchController"]
+[node name="LocalAuthority" type="Node" parent="MatchController" node_paths=PackedStringArray("ARENA", "MATCH_CONTROLLER")]
 script = ExtResource("3_dllb0")
+ARENA = NodePath("../../CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/Arena")
+MATCH_CONTROLLER = NodePath("..")
 
-[node name="OnlineAuthority" type="Node" parent="MatchController"]
+[node name="OnlineAuthority" type="Node" parent="MatchController" node_paths=PackedStringArray("ARENA", "MATCH_CONTROLLER")]
 script = ExtResource("4_3k3j3")
+ARENA = NodePath("../../CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/Arena")
+MATCH_CONTROLLER = NodePath("..")
 
-[node name="CharacterFactory" type="Node" parent="." node_paths=PackedStringArray("ARENA")]
+[node name="ActorFactory" type="Node" parent="." node_paths=PackedStringArray("MATCH_CONTROLLER")]
 script = ExtResource("4_rqjoh")
-ARENA = NodePath("../CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/CombatArena")
+MATCH_CONTROLLER = NodePath("../MatchController")
+
+[node name="CharacterControllers" type="Node" parent="."]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -134,11 +140,11 @@ render_target_update_mode = 4
 script = ExtResource("3_w5c51")
 cam = NodePath("../Camera3D")
 
-[node name="CombatArena" type="Node3D" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport"]
+[node name="Arena" type="Node3D" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport"]
 unique_name_in_owner = true
 script = ExtResource("1_p7nsj")
 
-[node name="Floor" type="Node3D" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/CombatArena"]
+[node name="Floor" type="Node3D" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/Arena"]
 
 [node name="Camera3D" type="Camera3D" parent="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 0.829038, 0.559193, 0, -0.559193, 0.829038, 3.3, 2.9, 4.7)
@@ -500,7 +506,7 @@ text = "5"
 [connection signal="update_energy_display" from="MatchController" to="." method="_update_energy"]
 [connection signal="move_by_coords" from="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/InputHandler" to="MatchController" method="handle_move_by_coords"]
 [connection signal="move_by_direction" from="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/InputHandler" to="MatchController" method="handle_move_by_direction"]
-[connection signal="ready" from="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/CombatArena" to="MatchController" method="_on_combat_arena_ready"]
+[connection signal="ready" from="CanvasLayer/GridContainer/PlaySpace/BattleContainer/SubViewport/Arena" to="MatchController" method="_on_combat_arena_ready"]
 [connection signal="pressed" from="CanvasLayer/GridContainer/PlaySpace/TextureButton" to="." method="_handle_pause_button"]
 [connection signal="pressed" from="CanvasLayer/GridContainer/PlaySpace/PauseMenu/MarginContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/GridContainer/AbilityPanel/VBoxContainer/MarginContainer/Button" to="." method="_UI_input_use_ability" binds= [0]]

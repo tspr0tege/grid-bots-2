@@ -4,12 +4,12 @@ extends Trap3D
 @onready var fire: CPUParticles3D = $Explosion/Fire
 @onready var sparks: CPUParticles3D = $Explosion/Sparks
 
-var control_group := Data.CGs.UNIVERSAL
+var team := Data.CGs.UNIVERSAL
 
 
 func _ready() -> void:
 	visible = true
-	#visible = Data.player_control_group == control_group
+	#visible = Data.player_team == team
 
 
 func trigger_trap() -> void:

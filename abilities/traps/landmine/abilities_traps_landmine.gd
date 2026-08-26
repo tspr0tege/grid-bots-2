@@ -5,12 +5,12 @@ const LANDMINE = preload("res://abilities/traps/landmine/objects_landmine.tscn")
 @export var dmg: float = 25.0
 
 
-func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
-	var caster = amx.get_character_by_id(caster_id)
+func validate(caster_id : String) -> Dictionary:
+	var caster = MatchSettings.BRIDGE.get_character_by_id(caster_id)
 	var instructions := {}
-	var target_group = Data.opposing_group(caster.control_group)
+	var target_group = MatchSettings.opposing_team(caster.team)
 	
-	var possible_locations: Array = amx.get_all_tiles_in_group(target_group)
+	var possible_locations: Array = MatchSettings.BRIDGE.get_all_tiles_in_group(target_group)
 	var all_clear = func(tile) -> bool:
 		return tile.occupant == null and !tile.trap
 	possible_locations = possible_locations.filter(all_clear)
@@ -25,19 +25,19 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 		"target_coords": target_tile.grid_coordinates
 	}
 	instructions.can_cast = true
-	instructions.ability_id = UID
+	instructions.ability_id = ability_id
 	instructions.caster_id = caster_id
 	
 	return instructions
 
 
-func cast(amx: AbilityMethodsExport, instructions: Dictionary) -> void:
-	var target_tile = amx.get_arena_tile_by_coords(instructions.vectors.target_coords)
+func cast(instructions: Dictionary) -> void:
+	var target_tile = MatchSettings.BRIDGE.get_arena_tile_by_coords(instructions.vectors.target_coords)
 	var new_mine: Trap3D = LANDMINE.instantiate()
 	new_mine.grid_coordinates = target_tile.grid_coordinates
 	target_tile.trap = new_mine
 	target_tile.add_child(new_mine)
-	target_tile.connect("occupant_added", detonate_mine.bind(amx.attempt_damage, new_mine))
+	target_tile.connect("occupant_added", detonate_mine.bind(MatchSettings.BRIDGE.attempt_damage, new_mine))
 
 
 func detonate_mine(_occupant, attempt_damage: Callable, mine: Trap3D) -> void:

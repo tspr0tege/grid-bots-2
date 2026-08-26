@@ -1,27 +1,33 @@
-extends Area3D
+class_name FloorTile extends Area3D
 
-@export var grid_coordinates : Vector2i
-@export var control_group : MatchData.teams
+enum tile_states {
+	NORMAL,
+	CRACKED,
+	BROKEN,
+	REVERTING_SOON,
+	WAITING_TO_REVERT,
+	#elemental
+	#captured?
+}
+
+var grid_coordinates : Vector2i
+var team : MatchSettings.teams
+var occupied := false
 var occupant : Character
-var trap : Trap3D
-#var traps := []
-var shots := []
-
-signal occupant_added(occupant)
-signal occupant_removed(occupant)
-#state : tbd
+var traversable := true
+var state : tile_states = tile_states.NORMAL
 
 
-func _set_control_group(group: MatchData.teams, reset_in: float = 0.0) -> void:
+func set_team(group: MatchSettings.teams, reset_in: float = 0.0) -> void:
 	#print("Changing control group to " + str(group))
 	if reset_in > 0:
-		var current_group = control_group
-		get_tree().create_timer(reset_in).timeout.connect(_set_control_group.bind(current_group))
+		var current_group = team
+		get_tree().create_timer(reset_in).timeout.connect(set_team.bind(current_group))
 	
-	control_group = group
+	team = group
 	var tile_material = $MeshInstance3D.get_surface_override_material(0)
 	
-	if group == MatchData.player_team:
+	if group == MatchSettings.player_team:
 		tile_material.albedo_color = Color(0, 0, .9)
 	else:
 		tile_material.albedo_color = Color(.9, .2, .2)
@@ -29,36 +35,12 @@ func _set_control_group(group: MatchData.teams, reset_in: float = 0.0) -> void:
 
 func break_tile() -> void:
 	$MeshInstance3D.visible = false
-	_set_control_group(MatchData.teams.NEUTRAL, 10.0)
+	state = tile_states.BROKEN
+	traversable = false
 	get_tree().create_timer(10).timeout.connect(repair_tile)
 
 
 func repair_tile() -> void:
 	$MeshInstance3D.visible = true
-
-
-func add_occupant(new_occupant: Character) -> void:
-	occupant = new_occupant
-	occupant_added.emit(new_occupant)
-	
-	for shot in shots:
-		shot._hit_character()
-	shots = []
-
-
-func remove_occupant() -> void:
-	occupant_removed.emit(occupant)
-	occupant = null
-
-
-func add_shot(shot: Projectile):
-	shot.grid_coords = grid_coordinates
-	if occupant and occupant.control_group != shot.control_group:
-		shot._hit_character()
-	else:
-		shot.shots_index = shots.size()
-		shots.push_back(shot)
-
-
-func remove_shot(index: int) -> void:
-	shots.pop_at(index)
+	state = tile_states.NORMAL
+	traversable = true

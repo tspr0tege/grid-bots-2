@@ -21,7 +21,7 @@ SceneManager="*res://_autoload/AL_sceneManager.gd"
 Data="res://_autoload/AL_data.gd"
 Nakama="*res://system/nakama-client/addons/com.heroiclabs.nakama/Nakama.gd"
 SoundManager="*res://_autoload/AL_soundManager.gd"
-MatchData="*res://_autoload/AL_matchData.gd"
+MatchSettings="*res://_autoload/AL_matchSettings.gd"
 AbilityLibrary="*res://_autoload/AL_abilityLibrary.gd"
 
 [display]

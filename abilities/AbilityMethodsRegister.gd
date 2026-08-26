@@ -7,8 +7,8 @@ func request_cast() -> void:
 	pass
 
 
-func cast(_amx : AbilityMethodsExport, _instructions: Dictionary) -> void:
-
+func cast(_instructions: Dictionary) -> void:
+	#NOTE: amx replaced by MatchSettings.BRIDGE
 	pass
 
 #Possible behavior JSON entries:

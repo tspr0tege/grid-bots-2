@@ -22,7 +22,7 @@ func _process(_delta) -> void:
 
 func _physics_process(_delta: float) -> void:
 	if screen_tap_origin.length() > 0:
-		var space_state = %CombatArena.get_world_3d().direct_space_state
+		var space_state = %Arena.get_world_3d().direct_space_state
 		var origin = cam.project_ray_origin(screen_tap_origin)
 		var end = origin + cam.project_ray_normal(screen_tap_origin) * RAY_LENGTH
 		var query = PhysicsRayQueryParameters3D.create(origin, end)

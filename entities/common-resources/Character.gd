@@ -1,16 +1,18 @@
 class_name Character extends Node3D
 
 signal character_death(source)
+#TODO: remove signal and execute ability from the weapon's id
 signal request_ability(character: Character, ability: Ability)
 
-var id: String
+var character_id: String
 var grid_coords: Vector2i
 var health_display: Label3D
 var tile_move_speed := .1
 
 @export var base_attack: Ability
-@export var control_group := MatchData.teams.NEUTRAL
+@export var team := MatchSettings.teams.NEUTRAL
 @export var move_handler: MovementStyle
+@export var is_animate: bool = true #true for anything that "acts" (has a controller)
 @export var teleport_enabled := false
 @export var diagonal_move_enabled := false
 @export var display_health: bool = false
@@ -20,9 +22,6 @@ var tile_move_speed := .1
 
 
 func _ready() -> void:
-	base_attack = base_attack.duplicate()
-	base_attack.ABILITY_DATA.energy_cost = 0
-	
 	#if BASE_ATTACK:
 		#base_attack = BASE_ATTACK.instantiate()
 		#Data.ability_deck[base_attack.UID] = base_attack
@@ -70,7 +69,7 @@ func use_base_attack() -> void:
 	if base_attack:
 		request_ability.emit(self, base_attack)
 	else:
-		push_error("%s's use_base_attack function was called, with no BASE_ATTACK Script assigned." % self.name)
+		push_error("%s has no BASE_ATTACK ability." % self.name)
 
 
 func _on_hp_node_hp_changed(new_amt: float) -> void:

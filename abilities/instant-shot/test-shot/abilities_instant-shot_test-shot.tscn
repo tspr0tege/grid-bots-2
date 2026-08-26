@@ -13,8 +13,5 @@ metadata/_custom_type_script = "uid://nky65oxq6ybu"
 
 [node name="Abilities-InstantShot-TestShot" type="Node"]
 script = ExtResource("1_5x7bp")
-dmg = null
 sound = SubResource("Resource_p3u5f")
-COST = null
-UID = "ISTS10"
 metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

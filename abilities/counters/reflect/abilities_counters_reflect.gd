@@ -9,10 +9,10 @@ var caster_hp_node
 var shield_object: Node3D
 
 
-func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
-	var caster = amx.get_character_by_id(caster_id)
+func validate(caster_id : String) -> Dictionary:
+	var caster = MatchSettings.BRIDGE.get_character_by_id(caster_id)
 	var instructions = {
-		"ability_id": UID,
+		"ability_id": ability_id,
 		"caster_id": caster_id,
 		"vectors": {"target_coords": caster.grid_coords},
 		"can_cast": true,		
@@ -21,8 +21,8 @@ func validate(caster_id : String, amx : AbilityMethodsExport) -> Dictionary:
 	return instructions
 
 
-func cast(amx: AbilityMethodsExport, instructions: Dictionary) -> void:
-	var caster = amx.get_character_by_id(instructions.caster_id)
+func cast(instructions: Dictionary) -> void:
+	var caster = MatchSettings.BRIDGE.get_character_by_id(instructions.caster_id)
 	var new_shield = REFLECT.instantiate()
 	shield_object = new_shield
 	#$AudioStreamPlayer.play()
@@ -31,7 +31,7 @@ func cast(amx: AbilityMethodsExport, instructions: Dictionary) -> void:
 	caster.add_child(new_shield)
 	
 	caster_hp_node = caster.get_node("HpNode")
-	caster_hp_node.connect_shield(_reflect_damage.bind(caster, amx.attempt_ability))
+	caster_hp_node.connect_shield(_reflect_damage.bind(caster, MatchSettings.BRIDGE.attempt_ability))
 
 
 func _remove_shield() -> void:

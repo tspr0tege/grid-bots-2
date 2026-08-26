@@ -1,8 +1,8 @@
 [gd_scene load_steps=11 format=3 uid="uid://d2emdno3lst2n"]
 
 [ext_resource type="Script" uid="uid://cokt0oy2u836f" path="res://entities/net-navi/entities_net-navi.gd" id="1_oicya"]
+[ext_resource type="Resource" uid="uid://bvqvnngavh452" path="res://abilities/_database/pro-rkt-l1.tres" id="2_0gl8w"]
 [ext_resource type="Script" uid="uid://1cq45k43fpfc" path="res://entities/common-resources/movement/MovementQuickHop.gd" id="2_5mku2"]
-[ext_resource type="PackedScene" uid="uid://dgbmwfed8cfja" path="res://abilities/instant-shot/test-shot/abilities_instant-shot_test-shot.tscn" id="3_q8kns"]
 [ext_resource type="PackedScene" uid="uid://bxdq16ujrrrtd" path="res://entities/net-navi/gltf/model.gltf" id="4_0gl8w"]
 [ext_resource type="AudioStream" uid="uid://cst8b3jc7augb" path="res://entities/common-resources/sfx/hit.wav" id="8_0okdf"]
 [ext_resource type="PackedScene" uid="uid://ck7yv7nnq5hna" path="res://entities/common-resources/hp_node.tscn" id="9_1rgcw"]
@@ -31,10 +31,9 @@ _data = {
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 script = ExtResource("1_oicya")
 right_hand_anchor = NodePath("blockbench_export/base/chest2/right arm/right upper arm/right lower arm/right hand/hand2/RightHandAnchor")
-control_group = 2
+base_attack = ExtResource("2_0gl8w")
 move_handler = SubResource("Resource_6tpmo")
 display_health = true
-BASE_ATTACK = ExtResource("3_q8kns")
 animation_player = NodePath("blockbench_export/AnimationPlayer")
 
 [node name="blockbench_export" parent="." instance=ExtResource("4_0gl8w")]
