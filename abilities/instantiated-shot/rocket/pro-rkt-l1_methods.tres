@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="pro_rkt_l1_methods" load_steps=2 format=3 uid="uid://jttr4urdslmc"]
+
+[ext_resource type="Script" uid="uid://dffyj55wkpow8" path="res://abilities/instantiated-shot/rocket/abilities_pro-rkt-l1_methods.gd" id="1_r5o8i"]
+
+[resource]
+script = ExtResource("1_r5o8i")
+test_variable = false
+metadata/_custom_type_script = "uid://dffyj55wkpow8"

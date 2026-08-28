@@ -6,197 +6,33 @@ signal NPC_use_ability
 @export var ARENA : Arena
 @export var MATCH_CONTROLLER : MatchController
 
-var arena_state = [
-	[
-		{
-			"team": MatchSettings.teams.TEAM_1,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-		{
-			"team": MatchSettings.teams.TEAM_1,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-		{
-			"team": MatchSettings.teams.TEAM_1,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-	],
-	[
-		{
-			"team": MatchSettings.teams.TEAM_1,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-		{
-			"team": MatchSettings.teams.TEAM_1,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-		{
-			"team": MatchSettings.teams.TEAM_1,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-	],
-	[
-		{
-			"team": MatchSettings.teams.TEAM_1,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-		{
-			"team": MatchSettings.teams.TEAM_1,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-		{
-			"team": MatchSettings.teams.TEAM_1,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-	],
-	[
-		{
-			"team": MatchSettings.teams.TEAM_2,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-		{
-			"team": MatchSettings.teams.TEAM_2,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-		{
-			"team": MatchSettings.teams.TEAM_2,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-	],
-	[
-		{
-			"team": MatchSettings.teams.TEAM_2,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-		{
-			"team": MatchSettings.teams.TEAM_2,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-		{
-			"team": MatchSettings.teams.TEAM_2,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-	],
-	[
-		{
-			"team": MatchSettings.teams.TEAM_2,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-		{
-			"team": MatchSettings.teams.TEAM_2,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-		{
-			"team": MatchSettings.teams.TEAM_2,
-			"projectiles": [],
-			"traps": [],
-			"occupant": null,
-			"reserved": false,
-			"traversable": true,
-			"state": FloorTile.tile_states.NORMAL,
-		},
-	],
-]
-var characters = {}
-#character example:
-	#"987234": {
-		#"id": "987234",
-		#"start_coords": Vector2i(0,1),
-		#"grid_coords": Vector2i(1,1),
-		#"teleport_enabled": false,
-		#"diagonal_move_enabled": false,
-		#"team": MatchSettings.teams.TEAM_1,
-		#"is_animate": true,
+#Example arena_state dictionary on server:
+##NOTE: Only use these values in LocalAuthority, to maintain logical consistency.
+	#{
+		#"team": MatchSettings.teams.TEAM_2,
+		#"projectiles": [],
+		#"traps": [],
+		#"occupant": null,
+		#"reserved": false,
+		#"traversable": true,
+		#"state": FloorTile.tile_states.NORMAL,
 	#}
+var characters = {}
+func _new_character() -> Dictionary:
+	var new_character := {
+		"character_id": "",
+		#"start_coords": Vector2i(0,1),
+		"grid_coords": Vector2i.ZERO,
+		"team": MatchSettings.teams.NEUTRAL,
+		"is_animate": true,
+		"teleport_enabled": false,
+		"diagonal_move_enabled": false,
+	}
+	return new_character
 
 
 func generate_character_id() -> String:
-	return str(floor(randf() * 10000))
+	return str(int(floor(randf() * 10000)))
 
 
 func init_match() -> void:
@@ -206,10 +42,12 @@ func init_match() -> void:
 		var new_character = _new_character()
 		for key in character:
 			new_character[key] = character[key]
-		if !new_character.has("id"): new_character.character_id = generate_character_id()
+		if new_character.character_id == "": 
+			new_character.character_id = generate_character_id()
+			push_error("New character %s was generated without character_id" % new_character.character_id)
 		new_character.grid_coords = character.start_coords
 		
-		print("init_match assembled a new character with these details:\n" + str(new_character))
+		print("LocalAuthority.init_match assembled a new character with these details:\n" + str(new_character))
 		characters[new_character.character_id] = new_character
 	
 	MatchSettings.propagate_ability_list(MatchSettings.player_deck)
@@ -217,7 +55,18 @@ func init_match() -> void:
 
 func request_ability(caster_id: String, ability_id: String) -> void: 
 	#MatchSettings.player_character_id
-	pass
+	var ability: Ability = MatchSettings.ability_list[ability_id]
+	
+	#CANCEL for player with inadequate energy
+	if caster_id == MatchSettings.player_character_id and MatchSettings.player_energy < ability.energy_cost: return
+	
+	var new_instructions = ability.methods.generate_local_instructions(caster_id, self)
+	
+	if caster_id == MatchSettings.player_character_id: #player ability
+		var hand_index = MatchSettings.player_hand.find(ability_id)
+		MATCH_CONTROLLER.process_player_ability(hand_index, new_instructions)
+	else: #NPC ability
+		MATCH_CONTROLLER.execute_ability(new_instructions)
 
 
 func request_move(character_id: String, to_coords: Vector2i) -> void:
@@ -262,7 +111,7 @@ func _validate_move(character: Dictionary, target_coords: Vector2i) -> Vector2i:
 
 
 func _is_valid_move(character: Dictionary, to_coords: Vector2i) -> bool:
-	var target_tile = arena_state[to_coords.x][to_coords.y]
+	var target_tile = ARENA.get_tile_by_coords(to_coords)
 	#Character moving to invalid team tile
 	if (character.team != MatchSettings.teams.UNIVERSAL and
 	 target_tile.team != character.team): 
@@ -284,16 +133,3 @@ func _move_dir(target_coords: Vector2i, rule: int) -> Vector2i:
 	if target_coords.y != 0 and rule != 1:
 		direction.y = target_coords.y / abs(target_coords.y)
 	return direction
-
-
-func _new_character() -> Dictionary:
-	var new_character := {
-		"id": "",
-		"team": MatchSettings.teams.NEUTRAL,
-		"is_animate": true,
-		"teleport_enabled": false,
-		"diagonal_move_enabled": false,
-		"grid_coords": Vector2i.ZERO,
-	}
-	
-	return new_character

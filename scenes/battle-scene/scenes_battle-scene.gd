@@ -15,7 +15,7 @@ func _ready() -> void:
 	if MatchSettings.is_online_match:
 		$CanvasLayer/MatchStartCountdown.match_start_time = SceneManager.online_client.match_start_time_ms
 	else:
-		$CanvasLayer/MatchStartCountdown.match_start_time = Time.get_ticks_msec() + 3000
+		$CanvasLayer/MatchStartCountdown.match_start_time = Time.get_ticks_msec() + 4000
 	
 	SoundManager.play_bgm_stream("BATTLE")
 	MatchSettings.shuffle_and_draw()
@@ -42,6 +42,7 @@ func _UI_input_fire_button_pressed() -> void:
 func _UI_input_use_ability(index: int) -> void:
 	#not enough energy
 	var ability_id = MatchSettings.player_hand[index]
+	print("_UI_input_use_ability:\n index = %s,\n player_hand = %s,\n ability_id = %s" % [index, str(MatchSettings.player_hand), ability_id])
 	#var ability : Ability = AbilityLibrary[ability_id]
 	#The above is wrong anyway. Abilities need to be pulled from MatchData
 	$MatchController.attempt_ability(MatchSettings.player_character_id, ability_id)

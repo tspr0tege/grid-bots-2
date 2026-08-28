@@ -1,4 +1,5 @@
-extends Ability
+## CANNONBALL
+extends AbilityMethodsRegister
 
 const CANNON_BALL = preload("res://abilities/thrown/cannon-ball/objects_cannon-ball.tscn")
 

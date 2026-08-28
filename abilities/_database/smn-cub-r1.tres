@@ -1,5 +1,6 @@
-[gd_resource type="Resource" script_class="Ability" load_steps=2 format=3 uid="uid://cqrplfg8xtkeg"]
+[gd_resource type="Resource" script_class="Ability" load_steps=3 format=3 uid="uid://cqrplfg8xtkeg"]
 
+[ext_resource type="Texture2D" uid="uid://cxrso4o3y4xjr" path="res://abilities/summons/rock-cube/Rock Cube icon 128 x 128.png" id="1_hw1ck"]
 [ext_resource type="Script" uid="uid://byhl1uog8jt4r" path="res://abilities/Ability.gd" id="1_votam"]
 
 [resource]
@@ -7,7 +8,9 @@ script = ExtResource("1_votam")
 ability_id = "smn-cub-r1"
 ability_name = "Rock Cube"
 ability_category = 7
+ability_icon = ExtResource("1_hw1ck")
+cast_animation = 0
 energy_cost = 1
 upgrade_to_id = ""
-ability_behavior = {}
+chain_abilities = []
 metadata/_custom_type_script = "uid://byhl1uog8jt4r"

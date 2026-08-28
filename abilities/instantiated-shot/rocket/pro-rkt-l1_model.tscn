@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://d03o1uq0uaxen"]
+
+[ext_resource type="Script" uid="uid://1mxumsdc60i0" path="res://abilities/instantiated-shot/rocket/abilities_pro-rkt-l1_model.gd" id="1_4d1tk"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_o32l5"]
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.25
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ys5dq"]
+top_radius = 0.0
+bottom_radius = 0.1
+height = 0.25
+
+[node name="RocketModel" type="Node3D"]
+script = ExtResource("1_4d1tk")
+
+[node name="Cylinder" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, -0.1, 0, 0)
+mesh = SubResource("CylinderMesh_o32l5")
+
+[node name="Cone" type="MeshInstance3D" parent="Cylinder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+mesh = SubResource("CylinderMesh_ys5dq")

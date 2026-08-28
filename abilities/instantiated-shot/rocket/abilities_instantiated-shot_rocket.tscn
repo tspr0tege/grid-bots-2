@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://duhilnikjdjs6"]
-
-[ext_resource type="Script" uid="uid://dffyj55wkpow8" path="res://abilities/instantiated-shot/rocket/abilities_instantiated-shot_rocket.gd" id="1_drf8w"]
-
-[node name="Card_Rocket" type="Node"]
-script = ExtResource("1_drf8w")
-metadata/_custom_type_script = "uid://cn7a5ijxhii6g"

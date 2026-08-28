@@ -1,4 +1,5 @@
-extends Ability
+## ROCK_CUBE
+extends AbilityMethodsRegister
 
 @export var summon_sound : SoundResource
 

@@ -438,6 +438,7 @@ theme_override_font_sizes/font_size = 50
 theme_override_styles/focus = SubResource("StyleBoxFlat_e5sai")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_2u67o")
 theme_override_styles/normal = SubResource("StyleBoxFlat_6tpmo")
+disabled = true
 action_mode = 0
 text = "ATK"
 icon = ExtResource("8_w5c51")

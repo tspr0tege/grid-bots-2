@@ -18,4 +18,4 @@ func target_result(found: bool) -> void:
 		use_base_attack()
 	else:
 		var random_grid_coords = Vector2i(randi_range(2, 5), randi_range(0, 2))
-		emit_signal("attempt_move", self, random_grid_coords)
+		emit_signal("attempt_move", self.character_id, random_grid_coords)

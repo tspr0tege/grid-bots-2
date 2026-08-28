@@ -3,11 +3,17 @@ class_name Character extends Node3D
 signal character_death(source)
 #TODO: remove signal and execute ability from the weapon's id
 signal request_ability(character: Character, ability: Ability)
+signal update_grid_coords(character_id: String, to_coords: Vector2i)
+
+const action_types := [
+	"update_grid_coords",
+]
 
 var character_id: String
 var grid_coords: Vector2i
 var health_display: Label3D
 var tile_move_speed := .1
+var is_busy := false
 
 @export var base_attack: Ability
 @export var team := MatchSettings.teams.NEUTRAL
@@ -37,6 +43,17 @@ func _ready() -> void:
 	
 	if animation_player:
 		animation_player.connect("animation_finished", _on_animation_finished)
+
+
+func handle_tick_action(action_type: String, action_instructions: Dictionary) -> void:
+	if !action_types.has(action_type): 
+		push_error("Unhandled action type received in Character.handle_tick_action\n action_type: \t %s\n action_instructions: \t %s" % [action_type, JSON.stringify(action_instructions, "\t")])
+		return
+	
+	match action_type:
+		"update_grid_coords":
+			update_grid_coords.emit(character_id, action_instructions.to_coords)
+			#grid_coords = action_instructions.to_coords
 
 
 func animate_action(animation_name) -> void:

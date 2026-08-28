@@ -44,6 +44,7 @@ func start_local_match() -> void:
 		}
 	)
 	MatchSettings.is_online_match = false
+	MatchSettings.player_team = MatchSettings.teams.TEAM_1
 	var scene : PackedScene = load(BATTLE_SCENE)
 	get_tree().change_scene_to_packed(scene)
 
@@ -61,7 +62,6 @@ func goto_matchmaker() -> void:
 
 
 func load_menu() -> void:
-	MatchSettings.is_online_match = false
 	MatchSettings.init_match_settings()
 	var scene : PackedScene = load(MENU_SCENE)
 	get_tree().change_scene_to_packed(scene)

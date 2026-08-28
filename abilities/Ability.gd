@@ -1,7 +1,7 @@
 class_name Ability
 extends Resource
 
-enum AbilityCategory {
+enum ability_categories {
 	BUFF,
 	COUNTER,
 	DEBUFF,
@@ -14,10 +14,31 @@ enum AbilityCategory {
 	TRAP
 }
 
+enum cast_animations {
+	SHOOT,
+	THRUST,
+	PUNCH,
+	OVERHEAD_SWING,
+	HORIZONTAL_SWING,
+	SHOULDER_SHOT,
+	SUMMON
+}
+
+const animation_names := [
+	"shoot",
+	"thrust",
+	"punch",
+	"overhead swing",
+	"horizontal swing",
+	"shoulder shot",
+	"summon"
+]
+
 @export var ability_id : String
 @export var ability_name : String
-@export var ability_category : AbilityCategory
+@export var ability_category : ability_categories
 @export var ability_icon: CompressedTexture2D
+@export var cast_animation: cast_animations
 @export var energy_cost : int = 1
 @export var upgrade_to_id : String
 #@export var ability_behavior : Dictionary #NOTE: ability_behavior will be temporarily housed in MethodsRegister. 

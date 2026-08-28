@@ -1,4 +1,5 @@
-extends Ability
+## TEST_SHOT
+extends AbilityMethodsRegister
 
 @export var dmg := 10.0
 @export var sound : SoundResource

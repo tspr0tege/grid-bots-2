@@ -15,6 +15,7 @@ var team : MatchSettings.teams
 var occupied := false
 var occupant : Character
 var traversable := true
+var reserved := false
 var state : tile_states = tile_states.NORMAL
 
 
@@ -31,6 +32,17 @@ func set_team(group: MatchSettings.teams, reset_in: float = 0.0) -> void:
 		tile_material.albedo_color = Color(0, 0, .9)
 	else:
 		tile_material.albedo_color = Color(.9, .2, .2)
+
+
+func add_occupant(new_occupant: Character) -> void:
+	occupant = new_occupant
+	occupied = true
+	reserved = false
+
+
+func remove_occupant() -> void:
+	occupant = null
+	occupied = false
 
 
 func break_tile() -> void:

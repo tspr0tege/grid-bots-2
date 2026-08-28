@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="Ability" load_steps=3 format=3 uid="uid://bvqvnngavh452"]
+[gd_resource type="Resource" script_class="Ability" load_steps=4 format=3 uid="uid://bvqvnngavh452"]
 
 [ext_resource type="Texture2D" uid="uid://chs5k0dsia67y" path="res://abilities/instantiated-shot/rocket/Rocket icon 128 x 128.png" id="1_g0h4c"]
 [ext_resource type="Script" uid="uid://byhl1uog8jt4r" path="res://abilities/Ability.gd" id="1_j22ed"]
+[ext_resource type="Resource" uid="uid://jttr4urdslmc" path="res://abilities/instantiated-shot/rocket/pro-rkt-l1_methods.tres" id="2_6ggex"]
 
 [resource]
 script = ExtResource("1_j22ed")
@@ -9,7 +10,9 @@ ability_id = "pro-rkt-l1"
 ability_name = "Rocket"
 ability_category = 5
 ability_icon = ExtResource("1_g0h4c")
+cast_animation = 0
 energy_cost = 1
 upgrade_to_id = ""
-ability_behavior = {}
+methods = ExtResource("2_6ggex")
+chain_abilities = []
 metadata/_custom_type_script = "uid://byhl1uog8jt4r"

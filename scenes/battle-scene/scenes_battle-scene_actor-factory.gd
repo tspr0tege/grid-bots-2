@@ -16,6 +16,7 @@ func spawn_character(instructions: Dictionary) -> Character: #return new charact
 			#"search_for_target": "search_for_target",
 		#},
 	#}
+	
 	var bot_type = MatchSettings.player_characters[instructions.bot_type]
 	var character: Character = load(bot_type).instantiate()
 	
@@ -38,6 +39,7 @@ func spawn_character(instructions: Dictionary) -> Character: #return new charact
 	character.team = instructions.team
 	character.connect("request_ability", MATCH_CONTROLLER.attempt_ability)
 	character.connect("character_death", MATCH_CONTROLLER.handle_character_death)
+	character.connect("update_grid_coords", MATCH_CONTROLLER.update_character_coords)
 	return character
 
 
