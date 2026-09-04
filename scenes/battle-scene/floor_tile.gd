@@ -12,11 +12,12 @@ enum tile_states {
 
 var grid_coordinates : Vector2i
 var team : MatchSettings.teams
-var occupied := false
+var is_occupied := false
 var occupant : Character
 var traversable := true
 var reserved := false
 var state : tile_states = tile_states.NORMAL
+var projectiles := {}
 
 
 func set_team(group: MatchSettings.teams, reset_in: float = 0.0) -> void:
@@ -36,13 +37,26 @@ func set_team(group: MatchSettings.teams, reset_in: float = 0.0) -> void:
 
 func add_occupant(new_occupant: Character) -> void:
 	occupant = new_occupant
-	occupied = true
+	is_occupied = true
 	reserved = false
 
 
 func remove_occupant() -> void:
 	occupant = null
-	occupied = false
+	is_occupied = false
+
+
+func add_projectile(projectile: ProjectileController) -> void:
+	var projectile_id: String = projectile.projectile_id
+	projectiles[projectile_id] = projectile
+
+
+func remove_projectile(projectile: ProjectileController) -> void:
+	var projectile_id: String = projectile.projectile_id
+	if projectiles.has(projectile_id):
+		projectiles.erase(projectile_id)
+	#else:
+		#push_warning("Attempting to remove a projectile from floor_tile, that is not stored in its dictionary")
 
 
 func break_tile() -> void:

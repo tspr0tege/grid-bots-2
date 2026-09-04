@@ -64,7 +64,8 @@ func send_clock_ping(socket: NakamaSocket) -> Dictionary:
 
 func _calculate_clock_offset(ping_result: Dictionary) -> int:
 	#"ping_id", "client_ping_send_time", "server_ping_received_time", "server_pong_send_time", "client_pong_received_time", "round_trip_time"
-	var server_clock_difference := int(
+	@warning_ignore("integer_division")
+	var server_clock_difference: int = int(
 		ping_result.server_ping_received_time
 		- ping_result.client_ping_send_time
 		+ ping_result.server_pong_send_time

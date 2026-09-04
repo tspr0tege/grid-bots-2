@@ -28,6 +28,7 @@ AbilityLibrary="*res://_autoload/AL_abilityLibrary.gd"
 
 window/size/viewport_width=1600
 window/size/viewport_height=1000
+window/size/initial_position_type=3
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 

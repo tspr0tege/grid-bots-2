@@ -89,4 +89,4 @@ func _on_quit_button_pressed() -> void:
 
 func _on_match_start_countdown_finished() -> void:
 	get_tree().paused = false
-	
+	$MatchController.tick_counter_active = true

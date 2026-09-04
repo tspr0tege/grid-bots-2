@@ -2,6 +2,16 @@ class_name AbilityMethodsRegister
 extends Resource
 
 
+func _new_instructions(caster_id: String, ability_id: String, projectile_id: String) -> Dictionary:
+	var instructions = {
+		"caster_id": caster_id,
+		"ability_id": ability_id,
+		"revision": 1,
+		"projectile_id": projectile_id,
+		#"start_coords": caster.grid_coords,
+		"action_plan": [], #action_plan will be a series of TickInstructions
+	}
+	return instructions
 
 func request_cast() -> void:
 	pass

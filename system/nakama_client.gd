@@ -203,7 +203,7 @@ func _handle_match_setup(payload: Dictionary) -> void:
 		return
 
 	MatchSettings.multiplayer_id = received_local_player_id
-	MatchSettings.player_team = received_local_team_id
+	MatchSettings.player_team = received_local_team_id as MatchSettings.teams
 	_build_character_list(received_players)
 	await _send_setup_received()
 

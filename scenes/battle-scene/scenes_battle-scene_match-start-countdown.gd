@@ -11,7 +11,7 @@ func _process(_delta: float) -> void:
 	
 	var remaining_ms := match_start_time - Time.get_ticks_msec()
 	
-	label.text = str(max(remaining_ms / 1000, 0)) # +1?
+	label.text = str(maxi(remaining_ms / 1000, 0)) # +1?
 
 	if remaining_ms <= 0: 
 		match_start_time_reached.emit()

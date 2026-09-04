@@ -5,14 +5,10 @@ signal character_death(source)
 signal request_ability(character: Character, ability: Ability)
 signal update_grid_coords(character_id: String, to_coords: Vector2i)
 
-const action_types := [
-	"update_grid_coords",
-]
-
 var character_id: String
 var grid_coords: Vector2i
 var health_display: Label3D
-var tile_move_speed := .1
+var tile_move_speed := 4
 var is_busy := false
 
 @export var base_attack: Ability
@@ -23,7 +19,6 @@ var is_busy := false
 @export var diagonal_move_enabled := false
 @export var display_health: bool = false
 @export var animation_player: AnimationPlayer
-#const available_animations = ["shoot", "move", "run", "ready", "punch"]
 @export_range(-1, 1, 2) var attack_direction = 1
 
 
@@ -46,14 +41,14 @@ func _ready() -> void:
 
 
 func handle_tick_action(action_type: String, action_instructions: Dictionary) -> void:
-	if !action_types.has(action_type): 
-		push_error("Unhandled action type received in Character.handle_tick_action\n action_type: \t %s\n action_instructions: \t %s" % [action_type, JSON.stringify(action_instructions, "\t")])
-		return
 	
 	match action_type:
-		"update_grid_coords":
+		"move":
 			update_grid_coords.emit(character_id, action_instructions.to_coords)
 			#grid_coords = action_instructions.to_coords
+		_:
+			push_error("Unhandled action type received in Character.handle_tick_action\n action_type: \t %s\n action_instructions: \t %s" % [action_type, JSON.stringify(action_instructions, "\t")])
+			
 
 
 func animate_action(animation_name) -> void:
@@ -74,12 +69,18 @@ func _on_animation_finished(anim_name: String) -> void:
 		animation_player.play("ready" if attack_direction > 0 else "ready2")
 
 
-func move_to(new_pos: Vector3, pushed := false) -> void:
-	if !pushed and move_handler:
+func move_to(new_pos: Vector3) -> void:
+	if move_handler:
 		move_handler.move(self, new_pos)
 	else:
-		var new_tween = get_tree().create_tween()
-		new_tween.tween_property(self, "position", new_pos, tile_move_speed)
+		slide_to(new_pos)
+	
+	animate_action("move")
+
+
+func slide_to(new_pos: Vector3) -> void:
+	var new_tween = get_tree().create_tween()
+	new_tween.tween_property(self, "position", new_pos, float(tile_move_speed) / 40)
 
 
 func use_base_attack() -> void:

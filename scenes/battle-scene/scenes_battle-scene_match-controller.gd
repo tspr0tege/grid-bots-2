@@ -1,5 +1,8 @@
 class_name MatchController extends Node
 
+@onready var tick_label: Label = $"../CanvasLayer/GridContainer/PlaySpace/DebugPanel/VBoxContainer/Tick"
+@onready var delta_ms_label: Label = $"../CanvasLayer/GridContainer/PlaySpace/DebugPanel/VBoxContainer/DeltaMs"
+
 signal transmit_ability(caster: String, ability, String)
 signal transmit_move(
 	character_id: String, 
@@ -8,6 +11,7 @@ signal transmit_move(
 	)
 signal update_energy_display()
 signal ability_executed(index: int)
+signal process_tick(action: TickInstruction)
 
 @export var ARENA : Arena
 @export var ACTOR_FACTORY : ActorFactory
@@ -21,15 +25,16 @@ var projectiles := {}
 
 
 
+var tick_counter_active := false
 const tick_rate := 40
+const tick_duration := 1.0 / tick_rate
 const tick_queue_size := 2048
 #1024 slots = 25.6 seconds
 #2048 slots = 51.2 seconds
 #4096 slots = 102.4 seconds
-var tick_counter_active := false
 var tick_accumulator := 0.0
 var tick_count := 0
-var tick_process_queue: Array = range(tick_queue_size).map(func(i): return [])
+var tick_process_queue: Array = range(tick_queue_size).map(func(_i): return [])
 
 
 func _ready():
@@ -55,23 +60,25 @@ func _process(delta):
 	update_energy_display.emit()
 	
 	if tick_counter_active:
-		var delta_ms = delta * 1000
-		tick_accumulator += delta_ms
-		while tick_accumulator >= tick_rate:
-			tick_accumulator -= tick_rate
+		#var delta_ms = int(delta * 1000)
+		tick_accumulator += delta
+		#delta_ms_label.text = "Delta MS: " + str(delta_ms)
+		while tick_accumulator >= tick_duration:
+			tick_accumulator -= tick_duration
 			_process_current_tick()
 
 
 func _process_current_tick() -> void:
 	tick_count += 1
+	tick_label.text = "tick_count: " + str(tick_count)
 	var tick_queue_index = tick_count % tick_queue_size
 	var current_tick_actions = tick_process_queue[tick_queue_index]
 	
 	for action: TickInstruction in current_tick_actions:
-		if action.target_tick != tick_count: push_error("Action executing from tick_queue is occuring in the wrong tick.\n Planned tick number: %s\n Actual tick number: %s" % [action.target_tick, tick_count])
+		if action.kickoff_tick != tick_count: push_error("Action executing from tick_queue is occuring in the wrong tick.\n Planned tick number: %s\n Actual tick number: %s" % [action.kickoff_tick, tick_count])
 		#{ <TickInstruction>
-			#target_tick:
-			#revision: -> current_revision needs to be stored on actor controller
+			#kickoff_tick:
+			#revision: -> current_revision on ProjectileController
 			#actor_type:
 			#actor_id:
 			#action_type:
@@ -80,17 +87,20 @@ func _process_current_tick() -> void:
 		
 		match action.actor_type:
 			"projectile":
-				var actor = projectiles[action.actor_id] #Projectile or ProjectileController?
-				actor.handle_tick_action(action.action_type, action.action_instructions)
+				if !projectiles.has(action.actor_id): continue #projectile has been deleted
+				var projectile: ProjectileController = projectiles[action.actor_id] #Projectile or ProjectileController?
+				if projectile.current_revision != action.revision: 
+					push_warning("projectile.current_revision does not match action.revision")
+					continue #projectile has updated instructions
+				projectile.handle_tick_action(action.action_type, action.action_instructions)
+				process_tick.emit(action)
 			"character":
-				var actor: Character = characters[action.actor_id]
-				actor.handle_tick_action(action.action_type, action.action_instructions)
+				var character: Character = characters[action.actor_id]
+				character.handle_tick_action(action.action_type, action.action_instructions)
+				process_tick.emit(action)
 			_:
 				push_error("Unhandled actor_type received in _process_current_tick.\n ACTION DICTIONARY:\n" + JSON.stringify(action, "\t"))
-		
-		pass
 	
-	#when done:
 	tick_process_queue[tick_queue_index] = []
 
 
@@ -115,55 +125,100 @@ func handle_move_by_coords(coords: Vector2i) -> void:
 	request_move(player_character.character_id, coords)
 
 
+func handle_projectile_collision(projectile_id: String) -> void:
+	var projectile: ProjectileController = projectiles[projectile_id]
+	projectile.handle_tick_action("collision", {})
+
+
 func request_move(character_id: String, target_coords: Vector2i) -> void:
+	#Check valid coordinates
 	if not ARENA.is_valid_tile(target_coords): return
 	
-	transmit_move.emit(character_id, target_coords)
-
-
-func _execute_move(character_id: String, to_coords: Vector2i, push := false) -> bool:
-	var character: Character = characters[character_id]
-	var current_tile: FloorTile = ARENA.get_tile_by_coords(character.grid_coords)
-	var target_tile: FloorTile = ARENA.get_tile_by_coords(to_coords)
-	#TODO: Move tile update logic to CombatArena. Maybe.
+	var moving_character: Character = characters[character_id]
+	#var from_coords = character.grid_coords
+	var desired_move = target_coords - moving_character.grid_coords
 	
-	#obstacle moving to an occupied tile
-	#TODO:Remove "push" from move, and separate it's logic into the ability script. This will require revisiting the obstacle movement logic.
-	if is_instance_of(character, Obstacle) and target_tile.occupant: 
-		var obstruction = target_tile.occupant
-		var next_tile = to_coords - character.grid_coords
-		var push_successful = !is_instance_of(obstruction, Obstacle) and await _execute_move(obstruction, to_coords + next_tile, true)
-		if push_successful:
-			obstruction.get_node("HpNode").take_damage(character.move_damage)
-			target_tile.add_occupant(character)
-			character.grid_coords = to_coords
-			character.move_to(target_tile.position, push)
-		else: #obstacle deals death damage
-			var char_hp_node = character.get_node("HpNode")
-			character.move_to(target_tile.position)
-			await get_tree().create_timer(character.tile_move_speed).timeout
-			obstruction.get_node("HpNode").take_damage(char_hp_node.HP / 2)
-			char_hp_node.take_damage(char_hp_node.HP)
-		return true
-	else: #moving to unoccupied tile
-		#TODO: occupant updates should happen by tick count as movement is not instant, and timing will matter.
-		current_tile.remove_occupant()
-		target_tile.add_occupant(character)
-		character.grid_coords = to_coords
-		#TODO: update move_to function to receive tile only, and update character grid_coords
-		character.move_to(target_tile.position, push)
-		return true
+	# desired_move.length is 1.0 for adjacent tiles, and roughly 1.4 for diagonals
+	if (moving_character.teleport_enabled or desired_move.length() <= 1) and _is_valid_move(moving_character, target_coords):
+		transmit_move.emit(character_id, target_coords)
+		execute_move(moving_character.character_id, target_coords)
+		#TODO: transmit_move also needs to mount the move somewhere for "undo" if invalidated by the server.
+	elif (moving_character.diagonal_move_enabled and 
+	_is_valid_move(moving_character, moving_character.grid_coords + _move_dir(desired_move, 0))):
+		var coords = moving_character.grid_coords + _move_dir(desired_move, 0)
+		transmit_move.emit(character_id, coords)
+		execute_move(character_id, coords)
+		
+	elif (abs(desired_move.x) <= abs(desired_move.y) and
+	 _is_valid_move(moving_character, moving_character.grid_coords + _move_dir(desired_move, 2))):
+		var coords = moving_character.grid_coords + _move_dir(desired_move, 2)
+		transmit_move.emit(character_id, coords)
+		execute_move(character_id, coords)
+		
+	elif _is_valid_move(moving_character, moving_character.grid_coords + _move_dir(desired_move, 1)):
+		var coords = moving_character.grid_coords + _move_dir(desired_move, 1)
+		transmit_move.emit(character_id, coords)
+		execute_move(character_id, coords)
+	else:
+		#push_warning("Invalid move request for %s." % character.character_id)
+		return
+
+
+func _is_valid_move(character: Character, to_coords: Vector2i) -> bool:
+	var target_tile = ARENA.get_tile_by_coords(to_coords)
+	#Character moving to invalid team tile
+	if (character.team != MatchSettings.teams.UNIVERSAL and
+	 target_tile.team != character.team): 
+		return false
+	#Character moving to occupied tile
+	if target_tile.occupant: return false
+	if target_tile.reserved: return false
+	if !target_tile.traversable: return false
+	
+	#Definitely going to move
+	return true
+
+
+func _move_dir(target_coords: Vector2i, rule: int) -> Vector2i:
+	#rule: 0 = diagonal, 1 = favor x, 2 = favor y
+	var direction := Vector2i.ZERO
+	if target_coords.x != 0 and rule != 2:
+		direction.x = target_coords.x / abs(target_coords.x)
+	if target_coords.y != 0 and rule != 1:
+		direction.y = target_coords.y / abs(target_coords.y)
+	return direction
+
+
+func execute_move(character_id: String, to_coords: Vector2i) -> void:
+	var character: Character = characters[character_id]
+	var character_move_speed = character.tile_move_speed
+	
+	var target_tile: FloorTile = ARENA.get_tile_by_coords(to_coords)
+	
+	var tick_update := TickInstruction.new(
+		int(character_move_speed / 2),
+		1,
+		"character",
+		character_id, 
+		TickInstruction.action_types.MOVE,
+		{ #instructions needed for update
+			"to_coords": to_coords
+		} 
+	)
+	
+	MatchSettings.BRIDGE.load_tick_instructions([tick_update])
+	target_tile.reserved = true
+	character.move_to(target_tile.position)
 
 
 func update_character_coords(character_id: String, to_coords: Vector2i) -> void:
-	#var character: Character = characters[character_id]
-	#var target_tile: FloorTile = ARENA.get_tile_by_coords(to_coords)
-	#var current_tile: FloorTile = ARENA.get_tile_by_coords(character.grid_coords)
-	#change character grid coords
-	#remove occupant from current tile
-	#add occupant in new tile
+	var character: Character = characters[character_id]
+	var target_tile: FloorTile = ARENA.get_tile_by_coords(to_coords)
+	var current_tile: FloorTile = ARENA.get_tile_by_coords(character.grid_coords)
 	#NOTE: character will already be moving
-	pass
+	current_tile.remove_occupant()
+	target_tile.add_occupant(character)
+	character.grid_coords = to_coords
 
 
 func search_for_target(source: Character, searching_for: String) -> void:
@@ -193,6 +248,12 @@ func _attempt_damage(grid_coords: Vector2i, amt: float) -> bool:
 		return true
 	
 	return false
+
+#TODO: change this is a single function for healing and damage
+func damage_character(character_id: String, dmg_amt: float) -> void:
+	var target_character = characters[character_id]
+	var target_hp_node = target_character.get_node("HpNode")
+	target_hp_node.take_damage(dmg_amt)
 
 
 func _attempt_healing(character: Character, amt: float, overheal := false) -> bool:
